@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JARVIS | Painel</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+
+    <script>
+        if (!isLoggedIn()) {
+            window.location.replace("pages/login.html");
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <aside class="sidebar">
+
+            <div class="logo">
+                JARVIS
+            </div>
+
+            <nav>
+
+                <a href="index.html" class="active">
+                    Dashboard
+                </a>
+
+                <a href="pages/conversas.html">
+                    Conversas
+                </a>
+
+                <a href="pages/memorias.html">
+                    Memórias
+                </a>
+
+                <a href="pages/dispositivos.html">
+                    Dispositivos
+                </a>
+
+                <a href="pages/configuracoes.html">
+                    Configurações
+                </a>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+
+                <span class="status-dot"></span>
+
+                <span id="sidebarStatus">
+                    Verificando sistema...
+                </span>
+
+            </div>
+
+        </aside>
+
+
+        <main class="content">
+
+            <header class="topbar">
+
+                <div>
+
+                    <span class="page-label">
+                        PAINEL DE CONTROLE
+                    </span>
+
+                    <h1>
+                        Dashboard
+                    </h1>
+
+                </div>
+
+
+                <div class="system-status">
+
+                    <span class="status-dot"></span>
+
+                    <span id="systemStatus">
+                        Verificando sistema...
+                    </span>
+
+                </div>
+
+            </header>
+
+
+            <section class="welcome-card">
+
+                <div>
+
+                    <span class="card-label">
+                        JARVIS CORE
+                    </span>
+
+                    <h2 id="welcomeMessage">
+                        Bem-vindo.
+                    </h2>
+
+                    <p>
+                        Sistema central do JARVIS operacional.
+                        Aqui você poderá acompanhar o estado do sistema,
+                        memórias, dispositivos e atividades recentes.
+                    </p>
+
+                </div>
+
+
+                <div class="core">
+
+                    <div class="core-ring"></div>
+
+                    <div class="core-center"></div>
+
+                </div>
+
+            </section>
+
+
+            <section class="cards">
+
+
+                <div class="card">
+
+                    <span class="card-label">
+                        API
+                    </span>
+
+                    <h3 id="apiStatus">
+                        ...
+                    </h3>
+
+                    <p>
+                        Status do backend JARVIS
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <span class="card-label">
+                        DATABASE
+                    </span>
+
+                    <h3 id="databaseStatus">
+                        ...
+                    </h3>
+
+                    <p>
+                        PostgreSQL
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <span class="card-label">
+                        MEMÓRIAS
+                    </span>
+
+                    <h3 id="memoryCount">
+                        ...
+                    </h3>
+
+                    <p>
+                        Memórias armazenadas
+                    </p>
+
+                </div>
+
+
+            </section>
+
+
+            <section class="activity">
+
+                <div class="section-header">
+
+                    <h2>
+                        Atividade recente
+                    </h2>
+
+                    <span id="lastActivity">
+                        Aguardando...
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="empty-activity"
+                    id="activityContainer"
+                >
+
+                    Carregando atividade...
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>

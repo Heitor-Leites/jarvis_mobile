@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>JARVIS | Memórias</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                JARVIS
+            </div>
+
+            <nav>
+
+                <a href="../index.html">
+                    Dashboard
+                </a>
+
+                <a href="conversas.html">
+                    Conversas
+                </a>
+
+                <a
+                    href="memorias.html"
+                    class="active"
+                >
+                    Memórias
+                </a>
+
+                <a href="dispositivos.html">
+                    Dispositivos
+                </a>
+
+                <a href="configuracoes.html">
+                    Configurações
+                </a>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+
+                <span class="status-dot"></span>
+
+                Sistema online
+
+            </div>
+
+        </aside>
+
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="content">
+
+            <!-- TOPBAR -->
+            <header class="topbar">
+
+                <div>
+
+                    <span class="page-label">
+                        JARVIS
+                    </span>
+
+                    <h1>
+                        Memórias
+                    </h1>
+
+                </div>
+
+                <div class="system-status">
+
+                    <span class="status-dot"></span>
+
+                    JARVIS Online
+
+                </div>
+
+            </header>
+
+
+            <!-- CABEÇALHO -->
+            <section class="welcome-card">
+
+                <div>
+
+                    <span class="page-label">
+                        SISTEMA DE MEMÓRIA
+                    </span>
+
+                    <h2>
+                        Memórias armazenadas
+                    </h2>
+
+                    <p>
+                        Gerencie as informações que o
+                        JARVIS pode lembrar sobre você
+                        e seus projetos.
+                    </p>
+
+                </div>
+
+                <button
+                    id="newMemoryButton"
+                    class="primary-button"
+                    type="button"
+                >
+                    + Nova memória
+                </button>
+
+            </section>
+
+
+            <!-- ESTATÍSTICAS -->
+            <section class="cards">
+
+                <div class="card">
+
+                    <span class="card-label">
+                        TOTAL
+                    </span>
+
+                    <strong id="memoryCount">
+                        0
+                    </strong>
+
+                    <small>
+                        Memórias armazenadas
+                    </small>
+
+                </div>
+
+
+                <div class="card">
+
+                    <span class="card-label">
+                        DATABASE
+                    </span>
+
+                    <strong
+                        id="databaseStatus"
+                        style="color: #4ade80;"
+                    >
+                        ONLINE
+                    </strong>
+
+                    <small>
+                        PostgreSQL conectado
+                    </small>
+
+                </div>
+
+
+                <div class="card">
+
+                    <span class="card-label">
+                        USUÁRIO
+                    </span>
+
+                    <strong id="currentUser">
+                        —
+                    </strong>
+
+                    <small>
+                        Conta autenticada
+                    </small>
+
+                </div>
+
+            </section>
+
+
+            <!-- LISTA DE MEMÓRIAS -->
+            <section class="activity">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <span class="page-label">
+                            DATABASE
+                        </span>
+
+                        <h2>
+                            Suas memórias
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="memoryContainer"
+                    class="empty-activity"
+                >
+                    Carregando memórias...
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- MODAL NOVA MEMÓRIA -->
+    <div
+        id="memoryModal"
+        class="modal-overlay"
+        aria-hidden="true"
+    >
+
+        <div
+            class="modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="memoryModalTitle"
+        >
+
+            <!-- CABEÇALHO -->
+            <div class="modal-header">
+
+                <div>
+
+                    <span class="page-label">
+                        JARVIS
+                    </span>
+
+                    <h2 id="memoryModalTitle">
+                        Nova memória
+                    </h2>
+
+                </div>
+
+                <button
+                    id="closeMemoryModal"
+                    class="modal-close"
+                    type="button"
+                    aria-label="Fechar"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <!-- FORMULÁRIO -->
+            <div class="modal-body">
+
+                <label for="memoryContent">
+                    Memória
+                </label>
+
+                <textarea
+                    id="memoryContent"
+                    rows="5"
+                    maxlength="2000"
+                    placeholder="Digite algo que o JARVIS deve lembrar..."
+                ></textarea>
+
+
+                <label for="memoryCategory">
+                    Categoria
+                </label>
+
+                <select id="memoryCategory">
+
+                    <option value="general">
+                        Geral
+                    </option>
+
+                    <option value="preferences">
+                        Preferências
+                    </option>
+
+                    <option value="projects">
+                        Projetos
+                    </option>
+
+                    <option value="personal">
+                        Pessoal
+                    </option>
+
+                    <option value="important">
+                        Importante
+                    </option>
+
+                </select>
+
+
+                <label for="memoryImportance">
+                    Importância
+                </label>
+
+                <select id="memoryImportance">
+
+                    <option value="1">
+                        1 · Baixa
+                    </option>
+
+                    <option value="2">
+                        2 · Normal
+                    </option>
+
+                    <option
+                        value="3"
+                        selected
+                    >
+                        3 · Média
+                    </option>
+
+                    <option value="4">
+                        4 · Alta
+                    </option>
+
+                    <option value="5">
+                        5 · Muito alta
+                    </option>
+
+                </select>
+
+
+                <!-- ERRO -->
+                <div
+                    id="memoryError"
+                    class="form-error"
+                    style="display: none;"
+                ></div>
+
+            </div>
+
+
+            <!-- RODAPÉ DO MODAL -->
+            <div class="modal-footer">
+
+                <button
+                    id="cancelMemoryButton"
+                    class="secondary-button"
+                    type="button"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    id="saveMemoryButton"
+                    class="primary-button"
+                    type="button"
+                >
+                    Salvar memória
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SCRIPTS -->
+    <script src="../js/auth.js"></script>
+
+    <script src="../js/api.js"></script>
+
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            () => {
+
+                console.log(
+                    "JARVIS: página de memórias carregada."
+                );
+
+
+                /* =========================
+                   ELEMENTOS
+                ========================= */
+
+                const newMemoryButton =
+                    document.getElementById(
+                        "newMemoryButton"
+                    );
+
+                const memoryModal =
+                    document.getElementById(
+                        "memoryModal"
+                    );
+
+                const closeMemoryModal =
+                    document.getElementById(
+                        "closeMemoryModal"
+                    );
+
+                const cancelMemoryButton =
+                    document.getElementById(
+                        "cancelMemoryButton"
+                    );
+
+                const saveMemoryButton =
+                    document.getElementById(
+                        "saveMemoryButton"
+                    );
+
+                const memoryContent =
+                    document.getElementById(
+                        "memoryContent"
+                    );
+
+                const memoryCategory =
+                    document.getElementById(
+                        "memoryCategory"
+                    );
+
+                const memoryImportance =
+                    document.getElementById(
+                        "memoryImportance"
+                    );
+
+                const memoryError =
+                    document.getElementById(
+                        "memoryError"
+                    );
+
+                const memoryContainer =
+                    document.getElementById(
+                        "memoryContainer"
+                    );
+
+                const memoryCount =
+                    document.getElementById(
+                        "memoryCount"
+                    );
+
+                const databaseStatus =
+                    document.getElementById(
+                        "databaseStatus"
+                    );
+
+                const currentUser =
+                    document.getElementById(
+                        "currentUser"
+                    );
+
+
+                /* =========================
+                   VERIFICAÇÃO
+                ========================= */
+
+                if (!newMemoryButton) {
+
+                    console.error(
+                        "JARVIS ERRO: newMemoryButton não encontrado."
+                    );
+
+                    return;
+                }
+
+                if (!memoryModal) {
+
+                    console.error(
+                        "JARVIS ERRO: memoryModal não encontrado."
+                    );
+
+                    return;
+                }
+
+
+                console.log(
+                    "JARVIS: botão Nova memória encontrado."
+                );
+
+
+                /* =========================
+                   MODAL
+                ========================= */
+
+                function openModal() {
+
+                    memoryModal.classList.add(
+                        "active"
+                    );
+
+                    memoryModal.setAttribute(
+                        "aria-hidden",
+                        "false"
+                    );
+
+                    memoryContent.value = "";
+
+                    memoryCategory.value =
+                        "general";
+
+                    memoryImportance.value =
+                        "3";
+
+                    memoryError.style.display =
+                        "none";
+
+                    memoryError.textContent =
+                        "";
+
+                    setTimeout(
+                        () => {
+
+                            memoryContent.focus();
+
+                        },
+                        100
+                    );
+
+                }
+
+
+                function closeModal() {
+
+                    memoryModal.classList.remove(
+                        "active"
+                    );
+
+                    memoryModal.setAttribute(
+                        "aria-hidden",
+                        "true"
+                    );
+
+                }
+
+
+                /* =========================
+                   EVENTOS DO BOTÃO
+                ========================= */
+
+                newMemoryButton.addEventListener(
+                    "click",
+                    () => {
+
+                        console.log(
+                            "JARVIS: botão Nova memória clicado."
+                        );
+
+                        openModal();
+
+                    }
+                );
+
+
+                closeMemoryModal.addEventListener(
+                    "click",
+                    closeModal
+                );
+
+
+                cancelMemoryButton.addEventListener(
+                    "click",
+                    closeModal
+                );
+
+
+                memoryModal.addEventListener(
+                    "click",
+                    (event) => {
+
+                        if (
+                            event.target ===
+                            memoryModal
+                        ) {
+
+                            closeModal();
+
+                        }
+
+                    }
+                );
+
+
+                document.addEventListener(
+                    "keydown",
+                    (event) => {
+
+                        if (
+                            event.key === "Escape"
+                        ) {
+
+                            closeModal();
+
+                        }
+
+                    }
+                );
+
+
+                /* =========================
+                   ERRO
+                ========================= */
+
+                function showError(
+                    message
+                ) {
+
+                    memoryError.textContent =
+                        message;
+
+                    memoryError.style.display =
+                        "block";
+
+                }
+
+
+                /* =========================
+                   ESCAPAR HTML
+                ========================= */
+
+                function escapeHtml(
+                    text
+                ) {
+
+                    const div =
+                        document.createElement(
+                            "div"
+                        );
+
+                    div.textContent = text;
+
+                    return div.innerHTML;
+
+                }
+
+
+                /* =========================
+                   CARREGAR USUÁRIO
+                ========================= */
+
+                async function loadUser() {
+
+                    try {
+
+                        if (
+                            typeof isLoggedIn ===
+                            "function" &&
+                            !isLoggedIn()
+                        ) {
+
+                            window.location.replace(
+                                "login.html"
+                            );
+
+                            return;
+
+                        }
+
+
+                        const user =
+                            await apiRequest(
+                                "/me",
+                                {
+                                    headers: {
+                                        "Authorization":
+                                            `Bearer ${getToken()}`
+                                    }
+                                }
+                            );
+
+
+                        currentUser.textContent =
+                            user.username;
+
+                    } catch (error) {
+
+                        console.error(
+                            "Erro ao carregar usuário:",
+                            error
+                        );
+
+                        if (
+                            typeof removeToken ===
+                            "function"
+                        ) {
+
+                            removeToken();
+
+                        }
+
+                        window.location.replace(
+                            "login.html"
+                        );
+
+                    }
+
+                }
+
+
+                /* =========================
+                   CARREGAR MEMÓRIAS
+                ========================= */
+
+                async function loadMemories() {
+
+                    try {
+
+                        databaseStatus.textContent =
+                            "CARREGANDO";
+
+                        databaseStatus.style.color =
+                            "#facc15";
+
+
+                        const response =
+                            await apiRequest(
+                                "/memories",
+                                {
+                                    headers: {
+                                        "Authorization":
+                                            `Bearer ${getToken()}`
+                                    }
+                                }
+                            );
+
+
+                        const memories =
+                            response.memories || [];
+
+
+                        memoryCount.textContent =
+                            memories.length;
+
+
+                        databaseStatus.textContent =
+                            "ONLINE";
+
+                        databaseStatus.style.color =
+                            "#4ade80";
+
+
+                        if (
+                            memories.length === 0
+                        ) {
+
+                            memoryContainer.className =
+                                "empty-activity";
+
+                            memoryContainer.innerHTML =
+                                `
+                                    <div>
+                                        <strong>
+                                            Nenhuma memória ainda.
+                                        </strong>
+
+                                        <p>
+                                            Clique em
+                                            "+ Nova memória"
+                                            para adicionar a primeira.
+                                        </p>
+                                    </div>
+                                `;
+
+                            return;
+
+                        }
+
+
+                        memoryContainer.className =
+                            "memory-list";
+
+                        memoryContainer.innerHTML =
+                            memories.map(
+                                (memory) => {
+
+                                    return `
+                                        <div
+                                            class="memory-item"
+                                            data-memory-id="${memory.id}"
+                                        >
+
+                                            <div
+                                                class="memory-content"
+                                            >
+
+                                                <strong>
+                                                    ${escapeHtml(
+                                                        memory.content
+                                                    )}
+                                                </strong>
+
+                                                <div
+                                                    class="memory-meta"
+                                                >
+
+                                                    <span>
+                                                        ${escapeHtml(
+                                                            memory.category
+                                                        )}
+                                                    </span>
+
+                                                    <span>
+                                                        Importância:
+                                                        ${memory.importance}
+                                                    </span>
+
+                                                    <span>
+                                                        ${new Date(
+                                                            memory.created_at
+                                                        ).toLocaleString(
+                                                            "pt-BR"
+                                                        )}
+                                                    </span>
+
+                                                </div>
+
+                                            </div>
+
+
+                                            <button
+                                                type="button"
+                                                class="delete-memory-button"
+                                                data-memory-id="${memory.id}"
+                                            >
+                                                Excluir
+                                            </button>
+
+                                        </div>
+                                    `;
+
+                                }
+                            ).join("");
+
+
+                    } catch (error) {
+
+                        console.error(
+                            "Erro ao carregar memórias:",
+                            error
+                        );
+
+                        databaseStatus.textContent =
+                            "ERRO";
+
+                        databaseStatus.style.color =
+                            "#f87171";
+
+                        memoryContainer.className =
+                            "empty-activity";
+
+                        memoryContainer.innerHTML =
+                            `
+                                <div>
+                                    Não foi possível carregar
+                                    as memórias.
+                                </div>
+                            `;
+
+                    }
+
+                }
+
+
+                /* =========================
+                   SALVAR MEMÓRIA
+                ========================= */
+
+                async function saveMemory() {
+
+                    const content =
+                        memoryContent.value.trim();
+
+                    const category =
+                        memoryCategory.value;
+
+                    const importance =
+                        Number(
+                            memoryImportance.value
+                        );
+
+
+                    if (!content) {
+
+                        showError(
+                            "Digite uma memória antes de salvar."
+                        );
+
+                        memoryContent.focus();
+
+                        return;
+
+                    }
+
+
+                    saveMemoryButton.disabled =
+                        true;
+
+                    saveMemoryButton.textContent =
+                        "Salvando...";
+
+
+                    try {
+
+                        await apiRequest(
+                            "/memories",
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Authorization":
+                                        `Bearer ${getToken()}`
+                                },
+
+                                body: JSON.stringify(
+                                    {
+                                        content,
+                                        category,
+                                        importance
+                                    }
+                                )
+                            }
+                        );
+
+
+                        closeModal();
+
+                        await loadMemories();
+
+
+                    } catch (error) {
+
+                        console.error(
+                            "Erro ao salvar memória:",
+                            error
+                        );
+
+                        showError(
+                            error.message ||
+                            "Não foi possível salvar a memória."
+                        );
+
+                    } finally {
+
+                        saveMemoryButton.disabled =
+                            false;
+
+                        saveMemoryButton.textContent =
+                            "Salvar memória";
+
+                    }
+
+                }
+
+
+                saveMemoryButton.addEventListener(
+                    "click",
+                    saveMemory
+                );
+
+
+                /* =========================
+                   EXCLUIR MEMÓRIA
+                ========================= */
+
+                memoryContainer.addEventListener(
+                    "click",
+                    async (event) => {
+
+                        const button =
+                            event.target.closest(
+                                ".delete-memory-button"
+                            );
+
+
+                        if (!button) {
+                            return;
+                        }
+
+
+                        const memoryId =
+                            button.dataset.memoryId;
+
+
+                        const confirmed =
+                            window.confirm(
+                                "Deseja realmente excluir esta memória?"
+                            );
+
+
+                        if (!confirmed) {
+                            return;
+                        }
+
+
+                        button.disabled =
+                            true;
+
+                        button.textContent =
+                            "Excluindo...";
+
+
+                        try {
+
+                            await apiRequest(
+                                `/memories/${memoryId}`,
+                                {
+                                    method: "DELETE",
+
+                                    headers: {
+                                        "Authorization":
+                                            `Bearer ${getToken()}`
+                                    }
+                                }
+                            );
+
+
+                            await loadMemories();
+
+
+                        } catch (error) {
+
+                            console.error(
+                                "Erro ao excluir memória:",
+                                error
+                            );
+
+                            alert(
+                                error.message ||
+                                "Não foi possível excluir a memória."
+                            );
+
+
+                            button.disabled =
+                                false;
+
+                            button.textContent =
+                                "Excluir";
+
+                        }
+
+                    }
+                );
+
+
+                /* =========================
+                   INICIALIZAÇÃO
+                ========================= */
+
+                loadUser();
+
+                loadMemories();
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>
