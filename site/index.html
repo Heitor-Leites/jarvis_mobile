@@ -559,8 +559,7 @@
             sender
         );
 
-       message.innerHTML = marked.parse(text);
-
+message.innerHTML = marked.parse(text, { breaks: true });
         chatMessages.appendChild(
             message
         );
