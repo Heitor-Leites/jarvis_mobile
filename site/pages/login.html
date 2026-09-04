@@ -1,150 +1,297 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>JARVIS | Login</title>
-
     <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
 
-    <main class="login-page">
 
-        <div class="login-card">
+<main class="login-page">
 
-            <div class="login-logo">
-                JARVIS
-            </div>
+    <div class="login-card">
 
-            <p class="login-subtitle">
-                Sistema de inteligência artificial
-            </p>
-
-            <form id="login-form">
-
-                <div class="input-group">
-
-                    <label for="username">
-                        Usuário
-                    </label>
-
-                    <input
-                        type="text"
-                        id="username"
-                        placeholder="Digite seu usuário"
-                        autocomplete="username"
-                        required
-                    >
-
-                </div>
-
-                <div class="input-group">
-
-                    <label for="password">
-                        Senha
-                    </label>
-
-                    <input
-                        type="password"
-                        id="password"
-                        placeholder="Digite sua senha"
-                        autocomplete="current-password"
-                        required
-                    >
-
-                </div>
-
-                <button type="submit" id="login-button">
-                    Entrar
-                </button>
-
-            </form>
-
-            <div class="login-status" id="login-status">
-                Acesso seguro
-            </div>
-
+        <div class="login-logo">
+            JARVIS
         </div>
 
-    </main>
+        <p class="login-subtitle">
+            Sistema de inteligência artificial
+        </p>
 
-    <script src="../js/api.js"></script>
-    <script src="../js/auth.js"></script>
+        <!-- LOGIN TRADICIONAL -->
 
-    <script>
+        <form id="login-form">
 
-        const form = document.getElementById("login-form");
-        const usernameInput = document.getElementById("username");
-        const passwordInput = document.getElementById("password");
-        const button = document.getElementById("login-button");
-        const status = document.getElementById("login-status");
+            <div class="input-group">
+                <label for="username">
+                    Usuário
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="Digite seu usuário"
+                    autocomplete="username"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="password">
+                    Senha
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Digite sua senha"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <button type="submit" id="login-button">
+                Entrar
+            </button>
+
+        </form>
+
+        <!-- DIVISOR -->
+
+        <div class="login-divider">
+            <span>ou</span>
+        </div>
+
+        <!-- GOOGLE -->
+
+        <button
+            type="button"
+            id="google-login-button"
+            class="google-login-button"
+        >
+            Entrar com Google
+        </button>
+
+        <div class="login-status" id="login-status">
+            Acesso seguro
+        </div>
+
+    </div>
+
+</main>
+
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+
+<script>
+
+    /*
+     * GOOGLE OAUTH
+     *
+     * O backend redireciona para:
+     *
+     * login.html#token=JWT
+     *
+     * Aqui capturamos o JWT, salvamos no
+     * localStorage e enviamos o usuário
+     * para o painel.
+     */
+
+    const hashParams = new URLSearchParams(
+        window.location.hash.substring(1)
+    );
+
+    const oauthToken = hashParams.get("token");
+
+    const oauthError = hashParams.get("oauth_error");
+
+    if (oauthToken) {
+
+        saveToken(oauthToken);
+
+        /*
+         * Remove o token da URL depois de salvá-lo.
+         */
+        window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+        );
+
+        /*
+         * Envia o usuário para o dashboard.
+         */
+        window.location.replace("../index.html");
+
+    } else if (oauthError) {
+
+        statusMessage(
+            "Não foi possível entrar com o Google."
+        );
+
+        /*
+         * Remove o erro da URL.
+         */
+        window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+        );
+    }
 
 
-        form.addEventListener("submit", async function (event) {
+    /*
+     * LOGIN NORMAL
+     */
+
+    const form =
+        document.getElementById("login-form");
+
+    const usernameInput =
+        document.getElementById("username");
+
+    const passwordInput =
+        document.getElementById("password");
+
+    const button =
+        document.getElementById("login-button");
+
+    const googleButton =
+        document.getElementById("google-login-button");
+
+    const status =
+        document.getElementById("login-status");
+
+
+    function statusMessage(message) {
+        const element =
+            document.getElementById("login-status");
+
+        if (element) {
+            element.textContent = message;
+        }
+    }
+
+
+    form.addEventListener(
+        "submit",
+        async function (event) {
 
             event.preventDefault();
 
-            const username = usernameInput.value.trim();
-            const password = passwordInput.value;
+            const username =
+                usernameInput.value.trim();
 
+            const password =
+                passwordInput.value;
 
             if (!username || !password) {
 
-                status.textContent = "Preencha usuário e senha.";
+                status.textContent =
+                    "Preencha usuário e senha.";
 
                 return;
             }
 
-
             button.disabled = true;
-            button.textContent = "Entrando...";
-            status.textContent = "Autenticando...";
+            googleButton.disabled = true;
 
+            button.textContent =
+                "Entrando...";
+
+            status.textContent =
+                "Autenticando...";
 
             try {
 
-                const data = await apiRequest("/login", {
+                const data =
+                    await apiRequest(
+                        "/login",
+                        {
+                            method: "POST",
 
-                    method: "POST",
+                            body: JSON.stringify({
+                                username: username,
+                                password: password
+                            })
+                        }
+                    );
 
-                    body: JSON.stringify({
-                        username: username,
-                        password: password
-                    })
+                saveToken(
+                    data.access_token
+                );
 
-                });
+                status.textContent =
+                    "Login realizado com sucesso.";
 
+                button.textContent =
+                    "Acesso autorizado";
 
-                saveToken(data.access_token);
+                setTimeout(
+                    function () {
 
+                        window.location.replace(
+                            "../index.html"
+                        );
 
-                status.textContent = "Login realizado com sucesso.";
-
-                button.textContent = "Acesso autorizado";
-
-
-                setTimeout(function () {
-
-                    window.location.href = "../index.html";
-
-                }, 500);
-
+                    },
+                    500
+                );
 
             } catch (error) {
 
-                status.textContent = error.message;
+                status.textContent =
+                    error.message;
 
                 button.disabled = false;
-                button.textContent = "Entrar";
+                googleButton.disabled = false;
 
+                button.textContent =
+                    "Entrar";
             }
 
-        });
+        }
+    );
 
-    </script>
+
+    /*
+     * LOGIN COM GOOGLE
+     */
+
+    googleButton.addEventListener(
+        "click",
+        function () {
+
+            googleButton.disabled = true;
+            button.disabled = true;
+
+            googleButton.textContent =
+                "Conectando ao Google...";
+
+            status.textContent =
+                "Redirecionando para o Google...";
+
+            /*
+             * O navegador vai para o backend.
+             *
+             * O backend inicia o OAuth
+             * e redireciona para o Google.
+             */
+
+            window.location.href =
+                "https://jarvis-backend-mzhe.onrender.com/auth/google/login";
+        }
+    );
+
+</script>
+
 
 </body>
+
 </html>
