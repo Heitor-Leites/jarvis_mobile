@@ -1,5 +1,7 @@
 const API_URL = "https://jarvis-backend-mzhe.onrender.com";
 
+window.sendMessage = sendMessage;
+
 async function apiRequest(endpoint, options = {}) {
     const response = await fetch(
         `${API_URL}${endpoint}`,
@@ -102,3 +104,5 @@ async function sendMessage(message) {
 
     return await publicChat(message);
 }
+
+window.sendMessage = sendMessage;
