@@ -325,12 +325,12 @@
                 JARVIS
             </div>
 
-            <a
-                href="Pages/Login.html"
-                class="login-button"
-            >
-                Entrar
-            </a>
+           <a
+    href="pages/login.html"
+    class="login-button"
+>
+    Entrar
+</a>
 
         </header>
 
@@ -485,27 +485,6 @@
         }
 
 
-        async function sendMessage(message) {
-
-            const response =
-                await apiRequest(
-                    "/chat",
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Authorization":
-                                "Bearer " +
-                                localStorage.getItem(
-                                    "jarvis_token"
-                                )
-                        },
-
-                        body: JSON.stringify({
-                            message: message
-                        })
-                    }
-                );
 
 
             return (
@@ -516,7 +495,7 @@
                 "Recebi seu comando."
             );
 
-        }
+        
 
 
         chatForm.addEventListener(
