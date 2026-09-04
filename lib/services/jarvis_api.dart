@@ -1,8 +1,9 @@
-
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class JarvisApi {
   JarvisApi({
@@ -11,13 +12,11 @@ class JarvisApi {
 
   final String baseUrl;
 
-  static const String _tokenKey = 'jarvis_access_token';
-  static const String _usernameKey = 'jarvis_username';
-  static const String _userIdKey = 'jarvis_user_id';
 
   Future<SharedPreferences> _preferences() async {
     return SharedPreferences.getInstance();
   }
+
 
   Future<Map<String, dynamic>> login({
     required String username,
@@ -30,156 +29,132 @@ class JarvisApi {
             'Content-Type': 'application/json',
           },
           body: jsonEncode({
-            'username': username,
+            'username': username.trim(),
             'password': password,
           }),
         )
         .timeout(
-          const Duration(seconds: 15),
+          const Duration(seconds: 30),
         );
 
-    final dynamic data = _decodeResponse(response);
+    final data = _decodeResponse(response);
 
     if (response.statusCode != 200) {
       throw Exception(
-        data is Map<String, dynamic>
-            ? data['detail']?.toString() ??
-                'Não foi possível realizar o login.'
-            : 'Não foi possível realizar o login.',
+        data['detail'] ??
+            'Usuário ou senha inválidos.',
       );
     }
 
-    if (data is! Map<String, dynamic>) {
+    final token = data['access_token'];
+
+    if (token == null ||
+        token.toString().isEmpty) {
       throw Exception(
-        'Resposta inválida recebida no login.',
-      );
-    }
-
-    final String? accessToken =
-        data['access_token']?.toString();
-
-    final String? loggedUsername =
-        data['username']?.toString();
-
-    final int? userId =
-        data['user_id'] is int
-            ? data['user_id'] as int
-            : int.tryParse(
-                data['user_id']?.toString() ?? '',
-              );
-
-    if (accessToken == null ||
-        accessToken.isEmpty) {
-      throw Exception(
-        'O servidor não retornou um token de acesso.',
+        'SERVER_ERROR: Token não recebido.',
       );
     }
 
     final prefs = await _preferences();
 
     await prefs.setString(
-      _tokenKey,
-      accessToken,
+      'jarvis_token',
+      token.toString(),
     );
 
-    if (loggedUsername != null) {
+    if (data['username'] != null) {
       await prefs.setString(
-        _usernameKey,
-        loggedUsername,
+        'jarvis_username',
+        data['username'].toString(),
       );
     }
 
-    if (userId != null) {
+    if (data['user_id'] != null) {
       await prefs.setInt(
-        _userIdKey,
-        userId,
+        'jarvis_user_id',
+        data['user_id'] as int,
       );
     }
 
-    return {
-      'access_token': accessToken,
-      'token_type': data['token_type']?.toString() ?? 'bearer',
-      'user_id': userId,
-      'username': loggedUsername,
-    };
+    return data;
   }
 
-  Future<void> logout() async {
-    final prefs = await _preferences();
-
-    await prefs.remove(_tokenKey);
-    await prefs.remove(_usernameKey);
-    await prefs.remove(_userIdKey);
-  }
-
-  Future<String?> getToken() async {
-    final prefs = await _preferences();
-
-    return prefs.getString(_tokenKey);
-  }
-
-  Future<String?> getUsername() async {
-    final prefs = await _preferences();
-
-    return prefs.getString(_usernameKey);
-  }
-
-  Future<int?> getUserId() async {
-    final prefs = await _preferences();
-
-    return prefs.getInt(_userIdKey);
-  }
 
   Future<bool> isLoggedIn() async {
-    final token = await getToken();
+    final prefs = await _preferences();
 
-    return token != null && token.isNotEmpty;
+    final token = prefs.getString(
+      'jarvis_token',
+    );
+
+    if (token == null ||
+        token.trim().isEmpty) {
+      return false;
+    }
+
+    try {
+      await getMe();
+      return true;
+    } catch (error) {
+      debugPrint(
+        'Sessão inválida: $error',
+      );
+
+      await logout();
+      return false;
+    }
   }
 
-  Future<String> chat({
-    required String message,
-  }) async {
-    final token = await getToken();
 
-    if (token == null || token.isEmpty) {
-      throw Exception(
-        'NOT_AUTHENTICATED',
-      );
-    }
+  Future<Map<String, dynamic>> getMe() async {
+    final response = await _authorizedGet(
+      '/me',
+    );
 
-    final response = await http
-        .post(
-          Uri.parse('$baseUrl/chat'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token',
-          },
-          body: jsonEncode({
-            'message': message,
-          }),
-        )
-        .timeout(
-          const Duration(seconds: 45),
-        );
-
-    if (response.statusCode == 200) {
-      final dynamic data = _decodeResponse(response);
-
-      if (data is Map<String, dynamic>) {
-        return data['response']?.toString() ??
-            'Não consegui gerar uma resposta.';
-      }
-
-      throw Exception(
-        'Resposta inválida recebida do servidor.',
-      );
-    }
+    final data = _decodeResponse(response);
 
     if (response.statusCode == 401) {
       await logout();
 
       throw Exception(
         'SESSION_EXPIRED',
+      );
+    }
+
+    if (response.statusCode != 200) {
+      throw Exception(
+        data['detail'] ??
+            'Não foi possível obter o usuário.',
+      );
+    }
+
+    return data;
+  }
+
+
+  Future<String> chat({
+    required String message,
+  }) async {
+    final response = await _authorizedPost(
+      '/chat',
+      {
+        'message': message,
+      },
+    );
+
+    final data = _decodeResponse(response);
+
+    if (response.statusCode == 401) {
+      await logout();
+
+      throw Exception(
+        'SESSION_EXPIRED',
+      );
+    }
+
+    if (response.statusCode == 422) {
+      throw Exception(
+        'VALIDATION_ERROR',
       );
     }
 
@@ -189,56 +164,33 @@ class JarvisApi {
       );
     }
 
-    if (response.statusCode == 422) {
+    if (response.statusCode != 200) {
       throw Exception(
-        'VALIDATION_ERROR',
+        data['detail'] ??
+            'SERVER_ERROR',
       );
     }
 
-    if (response.statusCode >= 500) {
+    final answer =
+        data['response']?.toString();
+
+    if (answer == null ||
+        answer.trim().isEmpty) {
       throw Exception(
         'SERVER_ERROR',
       );
     }
 
-    throw Exception(
-      'HTTP_${response.statusCode}',
-    );
+    return answer;
   }
 
-  Future<List<Map<String, dynamic>>> getMemories() async {
-    final token = await getToken();
 
-    if (token == null || token.isEmpty) {
-      throw Exception(
-        'NOT_AUTHENTICATED',
-      );
-    }
+  Future<List<dynamic>> getConversations() async {
+    final response = await _authorizedGet(
+      '/conversations',
+    );
 
-    final response = await http
-        .get(
-          Uri.parse('$baseUrl/memory'),
-          headers: {
-            'Authorization': 'Bearer $token',
-          },
-        )
-        .timeout(
-          const Duration(seconds: 15),
-        );
-
-    if (response.statusCode == 200) {
-      final dynamic data = _decodeResponse(response);
-
-      if (data is! List) {
-        throw Exception(
-          'Resposta de memórias inválida.',
-        );
-      }
-
-      return data
-          .whereType<Map<String, dynamic>>()
-          .toList();
-    }
+    final data = _decodeResponse(response);
 
     if (response.statusCode == 401) {
       await logout();
@@ -248,52 +200,92 @@ class JarvisApi {
       );
     }
 
-    throw Exception(
-      'HTTP_${response.statusCode}',
-    );
+    if (response.statusCode != 200) {
+      throw Exception(
+        data['detail'] ??
+            'Não foi possível carregar as conversas.',
+      );
+    }
+
+    if (data is List) {
+      return data;
+    }
+
+    return [];
   }
+
+
+  Future<void> deleteConversation(
+    int conversationId,
+  ) async {
+    final response = await _authorizedDelete(
+      '/conversations/$conversationId',
+    );
+
+    final data = _decodeResponse(response);
+
+    if (response.statusCode == 401) {
+      await logout();
+
+      throw Exception(
+        'SESSION_EXPIRED',
+      );
+    }
+
+    if (response.statusCode != 200) {
+      throw Exception(
+        data['detail'] ??
+            'Não foi possível excluir a conversa.',
+      );
+    }
+  }
+
+
+  Future<List<dynamic>> getMemories() async {
+    final response = await _authorizedGet(
+      '/memories',
+    );
+
+    final data = _decodeResponse(response);
+
+    if (response.statusCode == 401) {
+      await logout();
+
+      throw Exception(
+        'SESSION_EXPIRED',
+      );
+    }
+
+    if (response.statusCode != 200) {
+      throw Exception(
+        data['detail'] ??
+            'Não foi possível carregar as memórias.',
+      );
+    }
+
+    if (data is List) {
+      return data;
+    }
+
+    return [];
+  }
+
 
   Future<Map<String, dynamic>> createMemory({
     required String content,
     String category = 'general',
-    int importance = 1,
+    int importance = 3,
   }) async {
-    final token = await getToken();
+    final response = await _authorizedPost(
+      '/memories',
+      {
+        'content': content,
+        'category': category,
+        'importance': importance,
+      },
+    );
 
-    if (token == null || token.isEmpty) {
-      throw Exception(
-        'NOT_AUTHENTICATED',
-      );
-    }
-
-    final response = await http
-        .post(
-          Uri.parse('$baseUrl/memory'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token',
-          },
-          body: jsonEncode({
-            'content': content,
-            'category': category,
-            'importance': importance,
-          }),
-        )
-        .timeout(
-          const Duration(seconds: 15),
-        );
-
-    final dynamic data = _decodeResponse(response);
-
-    if (response.statusCode == 200) {
-      if (data is Map<String, dynamic>) {
-        return data;
-      }
-
-      throw Exception(
-        'Resposta inválida ao criar memória.',
-      );
-    }
+    final data = _decodeResponse(response);
 
     if (response.statusCode == 401) {
       await logout();
@@ -309,38 +301,28 @@ class JarvisApi {
       );
     }
 
-    throw Exception(
-      'HTTP_${response.statusCode}',
-    );
-  }
-
-  Future<void> deleteMemory(
-    int memoryId,
-  ) async {
-    final token = await getToken();
-
-    if (token == null || token.isEmpty) {
+    if (response.statusCode != 200) {
       throw Exception(
-        'NOT_AUTHENTICATED',
+        data['detail'] ??
+            'Não foi possível criar a memória.',
       );
     }
 
-    final response = await http
-        .delete(
-          Uri.parse(
-            '$baseUrl/memory/$memoryId',
-          ),
-          headers: {
-            'Authorization': 'Bearer $token',
-          },
-        )
-        .timeout(
-          const Duration(seconds: 15),
-        );
+    return data;
+  }
 
-    if (response.statusCode == 200) {
-      return;
-    }
+
+  Future<Map<String, dynamic>> detectMemory({
+    required String content,
+  }) async {
+    final response = await _authorizedPost(
+      '/memories/detect',
+      {
+        'content': content,
+      },
+    );
+
+    final data = _decodeResponse(response);
 
     if (response.statusCode == 401) {
       await logout();
@@ -350,29 +332,181 @@ class JarvisApi {
       );
     }
 
-    if (response.statusCode == 404) {
+    if (response.statusCode == 422) {
       throw Exception(
-        'MEMORY_NOT_FOUND',
+        'VALIDATION_ERROR',
       );
     }
 
-    throw Exception(
-      'HTTP_${response.statusCode}',
+    if (response.statusCode != 200) {
+      throw Exception(
+        data['detail'] ??
+            'Não foi possível detectar a memória.',
+      );
+    }
+
+    return data;
+  }
+
+
+  Future<void> deleteMemory(
+    int memoryId,
+  ) async {
+    final response = await _authorizedDelete(
+      '/memories/$memoryId',
+    );
+
+    final data = _decodeResponse(response);
+
+    if (response.statusCode == 401) {
+      await logout();
+
+      throw Exception(
+        'SESSION_EXPIRED',
+      );
+    }
+
+    if (response.statusCode != 200) {
+      throw Exception(
+        data['detail'] ??
+            'Não foi possível excluir a memória.',
+      );
+    }
+  }
+
+
+  Future<void> logout() async {
+    final prefs = await _preferences();
+
+    await prefs.remove(
+      'jarvis_token',
+    );
+
+    await prefs.remove(
+      'jarvis_username',
+    );
+
+    await prefs.remove(
+      'jarvis_user_id',
     );
   }
+
+
+  Future<String?> getToken() async {
+    final prefs = await _preferences();
+
+    return prefs.getString(
+      'jarvis_token',
+    );
+  }
+
+
+  Future<http.Response> _authorizedGet(
+    String path,
+  ) async {
+    final token = await getToken();
+
+    if (token == null ||
+        token.trim().isEmpty) {
+      throw Exception(
+        'NOT_AUTHENTICATED',
+      );
+    }
+
+    return http
+        .get(
+          Uri.parse('$baseUrl$path'),
+          headers: {
+            'Authorization':
+                'Bearer $token',
+            'Content-Type':
+                'application/json',
+          },
+        )
+        .timeout(
+          const Duration(seconds: 30),
+        );
+  }
+
+
+  Future<http.Response> _authorizedPost(
+    String path,
+    Map<String, dynamic> body,
+  ) async {
+    final token = await getToken();
+
+    if (token == null ||
+        token.trim().isEmpty) {
+      throw Exception(
+        'NOT_AUTHENTICATED',
+      );
+    }
+
+    return http
+        .post(
+          Uri.parse('$baseUrl$path'),
+          headers: {
+            'Authorization':
+                'Bearer $token',
+            'Content-Type':
+                'application/json',
+          },
+          body: jsonEncode(body),
+        )
+        .timeout(
+          const Duration(seconds: 60),
+        );
+  }
+
+
+  Future<http.Response> _authorizedDelete(
+    String path,
+  ) async {
+    final token = await getToken();
+
+    if (token == null ||
+        token.trim().isEmpty) {
+      throw Exception(
+        'NOT_AUTHENTICATED',
+      );
+    }
+
+    return http
+        .delete(
+          Uri.parse('$baseUrl$path'),
+          headers: {
+            'Authorization':
+                'Bearer $token',
+            'Content-Type':
+                'application/json',
+          },
+        )
+        .timeout(
+          const Duration(seconds: 30),
+        );
+  }
+
 
   dynamic _decodeResponse(
     http.Response response,
   ) {
     if (response.body.trim().isEmpty) {
-      return null;
+      return <String, dynamic>{};
     }
 
     try {
-      return jsonDecode(response.body);
-    } catch (_) {
-      return null;
+      return jsonDecode(
+        response.body,
+      );
+    } catch (error) {
+      debugPrint(
+        'Erro ao decodificar resposta: $error',
+      );
+
+      return <String, dynamic>{
+        'detail':
+            'Resposta inválida do servidor.',
+      };
     }
   }
 }
-

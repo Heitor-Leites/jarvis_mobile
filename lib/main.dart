@@ -1,11 +1,9 @@
-﻿
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-import 'screens/login_screen.dart';
 import 'services/jarvis_api.dart';
 
 void main() {
@@ -22,9 +20,6 @@ class JarvisApp extends StatefulWidget {
 class _JarvisAppState extends State<JarvisApp> {
   late final JarvisApi _api;
 
-  bool _checkingSession = true;
-  bool _loggedIn = false;
-
   @override
   void initState() {
     super.initState();
@@ -32,54 +27,6 @@ class _JarvisAppState extends State<JarvisApp> {
     _api = JarvisApi(
       baseUrl: 'https://jarvis-backend-mzhe.onrender.com',
     );
-
-    _checkSession();
-  }
-
-  Future<void> _checkSession() async {
-    try {
-      final bool loggedIn = await _api.isLoggedIn();
-
-      if (!mounted) {
-        return;
-      }
-
-      setState(() {
-        _loggedIn = loggedIn;
-        _checkingSession = false;
-      });
-    } catch (error) {
-      debugPrint(
-        'Erro ao verificar sessão: $error',
-      );
-
-      if (!mounted) {
-        return;
-      }
-
-      setState(() {
-        _loggedIn = false;
-        _checkingSession = false;
-      });
-    }
-  }
-
-  void _handleLoginSuccess() {
-    setState(() {
-      _loggedIn = true;
-    });
-  }
-
-  Future<void> _handleLogout() async {
-    await _api.logout();
-
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {
-      _loggedIn = false;
-    });
   }
 
   @override
@@ -94,60 +41,7 @@ class _JarvisAppState extends State<JarvisApp> {
           brightness: Brightness.dark,
         ),
       ),
-      home: _checkingSession
-          ? const _LoadingScreen()
-          : _loggedIn
-              ? JarvisHome(
-                  api: _api,
-                  onLogout: _handleLogout,
-                )
-              : LoginScreen(
-                  api: _api,
-                  onLoginSuccess: _handleLoginSuccess,
-                ),
-    );
-  }
-}
-
-class _LoadingScreen extends StatelessWidget {
-  const _LoadingScreen();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Color(0xFF050A0F),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              width: 42,
-              height: 42,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.cyanAccent,
-              ),
-            ),
-            SizedBox(height: 18),
-            Text(
-              'J.A.R.V.I.S.',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                letterSpacing: 3,
-              ),
-            ),
-            SizedBox(height: 6),
-            Text(
-              'INICIALIZANDO...',
-              style: TextStyle(
-                color: Colors.cyanAccent,
-                fontSize: 10,
-                letterSpacing: 2,
-              ),
-            ),
-          ],
-        ),
-      ),
+      home: JarvisHome(api: _api),
     );
   }
 }
@@ -156,26 +50,19 @@ class JarvisHome extends StatefulWidget {
   const JarvisHome({
     super.key,
     required this.api,
-    required this.onLogout,
   });
 
   final JarvisApi api;
-  final Future<void> Function() onLogout;
 
   @override
   State<JarvisHome> createState() => _JarvisHomeState();
 }
 
 class _JarvisHomeState extends State<JarvisHome> {
-  final TextEditingController _controller =
-      TextEditingController();
+  final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
-  final ScrollController _scrollController =
-      ScrollController();
-
-  final stt.SpeechToText _speech =
-      stt.SpeechToText();
-
+  final stt.SpeechToText _speech = stt.SpeechToText();
   final FlutterTts _tts = FlutterTts();
 
   final List<Map<String, String>> _messages = [];
@@ -208,8 +95,7 @@ class _JarvisHomeState extends State<JarvisHome> {
             return;
           }
 
-          if (status == 'done' ||
-              status == 'notListening') {
+          if (status == 'done' || status == 'notListening') {
             setState(() {
               _microphoneActive = false;
             });
@@ -234,9 +120,7 @@ class _JarvisHomeState extends State<JarvisHome> {
         _speechAvailable = available;
       });
     } catch (error) {
-      debugPrint(
-        'Erro ao inicializar voz: $error',
-      );
+      debugPrint('Erro ao inicializar voz: $error');
     }
   }
 
@@ -278,8 +162,7 @@ class _JarvisHomeState extends State<JarvisHome> {
           }
 
           setState(() {
-            _controller.text =
-                result.recognizedWords;
+            _controller.text = result.recognizedWords;
 
             _controller.selection =
                 TextSelection.fromPosition(
@@ -309,9 +192,7 @@ class _JarvisHomeState extends State<JarvisHome> {
         },
       );
     } catch (error) {
-      debugPrint(
-        'Erro no microfone: $error',
-      );
+      debugPrint('Erro no microfone: $error');
 
       if (!mounted) {
         return;
@@ -332,9 +213,7 @@ class _JarvisHomeState extends State<JarvisHome> {
       await _tts.stop();
       await _tts.speak(text);
     } catch (error) {
-      debugPrint(
-        'Erro no TTS: $error',
-      );
+      debugPrint('Erro no TTS: $error');
     }
   }
 
@@ -363,12 +242,10 @@ class _JarvisHomeState extends State<JarvisHome> {
   Future<void> _sendMessage({
     bool fromMicrophone = false,
   }) async {
-    final String message =
-        _controller.text.trim();
+    final String message = _controller.text.trim();
 
-    final bool shouldSpeak = message
-        .toLowerCase()
-        .startsWith('/falar');
+    final bool shouldSpeak =
+        message.toLowerCase().startsWith('/falar');
 
     final String cleanMessage = shouldSpeak
         ? message.substring(6).trim()
@@ -409,23 +286,13 @@ class _JarvisHomeState extends State<JarvisHome> {
     );
 
     try {
-      final Stopwatch timer =
-          Stopwatch()..start();
+      final Stopwatch timer = Stopwatch()..start();
 
-      debugPrint(
-        '========== JARVIS ==========',
-      );
+      debugPrint('========== JARVIS ==========');
+      debugPrint('Mensagem recebida: $cleanMessage');
+      debugPrint('Enviando para o backend...');
 
-      debugPrint(
-        'Mensagem recebida: $cleanMessage',
-      );
-
-      debugPrint(
-        'Enviando para o backend...',
-      );
-
-      final String answer =
-          await widget.api.chat(
+      final String answer = await widget.api.chat(
         message: cleanMessage,
       );
 
@@ -454,9 +321,7 @@ class _JarvisHomeState extends State<JarvisHome> {
       debugPrint(
         '========== ERRO TIMEOUT ==========',
       );
-
       debugPrint(error.toString());
-
       debugPrint(
         '=================================',
       );
@@ -468,37 +333,17 @@ class _JarvisHomeState extends State<JarvisHome> {
         fromMicrophone,
       );
     } catch (error) {
-      final String errorText =
-          error.toString();
+      final String errorText = error.toString();
 
       debugPrint(
         '========== ERRO JARVIS ==========',
       );
-
       debugPrint(errorText);
-
       debugPrint(
         '================================',
       );
 
-      if (errorText.contains('SESSION_EXPIRED') ||
-          errorText.contains('NOT_AUTHENTICATED')) {
-        await _addErrorMessage(
-          'Sua sessão expirou. Faça login novamente.',
-          fromMicrophone,
-        );
-
-        await widget.onLogout();
-
-        return;
-      }
-
-      if (errorText.contains('401')) {
-        await _addErrorMessage(
-          'Acesso não autorizado. Faça login novamente.',
-          fromMicrophone,
-        );
-      } else if (errorText.contains('SERVICE_UNAVAILABLE')) {
+      if (errorText.contains('SERVICE_UNAVAILABLE')) {
         await _addErrorMessage(
           'O serviço do Gemini está temporariamente '
           'indisponível. Tente novamente em instantes.',
@@ -665,14 +510,6 @@ class _JarvisHomeState extends State<JarvisHome> {
     );
   }
 
-  Future<void> _logout() async {
-    if (_isLoading) {
-      return;
-    }
-
-    await widget.onLogout();
-  }
-
   @override
   void dispose() {
     _controller.dispose();
@@ -687,8 +524,7 @@ class _JarvisHomeState extends State<JarvisHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:
-            Colors.transparent,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         title: const Column(
@@ -696,16 +532,14 @@ class _JarvisHomeState extends State<JarvisHome> {
             Text(
               'J.A.R.V.I.S.',
               style: TextStyle(
-                fontWeight:
-                    FontWeight.bold,
+                fontWeight: FontWeight.bold,
                 letterSpacing: 3,
               ),
             ),
             Text(
               'SISTEMA ONLINE',
               style: TextStyle(
-                color:
-                    Colors.cyanAccent,
+                color: Colors.cyanAccent,
                 fontSize: 10,
                 letterSpacing: 2,
               ),
@@ -718,16 +552,7 @@ class _JarvisHomeState extends State<JarvisHome> {
             icon: const Icon(
               Icons.delete_outline,
             ),
-            tooltip:
-                'Limpar conversa',
-          ),
-          IconButton(
-            onPressed: _logout,
-            icon: const Icon(
-              Icons.logout,
-            ),
-            tooltip:
-                'Sair',
+            tooltip: 'Limpar conversa',
           ),
         ],
       ),
@@ -746,17 +571,15 @@ class _JarvisHomeState extends State<JarvisHome> {
                             height: 110,
                             decoration:
                                 BoxDecoration(
-                              shape:
-                                  BoxShape.circle,
+                              shape: BoxShape.circle,
                               border: Border.all(
-                                color: Colors
-                                    .cyanAccent,
+                                color:
+                                    Colors.cyanAccent,
                                 width: 2,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors
-                                      .cyan
+                                  color: Colors.cyan
                                       .withValues(
                                     alpha: 0.25,
                                   ),
@@ -766,16 +589,13 @@ class _JarvisHomeState extends State<JarvisHome> {
                               ],
                             ),
                             child: const Icon(
-                              Icons
-                                  .smart_toy_outlined,
+                              Icons.smart_toy_outlined,
                               color:
                                   Colors.cyanAccent,
                               size: 55,
                             ),
                           ),
-                          const SizedBox(
-                            height: 25,
-                          ),
+                          const SizedBox(height: 25),
                           const Text(
                             'Olá, senhor.',
                             style: TextStyle(
@@ -784,24 +604,18 @@ class _JarvisHomeState extends State<JarvisHome> {
                                   FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(
-                            height: 8,
-                          ),
+                          const SizedBox(height: 8),
                           const Text(
                             'Como posso ajudá-lo?',
                             style: TextStyle(
-                              color:
-                                  Colors.white70,
+                              color: Colors.white70,
                               fontSize: 16,
                             ),
                           ),
-                          const SizedBox(
-                            height: 12,
-                          ),
+                          const SizedBox(height: 12),
                           const Padding(
                             padding:
-                                EdgeInsets
-                                    .symmetric(
+                                EdgeInsets.symmetric(
                               horizontal: 30,
                             ),
                             child: Text(
@@ -810,8 +624,7 @@ class _JarvisHomeState extends State<JarvisHome> {
                               textAlign:
                                   TextAlign.center,
                               style: TextStyle(
-                                color:
-                                    Colors.white38,
+                                color: Colors.white38,
                                 fontSize: 13,
                               ),
                             ),
@@ -820,12 +633,9 @@ class _JarvisHomeState extends State<JarvisHome> {
                       ),
                     )
                   : ListView.builder(
-                      controller:
-                          _scrollController,
-                      itemCount:
-                          _messages.length,
-                      padding:
-                          const EdgeInsets.only(
+                      controller: _scrollController,
+                      itemCount: _messages.length,
+                      padding: const EdgeInsets.only(
                         top: 10,
                         bottom: 10,
                       ),
@@ -839,8 +649,7 @@ class _JarvisHomeState extends State<JarvisHome> {
             ),
             if (_isLoading)
               Padding(
-                padding:
-                    const EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   bottom: 8,
                 ),
                 child: Text(
@@ -849,21 +658,18 @@ class _JarvisHomeState extends State<JarvisHome> {
                         'pode levar alguns segundos...'
                       : 'JARVIS está processando...',
                   style: const TextStyle(
-                    color:
-                        Colors.cyanAccent,
+                    color: Colors.cyanAccent,
                     fontSize: 12,
                   ),
                 ),
               ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 30,
               ),
               child: Row(
                 mainAxisAlignment:
-                    MainAxisAlignment
-                        .spaceBetween,
+                    MainAxisAlignment.spaceBetween,
                 children: [
                   _buildStatus(
                     'IA',
@@ -880,68 +686,52 @@ class _JarvisHomeState extends State<JarvisHome> {
                 ],
               ),
             ),
-            const SizedBox(
-              height: 12,
-            ),
+            const SizedBox(height: 12),
             Padding(
-              padding:
-                  const EdgeInsets.fromLTRB(
+              padding: const EdgeInsets.fromLTRB(
                 12,
                 0,
                 12,
                 12,
               ),
               child: TextField(
-                controller:
-                    _controller,
+                controller: _controller,
                 textInputAction:
                     TextInputAction.send,
                 onSubmitted: (_) {
                   _sendMessage();
                 },
-                decoration:
-                    InputDecoration(
+                decoration: InputDecoration(
                   hintText:
                       'Digite um comando...',
                   filled: true,
-                  fillColor: Colors
-                      .white
-                      .withValues(
+                  fillColor:
+                      Colors.white.withValues(
                     alpha: 0.06,
                   ),
-                  prefixIcon:
-                      IconButton(
-                    onPressed:
-                        _startListening,
+                  prefixIcon: IconButton(
+                    onPressed: _startListening,
                     icon: Icon(
                       _microphoneActive
                           ? Icons.mic
                           : Icons.mic_none,
-                      color:
-                          _microphoneActive
-                              ? Colors.cyanAccent
-                              : Colors.white70,
+                      color: _microphoneActive
+                          ? Colors.cyanAccent
+                          : Colors.white70,
                     ),
                   ),
-                  suffixIcon:
-                      IconButton(
-                    onPressed:
-                        _isLoading
-                            ? null
-                            : _sendMessage,
-                    icon:
-                        const Icon(
+                  suffixIcon: IconButton(
+                    onPressed: _isLoading
+                        ? null
+                        : _sendMessage,
+                    icon: const Icon(
                       Icons.arrow_upward,
-                      color:
-                          Colors.cyanAccent,
+                      color: Colors.cyanAccent,
                     ),
                   ),
-                  border:
-                      OutlineInputBorder(
+                  border: OutlineInputBorder(
                     borderRadius:
-                        BorderRadius.circular(
-                      18,
-                    ),
+                        BorderRadius.circular(18),
                     borderSide:
                         BorderSide.none,
                   ),

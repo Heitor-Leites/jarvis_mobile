@@ -51,5 +51,7 @@ app.*.map.json
 .env
 **/.env
 
-# Backend mantido em repositório separado
-/backend/
+# Backend
+/backend/.venv/
+/backend/.env
+/backend/**/.env
