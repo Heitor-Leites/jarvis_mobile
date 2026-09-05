@@ -187,15 +187,14 @@ app.add_middleware(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-    "https://30jarvis.com.br",
-    "https://www.30jarvis.com.br",
-    "http://localhost:54396",
-],
+        "https://30jarvis.com.br",
+        "https://www.30jarvis.com.br",
+        "http://localhost:51803",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 # ============================================================
 # DATABASE SESSION
