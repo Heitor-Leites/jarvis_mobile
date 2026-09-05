@@ -1,4 +1,4 @@
-const API_URL = "https://jarvis-backend-mzhe.onrender.com";
+const API_URL = "https://api.30jarvis.com.br";
 
 window.sendMessage = sendMessage;
 
