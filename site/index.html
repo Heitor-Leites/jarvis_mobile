@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 
 <head>
@@ -6,309 +7,593 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JARVIS</title>
 
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/chat.css?v=2">
+```
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/chat.css?v=2">
 
-    <script src="js/api.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="js/api.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<style>
+    .jarvis-profile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        overflow: hidden;
+        text-decoration: none;
+        flex-shrink: 0;
+    }
+
+    .jarvis-profile img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        border-radius: 50%;
+    }
+
+    .jarvis-profile:hover {
+        opacity: 0.85;
+    }
+</style>
+```
+
 </head>
 
 <body>
 
 <div class="jarvis-home" id="jarvisHome">
 
-    <header class="jarvis-header">
-        <div class="jarvis-logo">JARVIS</div>
+```
+<header class="jarvis-header">
 
-        <a href="pages/login.html" class="login-button">
-            Entrar
-        </a>
-    </header>
+    <div class="jarvis-logo">
+        JARVIS
+    </div>
 
-    <main class="jarvis-main">
+    <a href="pages/login.html" class="login-button" id="authButton">
+        Entrar
+    </a>
 
-        <section class="jarvis-greeting">
-            <div class="core">
-                <div class="core-ring"></div>
-                <div class="core-center"></div>
-            </div>
+</header>
 
-            <span class="jarvis-label">JARVIS CORE</span>
+<main class="jarvis-main">
 
-            <h1>Como vai seu dia hoje?</h1>
+    <section class="jarvis-greeting">
 
-            <p>Digite um comando ou use o microfone.</p>
-        </section>
+        <div class="core">
+            <div class="core-ring"></div>
+            <div class="core-center"></div>
+        </div>
 
-        <section class="jarvis-chat">
+        <span class="jarvis-label">
+            JARVIS CORE
+        </span>
 
-            <div id="chatMessages" class="chat-messages"></div>
+        <h1>
+            Como vai seu dia hoje?
+        </h1>
 
-            <form id="chatForm" class="chat-input-container">
+        <p>
+            Digite um comando ou use o microfone.
+        </p>
 
-                <input
-                    type="text"
-                    id="chatInput"
-                    placeholder="Digite um comando..."
-                    autocomplete="off"
-                >
+    </section>
 
-                <button
-                    type="button"
-                    id="micButton"
-                    class="mic-button"
-                    aria-label="Usar microfone"
-                    title="Usar microfone"
-                >
-                    🎙️
-                </button>
+    <section class="jarvis-chat">
 
-                <button
-                    type="submit"
-                    class="send-button"
-                    aria-label="Enviar"
-                    title="Enviar"
-                >
-                    ➤
-                </button>
+        <div id="chatMessages" class="chat-messages"></div>
 
-            </form>
+        <form id="chatForm" class="chat-input-container">
 
-            <div id="chatStatus" class="chat-status">
-                JARVIS pronto.
-            </div>
+            <input
+                type="text"
+                id="chatInput"
+                placeholder="Digite um comando..."
+                autocomplete="off"
+            >
 
-        </section>
+            <button
+                type="button"
+                id="micButton"
+                class="mic-button"
+                aria-label="Usar microfone"
+                title="Usar microfone"
+            >
+                🎙️
+            </button>
 
-    </main>
+            <button
+                type="submit"
+                class="send-button"
+                aria-label="Enviar"
+                title="Enviar"
+            >
+                ➤
+            </button>
 
-    <footer class="jarvis-footer">
-        <span>JARVIS</span>
-        <span>Sistema inteligente</span>
-    </footer>
+        </form>
+
+        <div id="chatStatus" class="chat-status">
+            JARVIS pronto.
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="jarvis-footer">
+    <span>JARVIS</span>
+    <span>Sistema inteligente</span>
+</footer>
+```
 
 </div>
 
 <script>
+
+/* ==========================================
+   ELEMENTOS
+========================================== */
+
 const jarvisHome = document.getElementById("jarvisHome");
 const chatForm = document.getElementById("chatForm");
 const chatInput = document.getElementById("chatInput");
 const chatMessages = document.getElementById("chatMessages");
 const chatStatus = document.getElementById("chatStatus");
 const micButton = document.getElementById("micButton");
+const authButton = document.getElementById("authButton");
 
 let conversationStarted = false;
+
+
+/* ==========================================
+   PERFIL / AUTENTICAÇÃO
+========================================== */
+
+async function loadUserProfile() {
+
+    const token = localStorage.getItem("jarvis_token");
+
+    if (!token) {
+        return;
+    }
+
+    try {
+
+        const user = await apiRequest(
+            "/me",
+            {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            }
+        );
+
+        if (
+            user &&
+            user.picture_url
+        ) {
+
+            authButton.href = "pages/profile.html";
+            authButton.classList.add("jarvis-profile");
+            authButton.innerHTML = "";
+
+            const image = document.createElement("img");
+
+            image.src = user.picture_url;
+            image.alt = "Perfil";
+
+            image.onerror = function () {
+
+                authButton.classList.remove("jarvis-profile");
+                authButton.href = "pages/login.html";
+                authButton.textContent = "Entrar";
+
+            };
+
+            authButton.appendChild(image);
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Erro ao carregar perfil:",
+            error
+        );
+
+        if (error.status === 401) {
+
+            localStorage.removeItem(
+                "jarvis_token"
+            );
+
+            authButton.href =
+                "pages/login.html";
+
+            authButton.classList.remove(
+                "jarvis-profile"
+            );
+
+            authButton.textContent =
+                "Entrar";
+        }
+    }
+}
+
 
 /* ==========================================
    STATUS
 ========================================== */
 
 function setChatStatus(text, state = "ready") {
+
     chatStatus.textContent = text;
     chatStatus.dataset.state = state;
+
 }
+
 
 /* ==========================================
    MODO CONVERSA
 ========================================== */
 
 function activateChatMode() {
+
     if (conversationStarted) return;
 
     conversationStarted = true;
-    jarvisHome.classList.add("chat-mode");
+
+    jarvisHome.classList.add(
+        "chat-mode"
+    );
+
 }
+
 
 /* ==========================================
    DIGITAÇÃO DO JARVIS
 ========================================== */
 
-async function typeMessage(element, text, speed = 12) {
+async function typeMessage(
+    element,
+    text,
+    speed = 12
+) {
 
     let current = "";
 
-    for (let i = 0; i < text.length; i++) {
+    for (
+        let i = 0;
+        i < text.length;
+        i++
+    ) {
+
         current += text.charAt(i);
 
-        element.innerHTML = marked.parse(current, { breaks: true });
+        element.innerHTML =
+            marked.parse(
+                current,
+                {
+                    breaks: true
+                }
+            );
 
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+        chatMessages.scrollTop =
+            chatMessages.scrollHeight;
 
-        await new Promise(resolve => setTimeout(resolve, speed));
+        await new Promise(
+            resolve =>
+                setTimeout(
+                    resolve,
+                    speed
+                )
+        );
+
     }
+
 }
+
 
 /* ==========================================
    ADICIONAR MENSAGEM
 ========================================== */
 
-async function addMessage(text, sender) {
+async function addMessage(
+    text,
+    sender
+) {
 
-    const message = document.createElement("div");
-    message.classList.add("chat-message", sender);
+    const message =
+        document.createElement("div");
 
-    chatMessages.appendChild(message);
+    message.classList.add(
+        "chat-message",
+        sender
+    );
+
+    chatMessages.appendChild(
+        message
+    );
 
     if (sender === "jarvis") {
-        await typeMessage(message, text);
+
+        await typeMessage(
+            message,
+            text
+        );
+
     } else {
-        message.innerHTML = marked.parse(text, { breaks: true });
+
+        message.innerHTML =
+            marked.parse(
+                text,
+                {
+                    breaks: true
+                }
+            );
+
     }
 
-    requestAnimationFrame(() => {
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    });
+    requestAnimationFrame(
+        () => {
+
+            chatMessages.scrollTop =
+                chatMessages.scrollHeight;
+
+        }
+    );
+
 }
+
 
 /* ==========================================
    ENVIO DA MENSAGEM
 ========================================== */
 
-chatForm.addEventListener("submit", async function (event) {
+chatForm.addEventListener(
+    "submit",
+    async function (event) {
 
-    event.preventDefault();
+        event.preventDefault();
 
-    const message = chatInput.value.trim();
-    if (!message) return;
+        const message =
+            chatInput.value.trim();
 
-    // O Core desaparece somente agora.
-    activateChatMode();
+        if (!message) return;
 
-    await addMessage(message, "user");
-
-    chatInput.value = "";
-    chatInput.disabled = true;
-    micButton.disabled = true;
-
-    // Sem barra de processamento.
-    setChatStatus("JARVIS pensando...", "ready");
-
-    try {
-
-        const response = await sendMessage(message);
-
-        await addMessage(response, "jarvis");
-
-        setChatStatus("JARVIS pronto.", "ready");
-
-    } catch (error) {
-
-        console.error("Erro JARVIS:", error);
+        activateChatMode();
 
         await addMessage(
-            "Não consegui processar seu comando. Verifique a conexão com o núcleo JARVIS.",
-            "jarvis"
+            message,
+            "user"
         );
 
-        setChatStatus("Falha na comunicação.", "error");
+        chatInput.value = "";
 
-    } finally {
+        chatInput.disabled = true;
+        micButton.disabled = true;
 
-        chatInput.disabled = false;
-        micButton.disabled = false;
-        chatInput.focus();
+        setChatStatus(
+            "JARVIS pensando...",
+            "ready"
+        );
+
+        try {
+
+            const response =
+                await sendMessage(
+                    message
+                );
+
+            await addMessage(
+                response,
+                "jarvis"
+            );
+
+            setChatStatus(
+                "JARVIS pronto.",
+                "ready"
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Erro JARVIS:",
+                error
+            );
+
+            await addMessage(
+                "Não consegui processar seu comando. Verifique a conexão com o núcleo JARVIS.",
+                "jarvis"
+            );
+
+            setChatStatus(
+                "Falha na comunicação.",
+                "error"
+            );
+
+        } finally {
+
+            chatInput.disabled = false;
+            micButton.disabled = false;
+
+            chatInput.focus();
+
+        }
+
     }
+);
 
-});
 
 /* ==========================================
    MICROFONE
 ========================================== */
 
 const SpeechRecognition =
-    window.SpeechRecognition || window.webkitSpeechRecognition;
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
 
 if (SpeechRecognition) {
 
-    const recognition = new SpeechRecognition();
+    const recognition =
+        new SpeechRecognition();
 
     recognition.lang = "pt-BR";
-    recognition.interimResults = false;
-    recognition.continuous = false;
 
-    micButton.addEventListener("click", function () {
+    recognition.interimResults =
+        false;
 
-        try {
+    recognition.continuous =
+        false;
 
-            recognition.start();
+    micButton.addEventListener(
+        "click",
+        function () {
 
-            micButton.textContent = "🔴";
-            micButton.classList.add("listening");
+            try {
 
-            setChatStatus("JARVIS está ouvindo...", "listening");
+                recognition.start();
 
-        } catch (e) {
-            console.log(e);
+                micButton.textContent =
+                    "🔴";
+
+                micButton.classList.add(
+                    "listening"
+                );
+
+                setChatStatus(
+                    "JARVIS está ouvindo...",
+                    "listening"
+                );
+
+            } catch (e) {
+
+                console.log(e);
+
+            }
+
         }
+    );
 
-    });
+    recognition.addEventListener(
+        "result",
+        function (event) {
 
-    recognition.addEventListener("result", function (event) {
+            const transcript =
+                event.results[0][0]
+                    .transcript;
 
-        const transcript = event.results[0][0].transcript;
+            chatInput.value =
+                transcript;
 
-        chatInput.value = transcript;
-        chatInput.focus();
+            chatInput.focus();
 
-        setChatStatus("Comando reconhecido.", "ready");
+            setChatStatus(
+                "Comando reconhecido.",
+                "ready"
+            );
 
-    });
-
-    recognition.addEventListener("end", function () {
-
-        micButton.textContent = "🎙️";
-        micButton.classList.remove("listening");
-
-        if (chatStatus.dataset.state === "listening") {
-            setChatStatus("JARVIS pronto.", "ready");
         }
+    );
 
-    });
+    recognition.addEventListener(
+        "end",
+        function () {
 
-    recognition.addEventListener("error", function (error) {
+            micButton.textContent =
+                "🎙️";
 
-        console.error("Microfone:", error);
+            micButton.classList.remove(
+                "listening"
+            );
 
-        micButton.textContent = "🎙️";
-        micButton.classList.remove("listening");
+            if (
+                chatStatus.dataset.state ===
+                "listening"
+            ) {
 
-        setChatStatus(
-            "Não foi possível utilizar o microfone.",
-            "error"
-        );
+                setChatStatus(
+                    "JARVIS pronto.",
+                    "ready"
+                );
 
-    });
+            }
+
+        }
+    );
+
+    recognition.addEventListener(
+        "error",
+        function (error) {
+
+            console.error(
+                "Microfone:",
+                error
+            );
+
+            micButton.textContent =
+                "🎙️";
+
+            micButton.classList.remove(
+                "listening"
+            );
+
+            setChatStatus(
+                "Não foi possível utilizar o microfone.",
+                "error"
+            );
+
+        }
+    );
 
 } else {
 
     micButton.disabled = true;
+
     micButton.title =
         "Seu navegador não suporta reconhecimento de voz.";
 
 }
 
+
 /* ==========================================
    BOAS-VINDAS AUTOMÁTICAS
 ========================================== */
 
-setTimeout(async function () {
+setTimeout(
+    async function () {
 
-    if (!conversationStarted) {
+        if (!conversationStarted) {
 
-        await addMessage(
-            "Olá. Eu sou o JARVIS. Como posso ajudar você hoje?",
-            "jarvis"
-        );
+            await addMessage(
+                "Olá. Eu sou o JARVIS. Como posso ajudar você hoje?",
+                "jarvis"
+            );
 
-    }
+        }
 
-}, 600);
+    },
+    600
+);
+
 
 /* ==========================================
    INICIALIZAÇÃO
 ========================================== */
 
-setChatStatus("JARVIS pronto.", "ready");
+setChatStatus(
+    "JARVIS pronto.",
+    "ready"
+);
+
+loadUserProfile();
+
 chatInput.focus();
 
 </script>
