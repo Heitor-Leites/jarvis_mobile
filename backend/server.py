@@ -189,8 +189,8 @@ app.add_middleware(
     allow_origins=[
         "https://30jarvis.com.br",
         "https://www.30jarvis.com.br",
-        "http://localhost:51803",
     ],
+    allow_origin_regex=r"^http://localhost(:\d+)?$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
