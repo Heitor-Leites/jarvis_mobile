@@ -1,0 +1,1624 @@
+/* ============================================================
+   J.A.R.V.I.S. — CHAT V2
+   Identidade visual da interface pública
+   ============================================================ */
+
+:root {
+    --jarvis-bg: #05080d;
+    --jarvis-surface: rgba(255, 255, 255, 0.045);
+    --jarvis-surface-hover: rgba(255, 255, 255, 0.075);
+
+    --jarvis-border: rgba(255, 255, 255, 0.09);
+    --jarvis-border-strong: rgba(255, 255, 255, 0.15);
+
+    --jarvis-text: #ffffff;
+    --jarvis-text-soft: rgba(255, 255, 255, 0.68);
+    --jarvis-text-muted: rgba(255, 255, 255, 0.38);
+
+    --jarvis-blue: #0b8cff;
+    --jarvis-blue-light: #43a8ff;
+    --jarvis-blue-soft: rgba(11, 140, 255, 0.14);
+
+    --jarvis-radius: 18px;
+}
+
+
+/* ============================================================
+   BASE
+   ============================================================ */
+
+.jarvis-home {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    background:
+        radial-gradient(
+            circle at 50% 38%,
+            rgba(11, 140, 255, 0.09),
+            transparent 38%
+        ),
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(11, 140, 255, 0.045),
+            transparent 45%
+        ),
+        var(--jarvis-bg);
+
+    color: var(--jarvis-text);
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    overflow: hidden;
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.jarvis-header {
+    width: 100%;
+    height: 72px;
+
+    padding: 0 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+    flex-shrink: 0;
+
+    background: rgba(5, 8, 13, 0.78);
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.jarvis-logo {
+    font-size: 19px;
+    font-weight: 700;
+
+    letter-spacing: 4px;
+
+    color: #ffffff;
+
+    user-select: none;
+}
+
+.login-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 38px;
+
+    padding: 0 16px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 9px;
+
+    background: rgba(255, 255, 255, 0.035);
+
+    color: rgba(255, 255, 255, 0.72);
+
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.login-button:hover {
+    background: rgba(255, 255, 255, 0.075);
+
+    border-color: rgba(255, 255, 255, 0.22);
+
+    color: #ffffff;
+
+    transform: translateY(-1px);
+}
+
+.login-button:active {
+    transform: translateY(0);
+}
+
+/* ============================================================
+   ÁREA PRINCIPAL
+   ============================================================ */
+
+.jarvis-main {
+    flex: 1;
+
+    width: 100%;
+    max-width: 1080px;
+
+    margin: 0 auto;
+
+    padding: 64px 28px 34px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    position: relative;
+
+    min-height: 0;
+}
+
+
+/* ============================================================
+   APRESENTAÇÃO INICIAL
+   ============================================================ */
+
+.jarvis-greeting {
+    width: 100%;
+
+    text-align: center;
+
+    transition:
+        opacity 0.45s ease,
+        transform 0.45s ease,
+        max-height 0.45s ease,
+        margin 0.45s ease;
+
+    max-height: 520px;
+
+    overflow: hidden;
+}
+
+
+/* ============================================================
+   NÚCLEO JARVIS
+   ============================================================ */
+
+.core {
+    width: 124px;
+    height: 124px;
+
+    margin: 0 auto 30px;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.core-ring {
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    border: 1px solid rgba(67, 168, 255, 0.48);
+
+    border-radius: 50%;
+
+    animation: jarvis-core-pulse 3.4s ease-in-out infinite;
+
+    box-shadow:
+        0 0 24px rgba(11, 140, 255, 0.08),
+        inset 0 0 24px rgba(11, 140, 255, 0.04);
+}
+
+.core-ring::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 11px;
+
+    border: 1px solid rgba(67, 168, 255, 0.22);
+
+    border-radius: 50%;
+}
+
+.core-ring::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 26px;
+
+    border: 1px solid rgba(67, 168, 255, 0.13);
+
+    border-radius: 50%;
+}
+
+.core-center {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle at 35% 35%,
+            #ffffff 0,
+            var(--jarvis-blue-light) 20%,
+            var(--jarvis-blue) 58%,
+            #066bc4 100%
+        );
+
+    box-shadow:
+        0 0 18px rgba(11, 140, 255, 0.9),
+        0 0 42px rgba(11, 140, 255, 0.35),
+        0 0 80px rgba(11, 140, 255, 0.12);
+}
+
+@keyframes jarvis-core-pulse {
+    0%,
+    100% {
+        transform: scale(0.96);
+        opacity: 0.58;
+    }
+
+    50% {
+        transform: scale(1.04);
+        opacity: 1;
+    }
+}
+
+
+/* ============================================================
+   TEXTO INICIAL
+   ============================================================ */
+
+.jarvis-label {
+    display: inline-block;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    letter-spacing: 4px;
+
+    color: var(--jarvis-blue-light);
+
+    opacity: 0.9;
+}
+
+.jarvis-greeting h1 {
+    margin: 16px 0 10px;
+
+    font-size: clamp(32px, 5vw, 48px);
+
+    line-height: 1.08;
+
+    font-weight: 500;
+
+    letter-spacing: -1.2px;
+
+    color: #ffffff;
+}
+
+.jarvis-greeting p {
+    margin: 0;
+
+    color: var(--jarvis-text-muted);
+
+    font-size: 15px;
+
+    line-height: 1.6;
+}
+
+
+/* ============================================================
+   CHAT
+   ============================================================ */
+
+.jarvis-chat {
+    width: 100%;
+    max-width: 900px;
+
+    margin-top: 48px;
+
+    display: flex;
+    flex-direction: column;
+
+    flex: 1;
+
+    min-height: 0;
+
+    transition: margin 0.45s ease;
+}
+
+.chat-messages {
+    width: 100%;
+
+    flex: 1;
+
+    min-height: 80px;
+
+    max-height: 440px;
+
+    overflow-y: auto;
+
+    padding: 8px 6px 12px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+
+    scroll-behavior: smooth;
+
+    scrollbar-width: thin;
+    scrollbar-color:
+        rgba(255, 255, 255, 0.14)
+        transparent;
+}
+
+.chat-messages::-webkit-scrollbar {
+    width: 5px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.13);
+    border-radius: 999px;
+}
+
+.chat-message {
+    max-width: min(78%, 720px);
+
+    padding: 13px 16px;
+
+    border-radius: 16px;
+
+    line-height: 1.55;
+
+    font-size: 15px;
+
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+
+    animation: jarvis-message-in 0.28s ease;
+
+    box-shadow:
+        0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+@keyframes jarvis-message-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ============================================================
+   MENSAGEM DO USUÁRIO
+   ============================================================ */
+
+.chat-message.user {
+    align-self: flex-end;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0b8cff,
+            #0877dc
+        );
+
+    color: #ffffff;
+
+    border: 1px solid rgba(67, 168, 255, 0.28);
+
+    border-bottom-right-radius: 5px;
+
+    box-shadow:
+        0 8px 24px rgba(0, 100, 210, 0.16);
+}
+
+
+/* ============================================================
+   MENSAGEM DO JARVIS
+   ============================================================ */
+
+.chat-message.jarvis {
+    align-self: flex-start;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.065),
+            rgba(255, 255, 255, 0.035)
+        );
+
+    border: 1px solid var(--jarvis-border);
+
+    color: rgba(255, 255, 255, 0.9);
+
+    border-bottom-left-radius: 5px;
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+
+/* ============================================================
+   MARKDOWN DAS MENSAGENS
+   ============================================================ */
+
+.chat-message p {
+    margin: 0 0 9px;
+}
+
+.chat-message p:last-child {
+    margin-bottom: 0;
+}
+
+.chat-message strong {
+    color: #ffffff;
+    font-weight: 650;
+}
+
+.chat-message em {
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.chat-message ul,
+.chat-message ol {
+    margin: 8px 0 8px 20px;
+}
+
+.chat-message li {
+    margin: 4px 0;
+}
+
+.chat-message code {
+    padding: 2px 5px;
+
+    border-radius: 5px;
+
+    background: rgba(0, 0, 0, 0.28);
+
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+
+    font-size: 0.9em;
+}
+
+.chat-message pre {
+    margin: 10px 0;
+
+    padding: 12px;
+
+    overflow-x: auto;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+
+    background: rgba(0, 0, 0, 0.32);
+}
+
+.chat-message pre code {
+    padding: 0;
+
+    background: transparent;
+}
+
+
+/* ============================================================
+   CAMPO DE COMANDO
+   ============================================================ */
+
+.chat-input-container {
+    width: 100%;
+
+    min-height: 66px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 8px 9px 8px 20px;
+
+    margin-top: 14px;
+
+    border: 1px solid var(--jarvis-border-strong);
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.055),
+            rgba(255, 255, 255, 0.025)
+        );
+
+    box-shadow:
+        0 16px 45px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.025);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+}
+
+.chat-input-container:focus-within {
+    border-color: rgba(11, 140, 255, 0.46);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.065),
+            rgba(255, 255, 255, 0.03)
+        );
+
+    box-shadow:
+        0 16px 45px rgba(0, 0, 0, 0.3),
+        0 0 0 3px rgba(11, 140, 255, 0.055),
+        0 0 30px rgba(11, 140, 255, 0.07);
+}
+
+#chatInput {
+    flex: 1;
+
+    min-width: 0;
+
+    height: 46px;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 15px;
+}
+
+#chatInput::placeholder {
+    color: rgba(255, 255, 255, 0.34);
+
+    transition: color 0.2s ease;
+}
+
+#chatInput:focus::placeholder {
+    color: rgba(255, 255, 255, 0.24);
+}
+
+
+/* ============================================================
+   BOTÕES
+   ============================================================ */
+
+.mic-button,
+.send-button {
+    width: 46px;
+    height: 46px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+
+    border-radius: 13px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+    font-size: 19px;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        opacity 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.mic-button {
+    background: rgba(255, 255, 255, 0.065);
+
+    color: rgba(255, 255, 255, 0.82);
+
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.mic-button:hover {
+    background: rgba(255, 255, 255, 0.11);
+
+    color: #ffffff;
+
+    transform: translateY(-1px);
+}
+
+.mic-button:active {
+    transform: translateY(0);
+}
+
+.mic-button:disabled {
+    opacity: 0.28;
+
+    cursor: not-allowed;
+}
+
+.send-button {
+    background:
+        linear-gradient(
+            135deg,
+            #1598ff,
+            #0878dc
+        );
+
+    color: #ffffff;
+
+    box-shadow:
+        0 6px 18px rgba(11, 140, 255, 0.22);
+}
+
+.send-button:hover {
+    background:
+        linear-gradient(
+            135deg,
+            #36a6ff,
+            #0b87ed
+        );
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 22px rgba(11, 140, 255, 0.3);
+}
+
+.send-button:active {
+    transform: translateY(0) scale(0.98);
+}
+
+
+/* ============================================================
+   STATUS
+   ============================================================ */
+
+.chat-status {
+    min-height: 18px;
+
+    margin-top: 10px;
+
+    text-align: center;
+
+    color: var(--jarvis-text-muted);
+
+    font-size: 11px;
+
+    letter-spacing: 0.2px;
+
+    transition:
+        color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+
+/* ============================================================
+   MODO CONVERSA
+   ============================================================ */
+
+.jarvis-home.chat-mode .jarvis-main {
+    padding-top: 18px;
+    padding-bottom: 18px;
+}
+
+.jarvis-home.chat-mode .jarvis-greeting {
+    opacity: 0;
+
+    transform: translateY(-24px);
+
+    max-height: 0;
+
+    margin: 0;
+}
+
+.jarvis-home.chat-mode .jarvis-chat {
+    margin-top: 0;
+
+    max-width: 900px;
+}
+
+.jarvis-home.chat-mode .chat-messages {
+    max-height: none;
+}
+
+.jarvis-home.chat-mode .chat-input-container {
+    margin-top: 14px;
+}
+
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+.jarvis-footer {
+    width: 100%;
+
+    padding: 18px 42px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    color: rgba(255, 255, 255, 0.28);
+
+    font-size: 11px;
+
+    letter-spacing: 0.2px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.055);
+
+    flex-shrink: 0;
+}
+
+
+/* ============================================================
+   ACESSIBILIDADE
+   ============================================================ */
+
+.login-button:focus-visible,
+.mic-button:focus-visible,
+.send-button:focus-visible,
+#chatInput:focus-visible {
+    outline: 2px solid rgba(67, 168, 255, 0.75);
+
+    outline-offset: 3px;
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 700px) {
+
+    .jarvis-home {
+        overflow: hidden;
+    }
+
+    .jarvis-header {
+        height: 64px;
+
+        padding: 0 18px;
+    }
+
+    .jarvis-logo {
+        font-size: 17px;
+
+        letter-spacing: 4px;
+    }
+
+    .login-button {
+        min-height: 38px;
+
+        padding: 0 14px;
+
+        font-size: 13px;
+
+        border-radius: 9px;
+    }
+
+    .jarvis-main {
+        padding: 42px 14px 24px;
+    }
+
+    .core {
+        width: 104px;
+        height: 104px;
+
+        margin-bottom: 26px;
+    }
+
+    .core-center {
+        width: 30px;
+        height: 30px;
+    }
+
+    .jarvis-greeting h1 {
+        margin-top: 14px;
+
+        font-size: 30px;
+
+        letter-spacing: -0.8px;
+    }
+
+    .jarvis-greeting p {
+        font-size: 14px;
+    }
+
+    .jarvis-chat {
+        margin-top: 34px;
+    }
+
+    .chat-messages {
+        padding: 6px 2px 10px;
+
+        gap: 10px;
+    }
+
+    .chat-message {
+        max-width: 91%;
+
+        padding: 12px 14px;
+
+        font-size: 14px;
+
+        border-radius: 15px;
+    }
+
+    .chat-input-container {
+        min-height: 60px;
+
+        padding: 7px 7px 7px 15px;
+
+        border-radius: 18px;
+    }
+
+    #chatInput {
+        height: 44px;
+
+        font-size: 15px;
+    }
+
+    .mic-button,
+    .send-button {
+        width: 44px;
+        height: 44px;
+
+        border-radius: 12px;
+    }
+
+    .jarvis-footer {
+        padding: 14px 18px;
+
+        font-size: 10px;
+    }
+
+    .jarvis-home.chat-mode .jarvis-main {
+        padding: 12px 10px 10px;
+    }
+
+    .jarvis-home.chat-mode .jarvis-footer {
+        display: none;
+    }
+
+    .jarvis-home.chat-mode .chat-input-container {
+        border-radius: 16px;
+    }
+}
+
+
+/* ============================================================
+   TELAS MUITO PEQUENAS
+   ============================================================ */
+
+@media (max-width: 380px) {
+
+    .jarvis-header {
+        padding: 0 14px;
+    }
+
+    .jarvis-main {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .jarvis-logo {
+        font-size: 16px;
+
+        letter-spacing: 3px;
+    }
+
+    .jarvis-greeting h1 {
+        font-size: 27px;
+    }
+
+    .chat-message {
+        max-width: 94%;
+    }
+
+    .chat-input-container {
+        padding-left: 12px;
+    }
+
+    .mic-button,
+    .send-button {
+        width: 42px;
+        height: 42px;
+    }
+}
+
+
+/* ============================================================
+   REDUÇÃO DE MOVIMENTO
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .core-ring,
+    .chat-message {
+        animation: none;
+    }
+
+    .jarvis-greeting,
+    .jarvis-chat,
+    .chat-input-container,
+    .login-button,
+    .mic-button,
+    .send-button {
+        transition: none;
+    }
+}
+
+/* ============================================================
+   J.A.R.V.I.S. V2 — ISOLAMENTO VISUAL
+   ============================================================ */
+
+.jarvis-home .core {
+    width: 124px !important;
+    height: 124px !important;
+    margin: 0 auto 30px !important;
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: none !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.jarvis-home .core-ring {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border: 1px solid rgba(67, 168, 255, 0.48) !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+}
+
+.jarvis-home .core-center {
+    position: absolute !important;
+    width: 34px !important;
+    height: 34px !important;
+    border: none !important;
+    border-radius: 50% !important;
+    background:
+        radial-gradient(
+            circle at 35% 35%,
+            #ffffff 0,
+            #43a8ff 20%,
+            #0b8cff 58%,
+            #066bc4 100%
+        ) !important;
+}
+
+.jarvis-home .jarvis-main {
+    background: transparent !important;
+}
+
+.jarvis-home .jarvis-chat {
+    background: transparent !important;
+}
+
+.jarvis-home .chat-message {
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif !important;
+}
+
+/* ============================================================
+   J.A.R.V.I.S. V2 — CAMPO DE COMANDO
+   ============================================================ */
+
+.jarvis-home .chat-input-container {
+    min-height: 64px !important;
+
+    padding: 8px 8px 8px 22px !important;
+
+    gap: 8px !important;
+
+    border-radius: 18px !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.10) !important;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.055),
+            rgba(255, 255, 255, 0.025)
+        ) !important;
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.035) !important;
+
+    backdrop-filter: blur(22px) !important;
+    -webkit-backdrop-filter: blur(22px) !important;
+}
+
+.jarvis-home .chat-input-container:focus-within {
+    border-color: rgba(67, 168, 255, 0.38) !important;
+
+    box-shadow:
+        0 14px 40px rgba(0, 0, 0, 0.32),
+        0 0 0 3px rgba(11, 140, 255, 0.045),
+        0 0 28px rgba(11, 140, 255, 0.055) !important;
+}
+
+.jarvis-home #chatInput {
+    height: 46px !important;
+
+    font-size: 15px !important;
+
+    color: rgba(255, 255, 255, 0.94) !important;
+}
+
+.jarvis-home #chatInput::placeholder {
+    color: rgba(255, 255, 255, 0.32) !important;
+}
+
+.jarvis-home .mic-button,
+.jarvis-home .send-button {
+    width: 44px !important;
+    height: 44px !important;
+
+    border-radius: 12px !important;
+}
+
+.jarvis-home .mic-button {
+    background: rgba(255, 255, 255, 0.055) !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.075) !important;
+
+    color: rgba(255, 255, 255, 0.72) !important;
+
+    box-shadow: none !important;
+}
+
+.jarvis-home .mic-button:hover {
+    background: rgba(255, 255, 255, 0.09) !important;
+
+    border-color: rgba(255, 255, 255, 0.12) !important;
+
+    color: #ffffff !important;
+
+    transform: translateY(-1px) !important;
+}
+
+.jarvis-home .send-button {
+    background:
+        linear-gradient(
+            135deg,
+            #1598ff,
+            #0878dc
+        ) !important;
+
+    box-shadow:
+        0 5px 16px rgba(11, 140, 255, 0.22) !important;
+}
+
+.jarvis-home .send-button:hover {
+    box-shadow:
+        0 7px 20px rgba(11, 140, 255, 0.30) !important;
+}
+
+/* ============================================================
+   J.A.R.V.I.S. V2 — MENSAGENS
+   ============================================================ */
+
+.jarvis-home .chat-message {
+    padding: 14px 17px !important;
+
+    border-radius: 15px !important;
+
+    font-size: 15px !important;
+    line-height: 1.58 !important;
+
+    box-shadow:
+        0 6px 22px rgba(0, 0, 0, 0.12) !important;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease !important;
+}
+
+
+/* -------------------------
+   MENSAGEM DO USUÁRIO
+   ------------------------- */
+
+.jarvis-home .chat-message.user {
+    background:
+        linear-gradient(
+            135deg,
+            #0b8cff,
+            #0877dc
+        ) !important;
+
+    border: 1px solid rgba(105, 190, 255, 0.24) !important;
+
+    border-bottom-right-radius: 5px !important;
+
+    box-shadow:
+        0 8px 26px rgba(0, 100, 210, 0.18) !important;
+}
+
+
+/* -------------------------
+   MENSAGEM DO JARVIS
+   ------------------------- */
+
+.jarvis-home .chat-message.jarvis {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.055),
+            rgba(255, 255, 255, 0.025)
+        ) !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.085) !important;
+
+    border-bottom-left-radius: 5px !important;
+
+    color: rgba(255, 255, 255, 0.90) !important;
+
+    box-shadow:
+        0 7px 24px rgba(0, 0, 0, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.025) !important;
+
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+}
+
+
+/* -------------------------
+   HIERARQUIA DO TEXTO
+   ------------------------- */
+
+.jarvis-home .chat-message strong {
+    color: #ffffff !important;
+    font-weight: 650 !important;
+}
+
+.jarvis-home .chat-message em {
+    color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.jarvis-home .chat-message code {
+    background: rgba(0, 0, 0, 0.24) !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.055) !important;
+}
+
+
+/* -------------------------
+   ENTRADA DA MENSAGEM
+   ------------------------- */
+
+@keyframes jarvis-message-v2 {
+    from {
+        opacity: 0;
+        transform: translateY(7px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.jarvis-home .chat-message {
+    animation: jarvis-message-v2 0.25s ease both !important;
+}
+
+/* ============================================================
+   J.A.R.V.I.S. V2 — APRESENTAÇÃO INICIAL
+   ============================================================ */
+
+.jarvis-home .jarvis-main {
+    padding-top: 52px !important;
+    padding-bottom: 28px !important;
+}
+
+.jarvis-home .jarvis-greeting {
+    max-width: 760px !important;
+}
+
+.jarvis-home .jarvis-greeting .core {
+    width: 116px !important;
+    height: 116px !important;
+    margin-bottom: 26px !important;
+}
+
+.jarvis-home .jarvis-greeting .core-ring {
+    border-color: rgba(67, 168, 255, 0.42) !important;
+
+    box-shadow:
+        0 0 28px rgba(11, 140, 255, 0.07),
+        inset 0 0 24px rgba(11, 140, 255, 0.035) !important;
+}
+
+.jarvis-home .jarvis-greeting .core-center {
+    width: 30px !important;
+    height: 30px !important;
+
+    box-shadow:
+        0 0 16px rgba(11, 140, 255, 0.75),
+        0 0 38px rgba(11, 140, 255, 0.28),
+        0 0 70px rgba(11, 140, 255, 0.10) !important;
+}
+
+.jarvis-home .jarvis-label {
+    font-size: 10px !important;
+    letter-spacing: 3.8px !important;
+    opacity: 0.72 !important;
+}
+
+.jarvis-home .jarvis-greeting h1 {
+    margin-top: 14px !important;
+    margin-bottom: 9px !important;
+
+    font-size: clamp(30px, 4.5vw, 44px) !important;
+
+    font-weight: 500 !important;
+    letter-spacing: -1.3px !important;
+}
+
+.jarvis-home .jarvis-greeting p {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+
+    color: rgba(255, 255, 255, 0.38) !important;
+}
+
+/* ============================================================
+   J.A.R.V.I.S. V2 — HEADER
+   ============================================================ */
+
+.jarvis-home .jarvis-header {
+    height: 72px !important;
+    padding: 0 34px !important;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(5, 8, 13, 0.96),
+            rgba(5, 8, 13, 0.78)
+        ) !important;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.055) !important;
+
+    backdrop-filter: blur(18px) !important;
+    -webkit-backdrop-filter: blur(18px) !important;
+}
+
+.jarvis-home .jarvis-logo {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    letter-spacing: 4.5px !important;
+    color: rgba(255, 255, 255, 0.94) !important;
+
+    transition:
+        opacity 0.2s ease,
+        letter-spacing 0.2s ease !important;
+}
+
+.jarvis-home .jarvis-logo:hover {
+    opacity: 1 !important;
+    letter-spacing: 5px !important;
+}
+
+.jarvis-home .login-button {
+    min-width: 78px !important;
+    height: 38px !important;
+    padding: 0 17px !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    border-radius: 10px !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+
+    background: rgba(255, 255, 255, 0.035) !important;
+
+    color: rgba(255, 255, 255, 0.78) !important;
+
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease !important;
+}
+
+.jarvis-home .login-button:hover {
+    background: rgba(255, 255, 255, 0.07) !important;
+    border-color: rgba(255, 255, 255, 0.20) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+}
+
+.jarvis-home .login-button:active {
+    transform: translateY(0) !important;
+}
+
+/* ============================================================
+   J.A.R.V.I.S. V2 — ESTADO DE PROCESSAMENTO
+   ============================================================ */
+
+.jarvis-home .chat-input-container.processing {
+    border-color: rgba(67, 168, 255, 0.22) !important;
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.30),
+        0 0 24px rgba(11, 140, 255, 0.045),
+        inset 0 1px 0 rgba(255, 255, 255, 0.035) !important;
+}
+
+.jarvis-home .chat-input-container.processing #chatInput {
+    color: rgba(255, 255, 255, 0.45) !important;
+    cursor: wait !important;
+}
+
+.jarvis-home .chat-input-container.processing #chatInput::placeholder {
+    color: rgba(255, 255, 255, 0.24) !important;
+}
+
+.jarvis-home .chat-input-container.processing .send-button {
+    opacity: 0.48 !important;
+    cursor: wait !important;
+    transform: none !important;
+    box-shadow:
+        0 3px 12px rgba(11, 140, 255, 0.10) !important;
+}
+
+.jarvis-home .chat-input-container.processing .mic-button {
+    opacity: 0.42 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+}
+
+/* ============================================================
+   J.A.R.V.I.S. V2 — INDICADOR DE STATUS
+   ============================================================ */
+
+.jarvis-home .chat-status {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 7px !important;
+
+    margin-top: 11px !important;
+
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.15px !important;
+
+    color: rgba(255, 255, 255, 0.38) !important;
+
+    transition:
+        color 0.25s ease,
+        opacity 0.25s ease !important;
+}
+
+.jarvis-home .chat-status::before {
+    content: "" !important;
+
+    width: 5px !important;
+    height: 5px !important;
+
+    flex: 0 0 5px !important;
+
+    border-radius: 50% !important;
+
+    background: rgba(67, 168, 255, 0.75) !important;
+
+    box-shadow:
+        0 0 8px rgba(11, 140, 255, 0.35) !important;
+
+    transition:
+        background 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.25s ease !important;
+}
+
+.jarvis-home .chat-input-container.processing ~ .chat-status::before {
+    animation: jarvis-status-pulse 1.2s ease-in-out infinite !important;
+}
+
+@keyframes jarvis-status-pulse {
+    0%, 100% {
+        opacity: 0.45;
+        transform: scale(0.85);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.15);
+    }
+}
+
+/* ============================================================
+   J.A.R.V.I.S. V2 — ESTADOS DO INDICADOR
+   ============================================================ */
+
+.jarvis-home .chat-status[data-state="ready"]::before {
+    background: rgba(67, 168, 255, 0.75) !important;
+    box-shadow:
+        0 0 8px rgba(11, 140, 255, 0.35) !important;
+}
+
+.jarvis-home .chat-status[data-state="processing"] {
+    color: rgba(255, 255, 255, 0.48) !important;
+}
+
+.jarvis-home .chat-status[data-state="processing"]::before {
+    background: #43a8ff !important;
+    box-shadow:
+        0 0 10px rgba(67, 168, 255, 0.65) !important;
+    animation: jarvis-status-pulse 1.2s ease-in-out infinite !important;
+}
+
+.jarvis-home .chat-status[data-state="listening"] {
+    color: rgba(255, 255, 255, 0.48) !important;
+}
+
+.jarvis-home .chat-status[data-state="listening"]::before {
+    background: #ffffff !important;
+    box-shadow:
+        0 0 10px rgba(255, 255, 255, 0.55) !important;
+    animation: jarvis-status-pulse 0.9s ease-in-out infinite !important;
+}
+
+.jarvis-home .chat-status[data-state="error"] {
+    color: rgba(255, 255, 255, 0.45) !important;
+}
+
+.jarvis-home .chat-status[data-state="error"]::before {
+    background: #ff6b6b !important;
+    box-shadow:
+        0 0 9px rgba(255, 107, 107, 0.45) !important;
+}
+
+/* ============================================================
+   J.A.R.V.I.S. V2 — MICROFONE ATIVO
+   ============================================================ */
+
+.jarvis-home .mic-button {
+    position: relative !important;
+    font-size: 0 !important;
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease !important;
+}
+
+.jarvis-home .mic-button::before {
+    content: "" !important;
+
+    width: 10px !important;
+    height: 15px !important;
+
+    border: 1.8px solid currentColor !important;
+    border-radius: 7px !important;
+
+    position: absolute !important;
+    top: 10px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+}
+
+.jarvis-home .mic-button::after {
+    content: "" !important;
+
+    width: 16px !important;
+    height: 10px !important;
+
+    border-left: 1.8px solid currentColor !important;
+    border-right: 1.8px solid currentColor !important;
+    border-bottom: 1.8px solid currentColor !important;
+    border-radius: 0 0 9px 9px !important;
+
+    position: absolute !important;
+    top: 20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+}
+
+.jarvis-home .mic-button:active {
+    transform: scale(0.96) !important;
+}
+
+.jarvis-home .mic-button.listening {
+    background: rgba(255, 255, 255, 0.09) !important;
+    border-color: rgba(255, 255, 255, 0.18) !important;
+    color: #ffffff !important;
+
+    box-shadow:
+        0 0 0 4px rgba(255, 255, 255, 0.035),
+        0 0 18px rgba(255, 255, 255, 0.08) !important;
+}
+
+.jarvis-home .mic-button.listening::before {
+    animation: jarvis-mic-pulse 1s ease-in-out infinite !important;
+}
+
+@keyframes jarvis-mic-pulse {
+    0%, 100% {
+        transform: translateX(-50%) scale(0.92);
+        opacity: 0.65;
+    }
+
+    50% {
+        transform: translateX(-50%) scale(1.08);
+        opacity: 1;
+    }
+}
+
+/* ============================================================
+   J.A.R.V.I.S. V2 — TRANSIÇÃO PARA CONVERSA
+   ============================================================ */
+
+.jarvis-home .jarvis-greeting {
+    transform-origin: center top;
+}
+
+.jarvis-home.chat-mode .jarvis-greeting {
+    opacity: 0 !important;
+    transform: translateY(-18px) scale(0.98) !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    pointer-events: none !important;
+}
+
+.jarvis-home.chat-mode .jarvis-chat {
+    margin-top: 0 !important;
+}
+
+.jarvis-home.chat-mode .chat-messages {
+    padding-top: 18px !important;
+}

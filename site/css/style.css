@@ -669,3 +669,88 @@ nav a.active {
         width: 100%;
     }
 }
+
+/* ============================================================
+   JARVIS CHAT V2 - ISOLAMENTO DA INTERFACE
+   ============================================================ */
+
+.jarvis-home,
+.jarvis-home * {
+    box-sizing: border-box;
+}
+
+.jarvis-home {
+    margin: 0;
+    padding: 0;
+}
+
+.jarvis-home .core {
+    width: 124px;
+    height: 124px;
+    margin: 0 auto 30px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.jarvis-home .core-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(67, 168, 255, 0.48);
+    border-radius: 50%;
+    animation: jarvis-core-pulse 3.4s ease-in-out infinite;
+}
+
+.jarvis-home .core-center {
+    width: 34px;
+    height: 34px;
+    position: relative;
+    border-radius: 50%;
+    background:
+        radial-gradient(
+            circle at 35% 35%,
+            #ffffff 0,
+            var(--jarvis-blue-light) 20%,
+            var(--jarvis-blue) 58%,
+            #066bc4 100%
+        );
+}
+
+.jarvis-home .jarvis-main {
+    width: 100%;
+}
+
+.jarvis-home .chat-message {
+    box-sizing: border-box;
+}
+
+.jarvis-home .chat-input-container {
+    box-sizing: border-box;
+}
+
+.jarvis-home input,
+.jarvis-home button {
+    font-family: inherit;
+}
+
+@media (max-width: 700px) {
+    .jarvis-home .core {
+        width: 104px;
+        height: 104px;
+        margin-bottom: 26px;
+    }
+
+    .jarvis-home .core-center {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+@media (max-width: 380px) {
+    .jarvis-home .core {
+        width: 94px;
+        height: 94px;
+    }
+}
