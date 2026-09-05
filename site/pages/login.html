@@ -11,287 +11,326 @@
 
 <body>
 
-
 <main class="login-page">
 
-    <div class="login-card">
+```
+<div class="login-card">
 
-        <div class="login-logo">
-            JARVIS
+    <div class="login-logo">
+        JARVIS
+    </div>
+
+    <p class="login-subtitle">
+        Sistema de inteligência artificial
+    </p>
+
+    <!-- LOGIN TRADICIONAL -->
+    <form id="login-form">
+
+        <div class="input-group">
+
+            <label for="username">
+                Usuário
+            </label>
+
+            <input
+                type="text"
+                id="username"
+                placeholder="Digite seu usuário"
+                autocomplete="username"
+                required
+            >
+
         </div>
 
-        <p class="login-subtitle">
-            Sistema de inteligência artificial
-        </p>
+        <div class="input-group">
 
-        <!-- LOGIN TRADICIONAL -->
+            <label for="password">
+                Senha
+            </label>
 
-        <form id="login-form">
+            <input
+                type="password"
+                id="password"
+                placeholder="Digite sua senha"
+                autocomplete="current-password"
+                required
+            >
 
-            <div class="input-group">
-                <label for="username">
-                    Usuário
-                </label>
-
-                <input
-                    type="text"
-                    id="username"
-                    placeholder="Digite seu usuário"
-                    autocomplete="username"
-                    required
-                >
-            </div>
-
-            <div class="input-group">
-                <label for="password">
-                    Senha
-                </label>
-
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="Digite sua senha"
-                    autocomplete="current-password"
-                    required
-                >
-            </div>
-
-            <button type="submit" id="login-button">
-                Entrar
-            </button>
-
-        </form>
-
-        <!-- DIVISOR -->
-
-        <div class="login-divider">
-            <span>ou</span>
         </div>
-
-        <!-- GOOGLE -->
 
         <button
-            type="button"
-            id="google-login-button"
-            class="google-login-button"
+            type="submit"
+            id="login-button"
         >
-            Entrar com Google
+            Entrar
         </button>
 
-        <div class="login-status" id="login-status">
-            Acesso seguro
-        </div>
+    </form>
 
+    <!-- DIVISOR -->
+    <div class="login-divider">
+        <span>ou</span>
     </div>
+
+    <!-- GOOGLE -->
+    <button
+        type="button"
+        id="google-login-button"
+        class="google-login-button"
+    >
+        Entrar com Google
+    </button>
+
+    <div
+        class="login-status"
+        id="login-status"
+    >
+        Acesso seguro
+    </div>
+
+</div>
+```
 
 </main>
 
 <script src="../js/api.js"></script>
+
 <script src="../js/auth.js"></script>
 
 <script>
 
-    /*
-     * GOOGLE OAUTH
-     *
-     * O backend redireciona para:
-     *
-     * login.html#token=JWT
-     *
-     * Aqui capturamos o JWT, salvamos no
-     * localStorage e enviamos o usuário
-     * para o painel.
-     */
+/*
+ * ============================================================
+ * GOOGLE OAUTH
+ * ============================================================
+ *
+ * O backend redireciona para:
+ *
+ * login.html#token=JWT
+ *
+ * Aqui capturamos o JWT, salvamos no
+ * localStorage e enviamos o usuário
+ * para o JARVIS.
+ */
 
-    const hashParams = new URLSearchParams(
-        window.location.hash.substring(1)
-    );
+const hashParams = new URLSearchParams(
+    window.location.hash.substring(1)
+);
 
-    const oauthToken = hashParams.get("token");
-
-    const oauthError = hashParams.get("oauth_error");
-
-    if (oauthToken) {
-
-        saveToken(oauthToken);
-
-        /*
-         * Remove o token da URL depois de salvá-lo.
-         */
-        window.history.replaceState(
-            {},
-            document.title,
-            window.location.pathname
-        );
-
-        /*
-         * Envia o usuário para o dashboard.
-         */
-        window.location.replace("../index.html");
-
-    } else if (oauthError) {
-
-        statusMessage(
-            "Não foi possível entrar com o Google."
-        );
-
-        /*
-         * Remove o erro da URL.
-         */
-        window.history.replaceState(
-            {},
-            document.title,
-            window.location.pathname
-        );
-    }
+const oauthToken = hashParams.get("token");
+const oauthError = hashParams.get("oauth_error");
 
 
-    /*
-     * LOGIN NORMAL
-     */
+/*
+ * ============================================================
+ * ELEMENTOS
+ * ============================================================
+ */
 
-    const form =
-        document.getElementById("login-form");
+const form =
+    document.getElementById("login-form");
 
-    const usernameInput =
-        document.getElementById("username");
+const usernameInput =
+    document.getElementById("username");
 
-    const passwordInput =
-        document.getElementById("password");
+const passwordInput =
+    document.getElementById("password");
 
-    const button =
-        document.getElementById("login-button");
+const button =
+    document.getElementById("login-button");
 
-    const googleButton =
-        document.getElementById("google-login-button");
+const googleButton =
+    document.getElementById("google-login-button");
 
-    const status =
+const status =
+    document.getElementById("login-status");
+
+
+/*
+ * ============================================================
+ * STATUS
+ * ============================================================
+ */
+
+function statusMessage(message) {
+
+    const element =
         document.getElementById("login-status");
 
-
-    function statusMessage(message) {
-        const element =
-            document.getElementById("login-status");
-
-        if (element) {
-            element.textContent = message;
-        }
+    if (element) {
+        element.textContent = message;
     }
 
+}
 
-    form.addEventListener(
-        "submit",
-        async function (event) {
 
-            event.preventDefault();
+/*
+ * ============================================================
+ * GOOGLE OAUTH CALLBACK
+ * ============================================================
+ */
 
-            const username =
-                usernameInput.value.trim();
+if (oauthToken) {
 
-            const password =
-                passwordInput.value;
-
-            if (!username || !password) {
-
-                status.textContent =
-                    "Preencha usuário e senha.";
-
-                return;
-            }
-
-            button.disabled = true;
-            googleButton.disabled = true;
-
-            button.textContent =
-                "Entrando...";
-
-            status.textContent =
-                "Autenticando...";
-
-            try {
-
-                const data =
-                    await apiRequest(
-                        "/login",
-                        {
-                            method: "POST",
-
-                            body: JSON.stringify({
-                                username: username,
-                                password: password
-                            })
-                        }
-                    );
-
-                saveToken(
-                    data.access_token
-                );
-
-                status.textContent =
-                    "Login realizado com sucesso.";
-
-                button.textContent =
-                    "Acesso autorizado";
-
-                setTimeout(
-                    function () {
-
-                        window.location.replace(
-                            "../index.html"
-                        );
-
-                    },
-                    500
-                );
-
-            } catch (error) {
-
-                status.textContent =
-                    error.message;
-
-                button.disabled = false;
-                googleButton.disabled = false;
-
-                button.textContent =
-                    "Entrar";
-            }
-
-        }
-    );
-
+    saveToken(oauthToken);
 
     /*
-     * LOGIN COM GOOGLE
+     * Remove o token da URL depois de salvá-lo.
      */
+    window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname
+    );
 
-    googleButton.addEventListener(
-        "click",
-        function () {
+    /*
+     * Envia o usuário para a página principal.
+     */
+    window.location.replace("../index.html");
 
-            googleButton.disabled = true;
-            button.disabled = true;
+}
+else if (oauthError) {
 
-            googleButton.textContent =
-                "Conectando ao Google...";
+    statusMessage(
+        "Não foi possível entrar com o Google."
+    );
+
+    /*
+     * Remove o erro da URL.
+     */
+    window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname
+    );
+
+}
+
+
+/*
+ * ============================================================
+ * LOGIN NORMAL
+ * ============================================================
+ */
+
+form.addEventListener(
+    "submit",
+    async function (event) {
+
+        event.preventDefault();
+
+        const username =
+            usernameInput.value.trim();
+
+        const password =
+            passwordInput.value;
+
+        if (!username || !password) {
 
             status.textContent =
-                "Redirecionando para o Google...";
+                "Preencha usuário e senha.";
 
-            /*
-             * O navegador vai para o backend.
-             *
-             * O backend inicia o OAuth
-             * e redireciona para o Google.
-             */
+            return;
 
-            window.location.href =
-    "https://api.30jarvis.com.br/auth/google/login";
         }
-    );
+
+        button.disabled = true;
+        googleButton.disabled = true;
+
+        button.textContent =
+            "Entrando...";
+
+        status.textContent =
+            "Autenticando...";
+
+        try {
+
+            const data =
+                await apiRequest(
+                    "/login",
+                    {
+                        method: "POST",
+
+                        body: JSON.stringify({
+                            username: username,
+                            password: password
+                        })
+                    }
+                );
+
+            saveToken(
+                data.access_token
+            );
+
+            status.textContent =
+                "Login realizado com sucesso.";
+
+            button.textContent =
+                "Acesso autorizado";
+
+            setTimeout(
+                function () {
+
+                    window.location.replace(
+                        "../index.html"
+                    );
+
+                },
+                500
+            );
+
+        }
+        catch (error) {
+
+            status.textContent =
+                error.message;
+
+            button.disabled = false;
+            googleButton.disabled = false;
+
+            button.textContent =
+                "Entrar";
+
+        }
+
+    }
+);
+
+
+/*
+ * ============================================================
+ * LOGIN COM GOOGLE
+ * ============================================================
+ */
+
+googleButton.addEventListener(
+    "click",
+    function () {
+
+        googleButton.disabled = true;
+        button.disabled = true;
+
+        googleButton.textContent =
+            "Conectando ao Google...";
+
+        status.textContent =
+            "Redirecionando para o Google...";
+
+        /*
+         * O navegador vai para o backend.
+         *
+         * O backend inicia o OAuth
+         * e redireciona para o Google.
+         */
+
+        window.location.href =
+            "https://api.30jarvis.com.br/auth/google/login";
+
+    }
+);
 
 </script>
 
-
 </body>
-
 </html>

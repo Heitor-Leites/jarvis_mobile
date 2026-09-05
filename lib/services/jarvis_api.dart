@@ -424,7 +424,7 @@ class JarvisApi {
           },
         )
         .timeout(
-          const Duration(seconds: 30),
+          const Duration(seconds: 50),
         );
   }
 
