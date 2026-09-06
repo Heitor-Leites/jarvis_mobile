@@ -754,3 +754,202 @@ nav a.active {
         height: 94px;
     }
 }
+
+/* ==========================================
+   JARVIS MOBILE - DOWNLOAD
+========================================== */
+
+.jarvis-mobile-download {
+    width: min(900px, 92%);
+    margin: 40px auto 20px;
+    padding: 30px;
+    border: 1px solid rgba(0, 220, 255, 0.22);
+    border-radius: 20px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0, 220, 255, 0.08),
+            rgba(5, 10, 15, 0.75)
+        );
+    box-shadow:
+        0 0 30px rgba(0, 220, 255, 0.06);
+    text-align: center;
+}
+
+.jarvis-mobile-label {
+    display: inline-block;
+    margin-bottom: 10px;
+    color: #00d9ff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.jarvis-mobile-download h2 {
+    margin: 0 0 10px;
+    font-size: 26px;
+    color: #ffffff;
+}
+
+.jarvis-mobile-download p {
+    margin: 0 auto 22px;
+    max-width: 600px;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.6;
+}
+
+.jarvis-mobile-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 13px 24px;
+    border: 1px solid rgba(0, 220, 255, 0.5);
+    border-radius: 12px;
+    background: rgba(0, 220, 255, 0.12);
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 700;
+    transition: 0.25s ease;
+    cursor: pointer;
+}
+
+.jarvis-mobile-button:hover {
+    background: rgba(0, 220, 255, 0.22);
+    border-color: #00d9ff;
+    transform: translateY(-2px);
+}
+
+.jarvis-mobile-version {
+    display: block;
+    margin-top: 14px;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 12px;
+}
+
+/* ==========================================
+   MODAL DE DOWNLOAD
+========================================== */
+
+.jarvis-download-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(8px);
+}
+
+.jarvis-download-modal.active {
+    display: flex;
+}
+
+.jarvis-download-box {
+    position: relative;
+    width: min(450px, 100%);
+    padding: 32px;
+    border: 1px solid rgba(0, 220, 255, 0.3);
+    border-radius: 20px;
+    background: #080e14;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+.jarvis-download-box h3 {
+    margin: 0 0 10px;
+    color: #ffffff;
+    font-size: 24px;
+}
+
+.jarvis-download-box p {
+    margin: 0 0 22px;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.5;
+}
+
+.jarvis-download-close {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    border: 0;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.jarvis-download-close:hover {
+    color: #ffffff;
+}
+
+.jarvis-download-info {
+    margin: 0 0 22px;
+    padding: 14px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.jarvis-download-main-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    border-radius: 12px;
+    background: #00d9ff;
+    color: #041016;
+    text-decoration: none;
+    font-weight: 800;
+    transition: 0.25s ease;
+}
+
+.jarvis-download-main-button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+}
+
+/* ==========================================
+   BOTÃO ANDROID - HEADER
+========================================== */
+
+.jarvis-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.download-header-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 16px;
+
+    border: 1px solid rgba(0, 220, 255, 0.35);
+    border-radius: 10px;
+
+    background: rgba(0, 220, 255, 0.08);
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+.download-header-button:hover {
+    background: rgba(0, 220, 255, 0.18);
+    border-color: #00d9ff;
+
+    transform: translateY(-1px);
+}

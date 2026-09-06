@@ -1,151 +1,531 @@
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>JARVIS</title>
 
-```
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/chat.css?v=2">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/chat.css?v=2">
 
-<script src="js/api.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-<style>
-    .jarvis-profile {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        overflow: hidden;
-        text-decoration: none;
-        flex-shrink: 0;
-    }
+    <style>
 
-    .jarvis-profile img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        border-radius: 50%;
-    }
+        /* ==========================================
+           PERFIL
+        ========================================== */
 
-    .jarvis-profile:hover {
-        opacity: 0.85;
-    }
-</style>
-```
+        .jarvis-profile {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            overflow: hidden;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
 
+        .jarvis-profile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 50%;
+        }
+
+        .jarvis-profile:hover {
+            opacity: 0.85;
+        }
+
+
+        /* ==========================================
+           JARVIS MOBILE - DOWNLOAD
+        ========================================== */
+
+        .jarvis-mobile-download {
+            width: min(900px, 92%);
+            margin: 40px auto 20px;
+            padding: 30px;
+            box-sizing: border-box;
+
+            border: 1px solid rgba(0, 220, 255, 0.22);
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(0, 220, 255, 0.08),
+                    rgba(5, 10, 15, 0.75)
+                );
+
+            box-shadow:
+                0 0 30px rgba(0, 220, 255, 0.06);
+
+            text-align: center;
+        }
+
+        .jarvis-mobile-label {
+            display: inline-block;
+            margin-bottom: 10px;
+
+            color: #00d9ff;
+
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .jarvis-mobile-download h2 {
+            margin: 0 0 10px;
+
+            color: #ffffff;
+
+            font-size: 26px;
+        }
+
+        .jarvis-mobile-download p {
+            max-width: 600px;
+            margin: 0 auto 22px;
+
+            color: rgba(255, 255, 255, 0.65);
+
+            line-height: 1.6;
+        }
+
+        .jarvis-mobile-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+
+            padding: 13px 24px;
+
+            border: 1px solid rgba(0, 220, 255, 0.5);
+            border-radius: 12px;
+
+            background: rgba(0, 220, 255, 0.12);
+
+            color: #ffffff;
+
+            text-decoration: none;
+            font-weight: 700;
+
+            transition: 0.25s ease;
+
+            cursor: pointer;
+        }
+
+        .jarvis-mobile-button:hover {
+            background: rgba(0, 220, 255, 0.22);
+            border-color: #00d9ff;
+
+            transform: translateY(-2px);
+        }
+
+        .jarvis-mobile-version {
+            display: block;
+
+            margin-top: 14px;
+
+            color: rgba(255, 255, 255, 0.4);
+
+            font-size: 12px;
+        }
+
+
+        /* ==========================================
+           MODAL DE DOWNLOAD
+        ========================================== */
+
+        .jarvis-download-modal {
+            position: fixed;
+            inset: 0;
+
+            z-index: 9999;
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            background: rgba(0, 0, 0, 0.72);
+
+            backdrop-filter: blur(8px);
+        }
+
+        .jarvis-download-modal.active {
+            display: flex;
+        }
+
+        .jarvis-download-box {
+            position: relative;
+
+            width: min(450px, 100%);
+
+            padding: 32px;
+
+            border: 1px solid rgba(0, 220, 255, 0.3);
+            border-radius: 20px;
+
+            background: #080e14;
+
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.5);
+
+            text-align: center;
+
+            box-sizing: border-box;
+        }
+
+        .jarvis-download-box h3 {
+            margin: 0 0 10px;
+
+            color: #ffffff;
+
+            font-size: 24px;
+        }
+
+        .jarvis-download-box p {
+            margin: 0 0 22px;
+
+            color: rgba(255, 255, 255, 0.65);
+
+            line-height: 1.5;
+        }
+
+        .jarvis-download-close {
+            position: absolute;
+
+            top: 12px;
+            right: 15px;
+
+            border: 0;
+
+            background: transparent;
+
+            color: rgba(255, 255, 255, 0.6);
+
+            font-size: 24px;
+
+            cursor: pointer;
+        }
+
+        .jarvis-download-close:hover {
+            color: #ffffff;
+        }
+
+        .jarvis-download-info {
+            margin: 0 0 22px;
+            padding: 14px;
+
+            border-radius: 12px;
+
+            background: rgba(255, 255, 255, 0.04);
+
+            color: rgba(255, 255, 255, 0.7);
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+        .jarvis-download-main-button {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            width: 100%;
+
+            box-sizing: border-box;
+
+            padding: 14px;
+
+            border-radius: 12px;
+
+            background: #00d9ff;
+
+            color: #041016;
+
+            text-decoration: none;
+
+            font-weight: 800;
+
+            transition: 0.25s ease;
+        }
+
+        .jarvis-download-main-button:hover {
+            transform: translateY(-2px);
+
+            filter: brightness(1.08);
+        }
+
+    </style>
 </head>
+
 
 <body>
 
 <div class="jarvis-home" id="jarvisHome">
 
-```
-<header class="jarvis-header">
+
+    <!-- ==========================================
+         HEADER
+    ========================================== -->
+
+   <header class="jarvis-header">
 
     <div class="jarvis-logo">
         JARVIS
     </div>
 
-    <a href="pages/login.html" class="login-button" id="authButton">
-        Entrar
-    </a>
+    <div class="jarvis-header-actions">
+
+        <button
+            type="button"
+            class="download-header-button"
+            id="openDownloadButton"
+        >
+            Android
+        </button>
+
+        <a
+            href="pages/login.html"
+            class="login-button"
+            id="authButton"
+        >
+            Entrar
+        </a>
+
+    </div>
 
 </header>
 
-<main class="jarvis-main">
+    <!-- ==========================================
+         CONTEÚDO PRINCIPAL
+    ========================================== -->
 
-    <section class="jarvis-greeting">
+    <main class="jarvis-main">
 
-        <div class="core">
-            <div class="core-ring"></div>
-            <div class="core-center"></div>
-        </div>
 
-        <span class="jarvis-label">
-            JARVIS CORE
+        <!-- ==========================================
+             SAUDAÇÃO
+        ========================================== -->
+
+        <section class="jarvis-greeting">
+
+            <div class="core">
+
+                <div class="core-ring"></div>
+
+                <div class="core-center"></div>
+
+            </div>
+
+            <span class="jarvis-label">
+                JARVIS CORE
+            </span>
+
+            <h1>
+                Como vai seu dia hoje?
+            </h1>
+
+            <p>
+                Digite um comando ou use o microfone.
+            </p>
+
+        </section>
+
+
+        <!-- ==========================================
+             CHAT
+        ========================================== -->
+
+        <section class="jarvis-chat">
+
+            <div
+                id="chatMessages"
+                class="chat-messages"
+            ></div>
+
+
+            <form
+                id="chatForm"
+                class="chat-input-container"
+            >
+
+                <input
+                    type="text"
+                    id="chatInput"
+                    placeholder="Digite um comando..."
+                    autocomplete="off"
+                >
+
+
+                <button
+                    type="button"
+                    id="micButton"
+                    class="mic-button"
+                    aria-label="Usar microfone"
+                    title="Usar microfone"
+                >
+                    🎙️
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="send-button"
+                    aria-label="Enviar"
+                    title="Enviar"
+                >
+                    ➤
+                </button>
+
+            </form>
+
+
+            <div
+                id="chatStatus"
+                class="chat-status"
+            >
+                JARVIS pronto.
+            </div>
+
+        </section>
+
+
+    </main> 
+
+    <!-- ==========================================
+         FOOTER
+    ========================================== -->
+
+    <footer class="jarvis-footer">
+
+        <span>
+            JARVIS
         </span>
 
-        <h1>
-            Como vai seu dia hoje?
-        </h1>
+        <span>
+            Sistema inteligente
+        </span>
 
-        <p>
-            Digite um comando ou use o microfone.
-        </p>
+    </footer>
 
-    </section>
 
-    <section class="jarvis-chat">
+    <!-- ==========================================
+         MODAL DE DOWNLOAD
+    ========================================== -->
 
-        <div id="chatMessages" class="chat-messages"></div>
+    <div
+        class="jarvis-download-modal"
+        id="downloadModal"
+    >
 
-        <form id="chatForm" class="chat-input-container">
+        <div class="jarvis-download-box">
 
-            <input
-                type="text"
-                id="chatInput"
-                placeholder="Digite um comando..."
-                autocomplete="off"
-            >
 
             <button
                 type="button"
-                id="micButton"
-                class="mic-button"
-                aria-label="Usar microfone"
-                title="Usar microfone"
+                class="jarvis-download-close"
+                id="closeDownloadButton"
+                aria-label="Fechar"
+                title="Fechar"
             >
-                🎙️
+                ×
             </button>
 
-            <button
-                type="submit"
-                class="send-button"
-                aria-label="Enviar"
-                title="Enviar"
+
+            <h3>
+                JARVIS Mobile
+            </h3>
+
+
+            <p>
+                Aplicativo oficial para Android.
+            </p>
+
+
+            <div class="jarvis-download-info">
+
+                <strong>
+                    Versão:
+                </strong>
+
+                1.0
+
+                <br>
+
+                <strong>
+                    Plataforma:
+                </strong>
+
+                Android
+
+                <br>
+
+                <strong>
+                    Formato:
+                </strong>
+
+                APK
+
+            </div>
+
+
+            <a
+                href="downloads/jarvis-mobile-v1.0.apk"
+                class="jarvis-download-main-button"
+                download
             >
-                ➤
-            </button>
+                Baixar APK
+            </a>
 
-        </form>
-
-        <div id="chatStatus" class="chat-status">
-            JARVIS pronto.
         </div>
 
-    </section>
-
-</main>
-
-<footer class="jarvis-footer">
-    <span>JARVIS</span>
-    <span>Sistema inteligente</span>
-</footer>
-```
+    </div>
 
 </div>
 
+
 <script>
+
 
 /* ==========================================
    ELEMENTOS
 ========================================== */
 
-const jarvisHome = document.getElementById("jarvisHome");
-const chatForm = document.getElementById("chatForm");
-const chatInput = document.getElementById("chatInput");
-const chatMessages = document.getElementById("chatMessages");
-const chatStatus = document.getElementById("chatStatus");
-const micButton = document.getElementById("micButton");
-const authButton = document.getElementById("authButton");
+const jarvisHome =
+    document.getElementById("jarvisHome");
+
+const chatForm =
+    document.getElementById("chatForm");
+
+const chatInput =
+    document.getElementById("chatInput");
+
+const chatMessages =
+    document.getElementById("chatMessages");
+
+const chatStatus =
+    document.getElementById("chatStatus");
+
+const micButton =
+    document.getElementById("micButton");
+
+const authButton =
+    document.getElementById("authButton");
+    
 
 let conversationStarted = false;
 
@@ -156,7 +536,8 @@ let conversationStarted = false;
 
 async function loadUserProfile() {
 
-    const token = localStorage.getItem("jarvis_token");
+    const token =
+        localStorage.getItem("jarvis_token");
 
     if (!token) {
         return;
@@ -164,40 +545,63 @@ async function loadUserProfile() {
 
     try {
 
-        const user = await apiRequest(
-            "/me",
-            {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`
+        const user =
+            await apiRequest(
+                "/me",
+                {
+                    method: "GET",
+
+                    headers: {
+                        "Authorization":
+                            `Bearer ${token}`
+                    }
                 }
-            }
-        );
+            );
+
 
         if (
             user &&
             user.picture_url
         ) {
 
-            authButton.href = "pages/profile.html";
-            authButton.classList.add("jarvis-profile");
+            authButton.href =
+                "pages/profile.html";
+
+            authButton.classList.add(
+                "jarvis-profile"
+            );
+
             authButton.innerHTML = "";
 
-            const image = document.createElement("img");
 
-            image.src = user.picture_url;
-            image.alt = "Perfil";
+            const image =
+                document.createElement("img");
 
-            image.onerror = function () {
+            image.src =
+                user.picture_url;
 
-                authButton.classList.remove("jarvis-profile");
-                authButton.href = "pages/login.html";
-                authButton.textContent = "Entrar";
+            image.alt =
+                "Perfil";
 
-            };
 
-            authButton.appendChild(image);
+            image.onerror =
+                function () {
 
+                    authButton.classList.remove(
+                        "jarvis-profile"
+                    );
+
+                    authButton.href =
+                        "pages/login.html";
+
+                    authButton.textContent =
+                        "Entrar";
+                };
+
+
+            authButton.appendChild(
+                image
+            );
         }
 
     } catch (error) {
@@ -207,18 +611,22 @@ async function loadUserProfile() {
             error
         );
 
+
         if (error.status === 401) {
 
             localStorage.removeItem(
                 "jarvis_token"
             );
 
+
             authButton.href =
                 "pages/login.html";
+
 
             authButton.classList.remove(
                 "jarvis-profile"
             );
+
 
             authButton.textContent =
                 "Entrar";
@@ -231,11 +639,16 @@ async function loadUserProfile() {
    STATUS
 ========================================== */
 
-function setChatStatus(text, state = "ready") {
+function setChatStatus(
+    text,
+    state = "ready"
+) {
 
-    chatStatus.textContent = text;
-    chatStatus.dataset.state = state;
+    chatStatus.textContent =
+        text;
 
+    chatStatus.dataset.state =
+        state;
 }
 
 
@@ -245,14 +658,15 @@ function setChatStatus(text, state = "ready") {
 
 function activateChatMode() {
 
-    if (conversationStarted) return;
+    if (conversationStarted) {
+        return;
+    }
 
     conversationStarted = true;
 
     jarvisHome.classList.add(
         "chat-mode"
     );
-
 }
 
 
@@ -268,13 +682,16 @@ async function typeMessage(
 
     let current = "";
 
+
     for (
         let i = 0;
         i < text.length;
         i++
     ) {
 
-        current += text.charAt(i);
+        current +=
+            text.charAt(i);
+
 
         element.innerHTML =
             marked.parse(
@@ -284,8 +701,10 @@ async function typeMessage(
                 }
             );
 
+
         chatMessages.scrollTop =
             chatMessages.scrollHeight;
+
 
         await new Promise(
             resolve =>
@@ -294,9 +713,7 @@ async function typeMessage(
                     speed
                 )
         );
-
     }
-
 }
 
 
@@ -312,14 +729,17 @@ async function addMessage(
     const message =
         document.createElement("div");
 
+
     message.classList.add(
         "chat-message",
         sender
     );
 
+
     chatMessages.appendChild(
         message
     );
+
 
     if (sender === "jarvis") {
 
@@ -337,8 +757,8 @@ async function addMessage(
                     breaks: true
                 }
             );
-
     }
+
 
     requestAnimationFrame(
         () => {
@@ -348,7 +768,6 @@ async function addMessage(
 
         }
     );
-
 }
 
 
@@ -362,27 +781,40 @@ chatForm.addEventListener(
 
         event.preventDefault();
 
+
         const message =
             chatInput.value.trim();
 
-        if (!message) return;
+
+        if (!message) {
+            return;
+        }
+
 
         activateChatMode();
+
 
         await addMessage(
             message,
             "user"
         );
 
+
         chatInput.value = "";
 
-        chatInput.disabled = true;
-        micButton.disabled = true;
+
+        chatInput.disabled =
+            true;
+
+        micButton.disabled =
+            true;
+
 
         setChatStatus(
             "JARVIS pensando...",
             "ready"
         );
+
 
         try {
 
@@ -391,10 +823,12 @@ chatForm.addEventListener(
                     message
                 );
 
+
             await addMessage(
                 response,
                 "jarvis"
             );
+
 
             setChatStatus(
                 "JARVIS pronto.",
@@ -408,10 +842,12 @@ chatForm.addEventListener(
                 error
             );
 
+
             await addMessage(
                 "Não consegui processar seu comando. Verifique a conexão com o núcleo JARVIS.",
                 "jarvis"
             );
+
 
             setChatStatus(
                 "Falha na comunicação.",
@@ -420,13 +856,14 @@ chatForm.addEventListener(
 
         } finally {
 
-            chatInput.disabled = false;
-            micButton.disabled = false;
+            chatInput.disabled =
+                false;
+
+            micButton.disabled =
+                false;
 
             chatInput.focus();
-
         }
-
     }
 );
 
@@ -439,18 +876,24 @@ const SpeechRecognition =
     window.SpeechRecognition ||
     window.webkitSpeechRecognition;
 
+
 if (SpeechRecognition) {
 
     const recognition =
         new SpeechRecognition();
 
-    recognition.lang = "pt-BR";
+
+    recognition.lang =
+        "pt-BR";
+
 
     recognition.interimResults =
         false;
 
+
     recognition.continuous =
         false;
+
 
     micButton.addEventListener(
         "click",
@@ -460,12 +903,15 @@ if (SpeechRecognition) {
 
                 recognition.start();
 
+
                 micButton.textContent =
                     "🔴";
+
 
                 micButton.classList.add(
                     "listening"
                 );
+
 
                 setChatStatus(
                     "JARVIS está ouvindo...",
@@ -475,11 +921,10 @@ if (SpeechRecognition) {
             } catch (e) {
 
                 console.log(e);
-
             }
-
         }
     );
+
 
     recognition.addEventListener(
         "result",
@@ -489,18 +934,21 @@ if (SpeechRecognition) {
                 event.results[0][0]
                     .transcript;
 
+
             chatInput.value =
                 transcript;
 
+
             chatInput.focus();
+
 
             setChatStatus(
                 "Comando reconhecido.",
                 "ready"
             );
-
         }
     );
+
 
     recognition.addEventListener(
         "end",
@@ -509,9 +957,11 @@ if (SpeechRecognition) {
             micButton.textContent =
                 "🎙️";
 
+
             micButton.classList.remove(
                 "listening"
             );
+
 
             if (
                 chatStatus.dataset.state ===
@@ -522,11 +972,10 @@ if (SpeechRecognition) {
                     "JARVIS pronto.",
                     "ready"
                 );
-
             }
-
         }
     );
+
 
     recognition.addEventListener(
         "error",
@@ -537,28 +986,31 @@ if (SpeechRecognition) {
                 error
             );
 
+
             micButton.textContent =
                 "🎙️";
+
 
             micButton.classList.remove(
                 "listening"
             );
 
+
             setChatStatus(
                 "Não foi possível utilizar o microfone.",
                 "error"
             );
-
         }
     );
 
 } else {
 
-    micButton.disabled = true;
+    micButton.disabled =
+        true;
+
 
     micButton.title =
         "Seu navegador não suporta reconhecimento de voz.";
-
 }
 
 
@@ -575,11 +1027,103 @@ setTimeout(
                 "Olá. Eu sou o JARVIS. Como posso ajudar você hoje?",
                 "jarvis"
             );
-
         }
 
     },
     600
+);
+
+
+/* ==========================================
+   DOWNLOAD JARVIS MOBILE
+========================================== */
+
+const downloadModal =
+    document.getElementById(
+        "downloadModal"
+    );
+
+
+const openDownloadButton =
+    document.getElementById(
+        "openDownloadButton"
+    );
+
+
+const closeDownloadButton =
+    document.getElementById(
+        "closeDownloadButton"
+    );
+
+
+/* ==========================================
+   ABRIR MODAL
+========================================== */
+
+openDownloadButton.addEventListener(
+    "click",
+    function () {
+
+        downloadModal.classList.add(
+            "active"
+        );
+
+    }
+);
+
+
+/* ==========================================
+   FECHAR MODAL
+========================================== */
+
+closeDownloadButton.addEventListener(
+    "click",
+    function () {
+
+        downloadModal.classList.remove(
+            "active"
+        );
+
+    }
+);
+
+
+/* ==========================================
+   FECHAR CLICANDO FORA
+========================================== */
+
+downloadModal.addEventListener(
+    "click",
+    function (event) {
+
+        if (
+            event.target ===
+            downloadModal
+        ) {
+
+            downloadModal.classList.remove(
+                "active"
+            );
+        }
+    }
+);
+
+
+/* ==========================================
+   FECHAR COM ESC
+========================================== */
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (event.key === "Escape") {
+
+            downloadModal.classList.remove(
+                "active"
+            );
+        }
+    }
 );
 
 
@@ -592,7 +1136,9 @@ setChatStatus(
     "ready"
 );
 
+
 loadUserProfile();
+
 
 chatInput.focus();
 
@@ -600,3 +1146,4 @@ chatInput.focus();
 
 </body>
 </html>
+
