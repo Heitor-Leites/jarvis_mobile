@@ -1111,6 +1111,7 @@ body {
 }
 
 .setting-card {
+    width: 100%;
     min-height: 68px;
 
     display: flex;
@@ -1126,6 +1127,9 @@ body {
     border: 1px solid var(--border);
     border-radius: 13px;
 
+    font: inherit;
+    text-align: left;
+
     cursor: pointer;
 
     transition:
@@ -1140,6 +1144,16 @@ body {
     background: var(--bg-card-hover);
 
     border-color: rgba(102, 199, 255, 0.13);
+}
+
+.setting-card.selected {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(56, 189, 248, 0.13),
+            rgba(56, 189, 248, 0.045)
+        );
+    border-color: rgba(102, 199, 255, 0.25);
 }
 
 .setting-card strong {
@@ -1160,6 +1174,266 @@ body {
     color: var(--text-muted);
 
     font-size: 20px;
+}
+
+.settings-details {
+    padding: 20px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(17, 29, 42, 0.94),
+            rgba(10, 15, 23, 0.90)
+        );
+    border: 1px solid rgba(102, 199, 255, 0.20);
+    border-radius: 15px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+.settings-details-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.settings-details-kicker {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--accent);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+}
+
+.settings-details-header strong {
+    color: var(--text-main);
+    font-size: 16px;
+}
+
+.settings-close {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.settings-close:hover {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.settings-detail-panel[hidden],
+.settings-details[hidden] {
+    display: none !important;
+}
+
+.detail-copy {
+    margin-bottom: 17px;
+}
+
+.detail-copy strong,
+.detail-copy span {
+    display: block;
+}
+
+.detail-copy strong {
+    margin-bottom: 5px;
+    color: var(--text-main);
+    font-size: 13px;
+}
+
+.detail-copy span {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.detail-stat {
+    padding: 13px;
+    background: rgba(7, 10, 15, 0.42);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.detail-stat span,
+.detail-stat strong {
+    display: block;
+}
+
+.detail-stat span {
+    margin-bottom: 6px;
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+.detail-stat strong {
+    overflow: hidden;
+    color: var(--text-main);
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.detail-stat .detail-online {
+    color: var(--success);
+}
+
+.secondary-button {
+    min-height: 38px;
+    padding: 0 15px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid rgba(102, 199, 255, 0.22);
+    border-radius: 9px;
+    font: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.secondary-button:hover {
+    background: rgba(56, 189, 248, 0.20);
+    transform: translateY(-1px);
+}
+
+.preference-row {
+    min-height: 57px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 11px 13px;
+    background: rgba(7, 10, 15, 0.42);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.preference-row + .preference-row {
+    margin-top: 9px;
+}
+
+.preference-row strong,
+.preference-row small {
+    display: block;
+}
+
+.preference-row strong {
+    margin-bottom: 4px;
+    color: var(--text-main);
+    font-size: 12px;
+}
+
+.preference-row small {
+    color: var(--text-secondary);
+    font-size: 10px;
+}
+
+.preference-row input[type="checkbox"] {
+    width: 38px;
+    height: 21px;
+    flex-shrink: 0;
+    appearance: none;
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid var(--border-strong);
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.preference-row input[type="checkbox"]::after {
+    width: 15px;
+    height: 15px;
+    display: block;
+    margin: 2px;
+    content: "";
+    background: var(--text-secondary);
+    border-radius: 50%;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.preference-row input[type="checkbox"]:checked {
+    background: var(--accent-strong);
+}
+
+.preference-row input[type="checkbox"]:checked::after {
+    background: #061018;
+    transform: translateX(16px);
+}
+
+.voice-controls {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 9px 12px;
+    margin-top: 14px;
+}
+
+.voice-controls label {
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 650;
+}
+
+.voice-controls output {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.voice-controls select {
+    min-height: 36px;
+    padding: 0 10px;
+    color: var(--text-main);
+    background: rgba(7, 10, 15, 0.68);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    font: inherit;
+    font-size: 11px;
+}
+
+.voice-controls input[type="range"] {
+    width: 100%;
+    accent-color: var(--accent-strong);
+}
+
+.voice-controls .secondary-button,
+.voice-controls .form-feedback {
+    grid-column: 2;
+}
+
+.inline-danger {
+    margin-top: 0;
+}
+
+body.high-contrast {
+    --border: rgba(150, 220, 255, 0.25);
+    --border-strong: rgba(190, 230, 255, 0.38);
+    --text-secondary: #c5d2df;
+    --text-muted: #91a3b5;
+}
+
+body.compact-mode .settings-list {
+    gap: 6px;
+}
+
+body.compact-mode .setting-card {
+    min-height: 54px;
 }
 
 
@@ -1331,6 +1605,19 @@ a:focus-visible {
 
     .profile-editor {
         padding: 16px;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .voice-controls {
+        grid-template-columns: 1fr;
+    }
+
+    .voice-controls .secondary-button,
+    .voice-controls .form-feedback {
+        grid-column: 1;
     }
 }
 
