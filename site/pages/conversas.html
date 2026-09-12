@@ -390,7 +390,13 @@
                 state.conversations = Array.isArray(response) ? response : response.conversations || [];
                 renderConversationList();
 
-                if (state.currentId && state.conversations.some(item => item.id === state.currentId)) {
+                const requestedId = Number(
+                    new URLSearchParams(window.location.search).get("id")
+                );
+
+                if (Number.isInteger(requestedId) && state.conversations.some(item => item.id === requestedId)) {
+                    await selectConversation(requestedId);
+                } else if (state.currentId && state.conversations.some(item => item.id === state.currentId)) {
                     await selectConversation(state.currentId);
                 } else if (state.conversations.length) {
                     await selectConversation(state.conversations[0].id);

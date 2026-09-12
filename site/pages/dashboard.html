@@ -12,7 +12,7 @@
 
     <title>JARVIS | Dashboard</title>
 
-    <link rel="stylesheet" href="../css/dashboard.css?v=config-4">
+    <link rel="stylesheet" href="../css/dashboard.css?v=config-5">
 
 </head>
 
@@ -108,8 +108,13 @@
             CONVERSAS RECENTES
         </div>
 
-        <div class="recent-empty">
-            Suas conversas aparecerão aqui.
+        <div
+            class="recent-conversations"
+            id="recentConversations"
+        >
+            <div class="recent-empty">
+                Suas conversas aparecerão aqui.
+            </div>
         </div>
 
 
@@ -1030,6 +1035,11 @@ const voiceFeedback =
 
 let profileUser = null;
 
+const recentConversations =
+    document.getElementById(
+        "recentConversations"
+    );
+
 const avatarTargets = [
     [
         document.getElementById("sidebarUserAvatar"),
@@ -1541,6 +1551,140 @@ if (testVoiceButton) {
 }
 
 loadVoicePreferences();
+
+
+/* ============================================================
+   CONVERSAS RECENTES
+   ============================================================ */
+
+function escapeRecentText(value) {
+
+    const element = document.createElement("div");
+    element.textContent = value ?? "";
+    return element.innerHTML;
+
+}
+
+function formatRecentDate(value) {
+
+    if (!value) {
+        return "";
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return "";
+    }
+
+    return date.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit"
+    });
+
+}
+
+function renderRecentConversations(conversations) {
+
+    if (!recentConversations) {
+        return;
+    }
+
+    if (!conversations.length) {
+        recentConversations.innerHTML =
+            '<div class="recent-empty">Suas conversas aparecerão aqui.</div>';
+        return;
+    }
+
+    recentConversations.innerHTML = conversations
+        .slice(0, 5)
+        .map(function (conversation) {
+            const title =
+                conversation.title || "Nova conversa";
+
+            const date = formatRecentDate(
+                conversation.updated_at || conversation.created_at
+            );
+
+            return `
+                <button
+                    type="button"
+                    class="recent-conversation"
+                    data-conversation-id="${conversation.id}"
+                    title="Abrir ${escapeRecentText(title)}"
+                >
+                    <span class="recent-conversation-icon">◫</span>
+                    <span class="recent-conversation-copy">
+                        <strong>${escapeRecentText(title)}</strong>
+                        <small>${escapeRecentText(date)}</small>
+                    </span>
+                </button>
+            `;
+        })
+        .join("");
+
+    recentConversations
+        .querySelectorAll("[data-conversation-id]")
+        .forEach(function (item) {
+            item.addEventListener("click", function () {
+                const id = item.dataset.conversationId;
+                window.location.href =
+                    `conversas.html?id=${encodeURIComponent(id)}`;
+            });
+        });
+
+}
+
+async function loadRecentConversations() {
+
+    if (!recentConversations || !token) {
+        return;
+    }
+
+    try {
+        const response = await apiRequest(
+            "/conversations",
+            {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }
+        );
+
+        const conversations = Array.isArray(response)
+            ? response
+            : response.conversations || [];
+
+        renderRecentConversations(conversations);
+
+    } catch (error) {
+
+        if (error.status === 401) {
+            removeToken();
+            window.location.replace("login.html");
+            return;
+        }
+
+        recentConversations.innerHTML =
+            '<div class="recent-empty">Não foi possível carregar.</div>';
+
+    }
+
+}
+
+loadRecentConversations();
+
+window.setInterval(
+    loadRecentConversations,
+    15000
+);
+
+document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) {
+        loadRecentConversations();
+    }
+});
 
 
 /* ============================================================

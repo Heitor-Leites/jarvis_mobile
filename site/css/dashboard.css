@@ -346,6 +346,64 @@ body {
     line-height: 1.6;
 }
 
+.recent-conversations {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin: 0 4px;
+}
+
+.recent-conversation {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 6px;
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.recent-conversation:hover {
+    background: rgba(56, 189, 248, 0.08);
+    border-color: rgba(102, 199, 255, 0.12);
+}
+
+.recent-conversation-icon {
+    flex-shrink: 0;
+    color: var(--accent);
+    font-size: 13px;
+}
+
+.recent-conversation-copy {
+    min-width: 0;
+}
+
+.recent-conversation-copy strong,
+.recent-conversation-copy small {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.recent-conversation-copy strong {
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.recent-conversation-copy small {
+    margin-top: 2px;
+    color: var(--text-muted);
+    font-size: 9px;
+}
+
 
 /* ============================================================
    SIDEBAR FOOTER
@@ -1678,6 +1736,7 @@ a:focus-visible {
     .nav-title,
     .recent-title,
     .recent-empty,
+    .recent-conversations,
     .user-name,
     .user-status,
     .logout-button {
