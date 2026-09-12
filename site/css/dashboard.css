@@ -441,6 +441,108 @@ body {
     font-size: 11px;
 }
 
+.profile-editor {
+    max-width: 720px;
+    margin-bottom: 2px;
+    padding: 20px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(18, 29, 42, 0.92),
+            rgba(12, 18, 27, 0.82)
+        );
+    border: 1px solid rgba(102, 199, 255, 0.16);
+    border-radius: 15px;
+}
+
+.profile-editor-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.profile-editor-heading strong,
+.profile-editor-heading span {
+    display: block;
+}
+
+.profile-editor-heading strong {
+    margin-bottom: 5px;
+    color: var(--text-main);
+    font-size: 14px;
+}
+
+.profile-editor-heading span {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+.profile-editor-icon {
+    color: var(--accent);
+    font-size: 20px !important;
+}
+
+.profile-editor label {
+    display: block;
+    margin: 14px 0 7px;
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 650;
+}
+
+.profile-editor input {
+    width: 100%;
+    min-height: 42px;
+    padding: 0 13px;
+    color: var(--text-main);
+    background: rgba(7, 10, 15, 0.68);
+    border: 1px solid var(--border-strong);
+    border-radius: 9px;
+    font: inherit;
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-editor input::placeholder {
+    color: var(--text-muted);
+}
+
+.profile-editor input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.10);
+}
+
+.profile-editor-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.profile-editor .primary-button:disabled {
+    cursor: wait;
+    opacity: 0.65;
+    transform: none;
+}
+
+.form-feedback {
+    min-height: 17px;
+    color: var(--text-muted);
+    font-size: 11px;
+}
+
+.form-feedback.success {
+    color: var(--success);
+}
+
+.form-feedback.error {
+    color: var(--danger);
+}
+
 .user-name {
     max-width: 125px;
 

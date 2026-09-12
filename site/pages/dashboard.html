@@ -506,12 +506,76 @@
                         </strong>
 
                         <span>
-                            Perfil conectado pelo Google
+                            Perfil da sua conta
                         </span>
 
                     </div>
 
                 </div>
+
+
+                <form
+                    class="profile-editor"
+                    id="profileForm"
+                >
+
+                    <div class="profile-editor-heading">
+
+                        <div>
+
+                            <strong>Editar perfil</strong>
+
+                            <span>Atualize como seu perfil aparece no J.A.R.V.I.S.</span>
+
+                        </div>
+
+                        <span class="profile-editor-icon">✦</span>
+
+                    </div>
+
+                    <label for="profileUsername">Nome de exibição</label>
+
+                    <input
+                        id="profileUsername"
+                        name="username"
+                        type="text"
+                        minlength="3"
+                        maxlength="100"
+                        autocomplete="nickname"
+                        placeholder="Como quer ser chamado?"
+                        required
+                    >
+
+                    <label for="profilePictureUrl">URL da foto</label>
+
+                    <input
+                        id="profilePictureUrl"
+                        name="picture_url"
+                        type="url"
+                        placeholder="https://exemplo.com/minha-foto.jpg"
+                        autocomplete="url"
+                    >
+
+                    <div class="profile-editor-actions">
+
+                        <button
+                            type="submit"
+                            class="primary-button"
+                            id="saveProfileButton"
+                        >
+                            Salvar alterações
+                        </button>
+
+                        <span
+                            class="form-feedback"
+                            id="profileFeedback"
+                            role="status"
+                            aria-live="polite"
+                        ></span>
+
+                    </div>
+
+                </form>
 
 
                 <div class="setting-card">
@@ -689,6 +753,31 @@ const settingsUserName =
         "settingsUserName"
     );
 
+const profileForm =
+    document.getElementById(
+        "profileForm"
+    );
+
+const profileUsername =
+    document.getElementById(
+        "profileUsername"
+    );
+
+const profilePictureUrl =
+    document.getElementById(
+        "profilePictureUrl"
+    );
+
+const saveProfileButton =
+    document.getElementById(
+        "saveProfileButton"
+    );
+
+const profileFeedback =
+    document.getElementById(
+        "profileFeedback"
+    );
+
 const avatarTargets = [
     [
         document.getElementById("sidebarUserAvatar"),
@@ -740,6 +829,14 @@ function applyUserProfile(user) {
         settingsUserName.textContent = name;
     }
 
+    if (profileUsername) {
+        profileUsername.value = name;
+    }
+
+    if (profilePictureUrl) {
+        profilePictureUrl.value = user.picture_url || "";
+    }
+
     avatarTargets.forEach(([image, initials]) => {
 
         if (!image || !initials) {
@@ -766,6 +863,77 @@ function applyUserProfile(user) {
 
     });
 
+}
+
+
+async function saveProfile(event) {
+
+    event.preventDefault();
+
+    if (!profileForm || !profileUsername || !profilePictureUrl) {
+        return;
+    }
+
+    const username = profileUsername.value.trim();
+    const pictureUrl = profilePictureUrl.value.trim();
+
+    if (username.length < 3) {
+        profileFeedback.textContent =
+            "O nome precisa ter pelo menos 3 caracteres.";
+        profileFeedback.className = "form-feedback error";
+        return;
+    }
+
+    if (pictureUrl && !/^https?:\/\/[^\s]+$/i.test(pictureUrl)) {
+        profileFeedback.textContent =
+            "Use uma URL http ou https válida para a foto.";
+        profileFeedback.className = "form-feedback error";
+        return;
+    }
+
+    saveProfileButton.disabled = true;
+    saveProfileButton.textContent = "Salvando...";
+    profileFeedback.textContent = "";
+    profileFeedback.className = "form-feedback";
+
+    try {
+
+        const user = await apiRequest(
+            "/me",
+            {
+                method: "PATCH",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({
+                    username,
+                    picture_url: pictureUrl || null
+                })
+            }
+        );
+
+        applyUserProfile(user);
+        profileFeedback.textContent = "Perfil atualizado com sucesso.";
+        profileFeedback.className = "form-feedback success";
+
+    } catch (error) {
+
+        profileFeedback.textContent =
+            error.message || "Não foi possível atualizar o perfil.";
+        profileFeedback.className = "form-feedback error";
+
+    } finally {
+
+        saveProfileButton.disabled = false;
+        saveProfileButton.textContent = "Salvar alterações";
+
+    }
+
+}
+
+
+if (profileForm) {
+    profileForm.addEventListener("submit", saveProfile);
 }
 
 
