@@ -12,7 +12,7 @@
 
     <title>JARVIS | Dashboard</title>
 
-    <link rel="stylesheet" href="../css/dashboard.css?v=config-3">
+    <link rel="stylesheet" href="../css/dashboard.css?v=config-4">
 
 </head>
 
@@ -749,7 +749,18 @@
                     >
                         <div class="detail-copy">
                             <strong>Aparência</strong>
-                            <span>Personalize a leitura do painel neste dispositivo.</span>
+                            <span>Personalize o tema e a leitura do painel neste dispositivo.</span>
+                        </div>
+                        <div class="theme-choice">
+                            <div>
+                                <label for="themeSelect">Tema da interface</label>
+                                <small>Escolha como o J.A.R.V.I.S. deve aparecer.</small>
+                            </div>
+                            <select id="themeSelect">
+                                <option value="dark">Escuro</option>
+                                <option value="light">Claro</option>
+                                <option value="system">Cores do sistema</option>
+                            </select>
                         </div>
                         <label class="preference-row" for="contrastToggle">
                             <span>
@@ -980,6 +991,11 @@ const contrastToggle =
 const compactToggle =
     document.getElementById(
         "compactToggle"
+    );
+
+const themeSelect =
+    document.getElementById(
+        "themeSelect"
     );
 
 const voiceToggle =
@@ -1282,6 +1298,9 @@ if (focusProfileButton) {
 
 function loadAppearancePreferences() {
 
+    const savedTheme =
+        localStorage.getItem("jarvis_theme") || "dark";
+
     const highContrast =
         localStorage.getItem("jarvis_high_contrast") === "true";
 
@@ -1298,6 +1317,12 @@ function loadAppearancePreferences() {
         compactMode
     );
 
+    applyTheme(savedTheme);
+
+    if (themeSelect) {
+        themeSelect.value = savedTheme;
+    }
+
     if (contrastToggle) {
         contrastToggle.checked = highContrast;
     }
@@ -1306,6 +1331,47 @@ function loadAppearancePreferences() {
         compactToggle.checked = compactMode;
     }
 
+}
+
+function applyTheme(theme) {
+
+    const selectedTheme =
+        ["dark", "light", "system"].includes(theme)
+            ? theme
+            : "dark";
+
+    const followsLightSystem =
+        selectedTheme === "system" &&
+        window.matchMedia("(prefers-color-scheme: light)").matches;
+
+    document.body.classList.toggle(
+        "theme-light",
+        selectedTheme === "light" || followsLightSystem
+    );
+
+    document.body.classList.toggle(
+        "theme-system",
+        selectedTheme === "system"
+    );
+
+}
+
+const systemThemeQuery =
+    window.matchMedia("(prefers-color-scheme: light)");
+
+if (systemThemeQuery.addEventListener) {
+    systemThemeQuery.addEventListener("change", function () {
+        if (localStorage.getItem("jarvis_theme") === "system") {
+            applyTheme("system");
+        }
+    });
+}
+
+if (themeSelect) {
+    themeSelect.addEventListener("change", function () {
+        localStorage.setItem("jarvis_theme", themeSelect.value);
+        applyTheme(themeSelect.value);
+    });
 }
 
 if (contrastToggle) {
