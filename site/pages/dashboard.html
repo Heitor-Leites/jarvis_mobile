@@ -117,6 +117,18 @@
 
         <div class="sidebar-footer">
 
+            <div class="user-avatar avatar-small">
+
+                <img
+                    id="sidebarUserAvatar"
+                    alt="Foto do perfil"
+                    hidden
+                >
+
+                <span id="sidebarUserInitials">?</span>
+
+            </div>
+
             <div>
 
                 <div
@@ -166,6 +178,26 @@
 
 
             <div class="topbar-right">
+
+                <div class="profile-chip">
+
+                    <div class="user-avatar avatar-topbar">
+
+                        <img
+                            id="topUserAvatar"
+                            alt="Foto do perfil"
+                            hidden
+                        >
+
+                        <span id="topUserInitials">?</span>
+
+                    </div>
+
+                    <span id="topUserName">
+                        Usuário
+                    </span>
+
+                </div>
 
                 <span class="online-badge">
 
@@ -453,6 +485,34 @@
 
             <div class="settings-list">
 
+                <div class="profile-card">
+
+                    <div class="user-avatar avatar-settings">
+
+                        <img
+                            id="settingsUserAvatar"
+                            alt="Foto do perfil"
+                            hidden
+                        >
+
+                        <span id="settingsUserInitials">?</span>
+
+                    </div>
+
+                    <div>
+
+                        <strong id="settingsUserName">
+                            Usuário
+                        </strong>
+
+                        <span>
+                            Perfil conectado pelo Google
+                        </span>
+
+                    </div>
+
+                </div>
+
 
                 <div class="setting-card">
 
@@ -618,6 +678,95 @@ const userName =
     document.getElementById(
         "userName"
     );
+
+const topUserName =
+    document.getElementById(
+        "topUserName"
+    );
+
+const settingsUserName =
+    document.getElementById(
+        "settingsUserName"
+    );
+
+const avatarTargets = [
+    [
+        document.getElementById("sidebarUserAvatar"),
+        document.getElementById("sidebarUserInitials")
+    ],
+    [
+        document.getElementById("topUserAvatar"),
+        document.getElementById("topUserInitials")
+    ],
+    [
+        document.getElementById("settingsUserAvatar"),
+        document.getElementById("settingsUserInitials")
+    ]
+];
+
+function getInitials(name) {
+
+    const words = String(name || "Usuário")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+
+    if (!words.length) {
+        return "?";
+    }
+
+    return words
+        .slice(0, 2)
+        .map(word => word[0])
+        .join("")
+        .toUpperCase();
+
+}
+
+function applyUserProfile(user) {
+
+    const name =
+        user.username ||
+        user.name ||
+        "Usuário";
+
+    userName.textContent = name;
+
+    if (topUserName) {
+        topUserName.textContent = name;
+    }
+
+    if (settingsUserName) {
+        settingsUserName.textContent = name;
+    }
+
+    avatarTargets.forEach(([image, initials]) => {
+
+        if (!image || !initials) {
+            return;
+        }
+
+        initials.textContent = getInitials(name);
+        image.hidden = true;
+        initials.hidden = false;
+
+        const showFallback = () => {
+            image.hidden = true;
+            initials.hidden = false;
+        };
+
+        image.onerror = showFallback;
+
+        if (user.picture_url) {
+            image.src = user.picture_url;
+            image.alt = `Foto do perfil de ${name}`;
+            image.hidden = false;
+            initials.hidden = true;
+        }
+
+    });
+
+}
 
 
 /* ============================================================
@@ -836,10 +985,7 @@ async function loadUser() {
 
         if (user) {
 
-            userName.textContent =
-                user.username ||
-                user.name ||
-                "Usuário";
+            applyUserProfile(user);
 
         }
 
