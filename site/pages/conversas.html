@@ -4,87 +4,478 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>JARVIS | Conversas</title>
-
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .conversation-page {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .conversation-content {
+            flex: 1;
+            min-width: 0;
+            padding: 35px 45px;
+        }
+
+        .conversation-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .conversation-status {
+            color: #4ade80;
+            font-size: 13px;
+        }
+
+        .conversation-layout {
+            display: grid;
+            grid-template-columns: minmax(230px, 320px) minmax(0, 1fr);
+            gap: 18px;
+            min-height: 620px;
+        }
+
+        .conversation-panel,
+        .chat-panel {
+            min-width: 0;
+            background: #0b1017;
+            border: 1px solid #1b2430;
+            border-radius: 14px;
+        }
+
+        .conversation-panel {
+            padding: 16px;
+        }
+
+        .conversation-panel h2,
+        .chat-panel h2 {
+            margin: 4px 4px 16px;
+            font-size: 17px;
+            font-weight: 500;
+        }
+
+        .conversation-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .conversation-item {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            background: transparent;
+            color: #cbd5e1;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .conversation-item:hover,
+        .conversation-item.active {
+            background: #151c27;
+            border-color: #26374a;
+        }
+
+        .conversation-item-title {
+            display: block;
+            overflow: hidden;
+            color: #f1f5f9;
+            font-size: 13px;
+            font-weight: 600;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .conversation-item-date {
+            display: block;
+            margin-top: 6px;
+            color: #718096;
+            font-size: 11px;
+        }
+
+        .empty-state {
+            padding: 28px 14px;
+            color: #718096;
+            font-size: 13px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .chat-panel {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 18px 20px;
+            border-bottom: 1px solid #1b2430;
+        }
+
+        .chat-header h2 {
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .chat-delete {
+            border: 0;
+            background: transparent;
+            color: #f87171;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            min-height: 420px;
+            padding: 22px;
+            overflow-y: auto;
+        }
+
+        .chat-message {
+            max-width: 82%;
+            margin-bottom: 14px;
+            padding: 12px 14px;
+            border: 1px solid #1b2430;
+            border-radius: 12px;
+            color: #dbe4ef;
+            font-size: 14px;
+            line-height: 1.55;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .chat-message.user {
+            margin-left: auto;
+            background: rgba(56, 189, 248, 0.1);
+            border-color: rgba(56, 189, 248, 0.22);
+        }
+
+        .chat-message.assistant {
+            background: #101722;
+        }
+
+        .chat-composer {
+            display: flex;
+            gap: 10px;
+            padding: 16px;
+            border-top: 1px solid #1b2430;
+        }
+
+        .chat-composer textarea {
+            flex: 1;
+            min-height: 46px;
+            max-height: 140px;
+            padding: 12px;
+            resize: vertical;
+            border: 1px solid #26374a;
+            border-radius: 9px;
+            outline: none;
+            background: #070a0f;
+            color: #ffffff;
+            font: inherit;
+        }
+
+        .chat-composer textarea:focus {
+            border-color: #38bdf8;
+        }
+
+        .chat-composer button {
+            align-self: flex-end;
+        }
+
+        .error-message {
+            display: none;
+            margin: 0 0 18px;
+            padding: 12px 14px;
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            border-radius: 9px;
+            background: rgba(248, 113, 113, 0.08);
+            color: #fca5a5;
+            font-size: 13px;
+        }
+
+        @media (max-width: 850px) {
+            .conversation-content {
+                padding: 24px 20px;
+            }
+
+            .conversation-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .conversation-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+        }
+    </style>
 </head>
 
 <body>
-
-    <div class="app">
-
+    <div class="conversation-page">
         <aside class="sidebar">
-
-            <div class="logo">
-                JARVIS
-            </div>
-
+            <div class="logo">JARVIS</div>
             <nav>
-
-                <a href="../index.html">
-                    Dashboard
-                </a>
-
-                <a href="conversas.html" class="active">
-                    Conversas
-                </a>
-
-                <a href="memorias.html">
-                    Memórias
-                </a>
-
-                <a href="dispositivos.html">
-                    Dispositivos
-                </a>
-
-                <a href="configuracoes.html">
-                    Configurações
-                </a>
-
+                <a href="../index.html">Dashboard</a>
+                <a href="conversas.html" class="active">Conversas</a>
+                <a href="memorias.html">Memórias</a>
+                <a href="dispositivos.html">Dispositivos</a>
+                <a href="configuracoes.html">Configurações</a>
             </nav>
-
             <div class="sidebar-bottom">
                 <span class="status-dot"></span>
                 Sistema online
             </div>
-
         </aside>
 
-
-        <main class="content">
-
+        <main class="conversation-content">
             <header class="topbar">
-
                 <div>
                     <span class="page-label">JARVIS</span>
                     <h1>Conversas</h1>
                 </div>
-
-                <div class="system-status">
-                    <span class="status-dot"></span>
-                    JARVIS Online
+                <div class="conversation-actions">
+                    <span class="conversation-status" id="conversationStatus">Online</span>
+                    <button class="primary-button" id="newConversationButton" type="button">
+                        + Nova conversa
+                    </button>
                 </div>
-
             </header>
 
+            <div class="error-message" id="errorMessage"></div>
 
-            <section class="activity">
+            <section class="conversation-layout">
+                <aside class="conversation-panel">
+                    <h2>Histórico</h2>
+                    <div class="conversation-list" id="conversationList">
+                        <div class="empty-state">Carregando conversas...</div>
+                    </div>
+                </aside>
 
-                <div class="section-header">
-                    <h2>Histórico de conversas</h2>
-                </div>
+                <section class="chat-panel">
+                    <header class="chat-header">
+                        <h2 id="conversationTitle">Nova conversa</h2>
+                        <button class="chat-delete" id="deleteConversationButton" type="button" hidden>
+                            Excluir
+                        </button>
+                    </header>
 
-                <div class="empty-activity">
-                    Nenhuma conversa encontrada.
-                </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="empty-state">
+                            Escolha uma conversa ou comece uma nova.
+                        </div>
+                    </div>
 
+                    <form class="chat-composer" id="chatForm">
+                        <textarea id="chatInput" maxlength="4000" placeholder="Digite uma mensagem para o JARVIS..." required></textarea>
+                        <button class="primary-button" id="sendButton" type="submit">Enviar</button>
+                    </form>
+                </section>
             </section>
-
         </main>
-
     </div>
 
-</body>
+    <script src="../js/auth.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        const state = {
+            conversations: [],
+            currentId: null,
+            busy: false
+        };
 
+        const conversationList = document.getElementById("conversationList");
+        const conversationTitle = document.getElementById("conversationTitle");
+        const chatMessages = document.getElementById("chatMessages");
+        const chatForm = document.getElementById("chatForm");
+        const chatInput = document.getElementById("chatInput");
+        const sendButton = document.getElementById("sendButton");
+        const newConversationButton = document.getElementById("newConversationButton");
+        const deleteConversationButton = document.getElementById("deleteConversationButton");
+        const errorMessage = document.getElementById("errorMessage");
+        const conversationStatus = document.getElementById("conversationStatus");
+
+        function authOptions(options = {}) {
+            return {
+                ...options,
+                headers: {
+                    ...(options.headers || {}),
+                    Authorization: `Bearer ${getToken()}`
+                }
+            };
+        }
+
+        function escapeHtml(value) {
+            const element = document.createElement("div");
+            element.textContent = value ?? "";
+            return element.innerHTML;
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = "block";
+        }
+
+        function clearError() {
+            errorMessage.textContent = "";
+            errorMessage.style.display = "none";
+        }
+
+        function formatDate(value) {
+            if (!value) return "";
+            const date = new Date(value);
+            return Number.isNaN(date.getTime())
+                ? ""
+                : date.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+        }
+
+        function handleUnauthorized(error) {
+            if (error.status === 401) {
+                removeToken();
+                window.location.replace("login.html");
+                return true;
+            }
+            return false;
+        }
+
+        function renderConversationList() {
+            if (!state.conversations.length) {
+                conversationList.innerHTML = '<div class="empty-state">Nenhuma conversa encontrada.</div>';
+                return;
+            }
+
+            conversationList.innerHTML = state.conversations.map(conversation => `
+                <button class="conversation-item ${conversation.id === state.currentId ? "active" : ""}" type="button" data-id="${conversation.id}">
+                    <span class="conversation-item-title">${escapeHtml(conversation.title || "Nova conversa")}</span>
+                    <span class="conversation-item-date">${escapeHtml(formatDate(conversation.updated_at || conversation.created_at))}</span>
+                </button>
+            `).join("");
+
+            conversationList.querySelectorAll(".conversation-item").forEach(button => {
+                button.addEventListener("click", () => selectConversation(Number(button.dataset.id)));
+            });
+        }
+
+        function renderConversation(conversation) {
+            state.currentId = conversation?.id ?? null;
+            conversationTitle.textContent = conversation?.title || "Nova conversa";
+            deleteConversationButton.hidden = !state.currentId;
+
+            const messages = conversation?.messages || [];
+            if (!messages.length) {
+                chatMessages.innerHTML = '<div class="empty-state">Nenhuma mensagem ainda. Comece a conversa abaixo.</div>';
+            } else {
+                chatMessages.innerHTML = messages.map(message => `
+                    <div class="chat-message ${message.role === "user" ? "user" : "assistant"}">${escapeHtml(message.content)}</div>
+                `).join("");
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            renderConversationList();
+        }
+
+        async function loadConversations() {
+            try {
+                const response = await apiRequest("/conversations", authOptions());
+                state.conversations = Array.isArray(response) ? response : response.conversations || [];
+                renderConversationList();
+
+                if (state.currentId && state.conversations.some(item => item.id === state.currentId)) {
+                    await selectConversation(state.currentId);
+                } else if (state.conversations.length) {
+                    await selectConversation(state.conversations[0].id);
+                } else {
+                    renderConversation(null);
+                }
+            } catch (error) {
+                if (!handleUnauthorized(error)) showError(error.message || "Não foi possível carregar as conversas.");
+                conversationStatus.textContent = "Erro";
+                conversationStatus.style.color = "#f87171";
+            }
+        }
+
+        async function selectConversation(id) {
+            clearError();
+            try {
+                const conversation = await apiRequest(`/conversations/${id}`, authOptions());
+                renderConversation(conversation);
+            } catch (error) {
+                if (!handleUnauthorized(error)) showError(error.message || "Não foi possível abrir a conversa.");
+            }
+        }
+
+        newConversationButton.addEventListener("click", () => {
+            clearError();
+            renderConversation(null);
+            chatInput.focus();
+        });
+
+        chatForm.addEventListener("submit", async event => {
+            event.preventDefault();
+            const message = chatInput.value.trim();
+            if (!message || state.busy) return;
+
+            state.busy = true;
+            clearError();
+            sendButton.disabled = true;
+            newConversationButton.disabled = true;
+            conversationStatus.textContent = "Processando...";
+            conversationStatus.style.color = "#fbbf24";
+
+            try {
+                const response = await apiRequest("/chat", authOptions({
+                    method: "POST",
+                    body: JSON.stringify({
+                        message,
+                        conversation_id: state.currentId
+                    })
+                }));
+
+                chatInput.value = "";
+                state.currentId = response.conversation_id;
+                conversationStatus.textContent = "Online";
+                conversationStatus.style.color = "#4ade80";
+                await loadConversations();
+                await selectConversation(state.currentId);
+            } catch (error) {
+                if (!handleUnauthorized(error)) showError(error.message || "Não foi possível enviar a mensagem.");
+                conversationStatus.textContent = "Erro";
+                conversationStatus.style.color = "#f87171";
+            } finally {
+                state.busy = false;
+                sendButton.disabled = false;
+                newConversationButton.disabled = false;
+                chatInput.focus();
+            }
+        });
+
+        deleteConversationButton.addEventListener("click", async () => {
+            if (!state.currentId || !window.confirm("Excluir esta conversa?")) return;
+
+            try {
+                await apiRequest(`/conversations/${state.currentId}`, authOptions({ method: "DELETE" }));
+                state.currentId = null;
+                await loadConversations();
+            } catch (error) {
+                if (!handleUnauthorized(error)) showError(error.message || "Não foi possível excluir a conversa.");
+            }
+        });
+
+        if (!getToken()) {
+            window.location.replace("login.html");
+        } else {
+            loadConversations();
+        }
+    </script>
+</body>
 </html>
