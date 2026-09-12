@@ -12,7 +12,7 @@
 
     <title>JARVIS | Dashboard</title>
 
-    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/dashboard.css?v=perfil-2">
 
 </head>
 
@@ -533,28 +533,40 @@
 
                     </div>
 
-                    <label for="profileUsername">Nome de exibição</label>
+                    <div class="profile-editor-fields">
 
-                    <input
-                        id="profileUsername"
-                        name="username"
-                        type="text"
-                        minlength="3"
-                        maxlength="100"
-                        autocomplete="nickname"
-                        placeholder="Como quer ser chamado?"
-                        required
-                    >
+                        <div class="profile-field">
 
-                    <label for="profilePictureUrl">URL da foto</label>
+                            <label for="profileUsername">Nome de exibição</label>
 
-                    <input
-                        id="profilePictureUrl"
-                        name="picture_url"
-                        type="url"
-                        placeholder="https://exemplo.com/minha-foto.jpg"
-                        autocomplete="url"
-                    >
+                            <input
+                                id="profileUsername"
+                                name="username"
+                                type="text"
+                                minlength="3"
+                                maxlength="100"
+                                autocomplete="nickname"
+                                placeholder="Como quer ser chamado?"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="profile-field">
+
+                            <label for="profilePictureUrl">URL da foto</label>
+
+                            <input
+                                id="profilePictureUrl"
+                                name="picture_url"
+                                type="url"
+                                placeholder="https://exemplo.com/minha-foto.jpg"
+                                autocomplete="url"
+                            >
+
+                        </div>
+
+                    </div>
 
                     <div class="profile-editor-actions">
 
