@@ -91,6 +91,16 @@
 
 
             <a
+                href="dispositivos.html"
+                class="nav-item"
+                data-section="devices"
+            >
+                <span>▣</span>
+                <span>Dispositivos</span>
+            </a>
+
+
+            <a
                 href="#"
                 class="nav-item"
                 data-section="settings"
@@ -1719,6 +1729,11 @@ function showSection(name) {
         return;
     }
 
+    if (name === "devices") {
+        window.location.href = "dispositivos.html";
+        return;
+    }
+
     Object.keys(sections).forEach(
         function (key) {
 
@@ -1956,6 +1971,13 @@ async function loadUser() {
 
 
 loadUser();
+
+const requestedSection =
+    new URLSearchParams(window.location.search).get("section");
+
+if (requestedSection === "settings") {
+    showSection("settings");
+}
 
 </script>
 

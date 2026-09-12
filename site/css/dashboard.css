@@ -1628,6 +1628,155 @@ body.compact-mode .setting-card {
     min-height: 54px;
 }
 
+.device-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    max-width: 900px;
+}
+
+.device-card {
+    min-height: 230px;
+    padding: 22px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(18, 27, 39, 0.88),
+            rgba(10, 15, 23, 0.76)
+        );
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+}
+
+.device-current {
+    border-color: rgba(102, 199, 255, 0.22);
+}
+
+.device-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.device-icon,
+.device-info-icon {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid rgba(102, 199, 255, 0.16);
+    border-radius: 12px;
+    font-size: 18px;
+}
+
+.device-online {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--success);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.device-card-label {
+    margin-bottom: 7px;
+    color: var(--text-muted);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+}
+
+.device-card h3 {
+    margin-bottom: 7px;
+    color: var(--text-main);
+    font-size: 18px;
+}
+
+.device-card p {
+    min-height: 34px;
+    color: var(--text-secondary);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.device-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 13px;
+    border-top: 1px solid var(--border);
+}
+
+.device-meta span,
+.device-meta strong {
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+.device-meta strong {
+    color: var(--text-secondary);
+    font-weight: 650;
+}
+
+.device-info-card {
+    max-width: 900px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 16px;
+    padding: 16px 18px;
+    background: rgba(56, 189, 248, 0.06);
+    border: 1px solid rgba(102, 199, 255, 0.12);
+    border-radius: 13px;
+}
+
+.device-info-icon {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    font-size: 14px;
+}
+
+.device-info-card strong,
+.device-info-card p {
+    display: block;
+}
+
+.device-info-card strong {
+    margin-bottom: 4px;
+    color: var(--text-main);
+    font-size: 12px;
+}
+
+.device-info-card p {
+    color: var(--text-secondary);
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+#refreshDeviceButton {
+    margin-top: 18px;
+}
+
+#deviceFeedback {
+    margin-left: 12px;
+}
+
+body.theme-light .device-card {
+    background: var(--bg-card);
+}
+
+body.theme-light .device-info-card {
+    background: rgba(11, 155, 215, 0.07);
+}
+
 
 /* ============================================================
    DANGER BUTTON
@@ -1802,6 +1951,18 @@ a:focus-visible {
 
     .detail-grid {
         grid-template-columns: 1fr;
+    }
+
+    .device-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .device-card {
+        min-height: 210px;
+    }
+
+    .device-info-card {
+        align-items: flex-start;
     }
 
     .theme-choice {

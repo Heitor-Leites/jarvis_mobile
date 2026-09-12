@@ -4,87 +4,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>JARVIS | Dispositivos</title>
-
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css?v=dispositivos-1">
 </head>
 
 <body>
 
-    <div class="app">
+<div class="app-shell">
 
-        <aside class="sidebar">
+    <aside class="sidebar">
 
-            <div class="logo">
-                JARVIS
+        <div class="brand">
+            <div class="brand-icon">◉</div>
+            <span>J.A.R.V.I.S.</span>
+        </div>
+
+        <a href="dashboard.html" class="new-chat">
+            <span>＋</span>
+            <span>Nova conversa</span>
+        </a>
+
+        <div class="nav-title">NAVEGAÇÃO</div>
+
+        <nav class="nav">
+            <a href="dashboard.html" class="nav-item">
+                <span>⌂</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="conversas.html" class="nav-item">
+                <span>◫</span>
+                <span>Conversas</span>
+            </a>
+            <a href="memorias.html" class="nav-item">
+                <span>◈</span>
+                <span>Memórias</span>
+            </a>
+            <a href="dispositivos.html" class="nav-item active">
+                <span>▣</span>
+                <span>Dispositivos</span>
+            </a>
+            <a href="dashboard.html?section=settings" class="nav-item">
+                <span>⚙</span>
+                <span>Configurações</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-avatar avatar-small">
+                <img id="sidebarUserAvatar" alt="Foto do perfil" hidden>
+                <span id="sidebarUserInitials">?</span>
             </div>
-
-            <nav>
-
-                <a href="../index.html">
-                    Dashboard
-                </a>
-
-                <a href="conversas.html">
-                    Conversas
-                </a>
-
-                <a href="memorias.html">
-                    Memórias
-                </a>
-
-                <a href="dispositivos.html" class="active">
-                    Dispositivos
-                </a>
-
-                <a href="configuracoes.html">
-                    Configurações
-                </a>
-
-            </nav>
-
-            <div class="sidebar-bottom">
-                <span class="status-dot"></span>
-                Sistema online
+            <div>
+                <div class="user-name" id="userName">Carregando...</div>
+                <div class="user-status"><span class="status-dot"></span>Online</div>
             </div>
+            <button id="logoutButton" class="logout-button">Sair</button>
+        </div>
 
-        </aside>
+    </aside>
 
+    <main class="content">
 
-        <main class="content">
+        <header class="topbar">
+            <h1>Dispositivos</h1>
+            <div class="topbar-right">
+                <div class="profile-chip">
+                    <div class="user-avatar avatar-topbar">
+                        <img id="topUserAvatar" alt="Foto do perfil" hidden>
+                        <span id="topUserInitials">?</span>
+                    </div>
+                    <span id="topUserName">Usuário</span>
+                </div>
+                <span class="online-badge"><span class="status-dot"></span>Online</span>
+                <button id="topLogoutButton" class="icon-button" title="Sair">⇥</button>
+            </div>
+        </header>
 
-            <header class="topbar">
+        <section class="section active-section">
 
+            <div class="page-heading">
+                <div class="heading-icon">▣</div>
                 <div>
-                    <span class="page-label">JARVIS</span>
-                    <h1>Dispositivos</h1>
+                    <h2>Dispositivos</h2>
+                    <p>Acompanhe os acessos ativos à sua conta.</p>
                 </div>
+            </div>
 
-                <div class="system-status">
-                    <span class="status-dot"></span>
-                    JARVIS Online
+            <div class="device-grid">
+
+                <article class="device-card device-current">
+                    <div class="device-card-header">
+                        <div class="device-icon">▣</div>
+                        <span class="device-online"><span class="status-dot"></span>Ativo agora</span>
+                    </div>
+                    <div class="device-card-label">SESSÃO ATUAL</div>
+                    <h3 id="deviceName">Este navegador</h3>
+                    <p id="deviceDetails">Verificando navegador e sistema...</p>
+                    <div class="device-meta">
+                        <span>Última verificação</span>
+                        <strong id="deviceLastSeen">Agora</strong>
+                    </div>
+                </article>
+
+                <article class="device-card">
+                    <div class="device-card-header">
+                        <div class="device-icon">☁</div>
+                        <span class="device-online"><span class="status-dot"></span>Online</span>
+                    </div>
+                    <div class="device-card-label">CONEXÃO J.A.R.V.I.S.</div>
+                    <h3 id="backendDeviceStatus">Backend conectado</h3>
+                    <p id="backendDeviceDetails">Suas conversas são sincronizadas pela conta.</p>
+                    <div class="device-meta">
+                        <span>Banco de dados</span>
+                        <strong id="databaseDeviceStatus">Verificando...</strong>
+                    </div>
+                </article>
+
+            </div>
+
+            <div class="device-info-card">
+                <div class="device-info-icon">✦</div>
+                <div>
+                    <strong>Sincronização entre aparelhos</strong>
+                    <p>O celular e o site compartilham as mesmas conversas quando estão conectados à mesma conta.</p>
                 </div>
+            </div>
 
-            </header>
+            <button type="button" class="secondary-button" id="refreshDeviceButton">
+                Atualizar status
+            </button>
+            <span class="form-feedback" id="deviceFeedback" role="status"></span>
 
+        </section>
 
-            <section class="activity">
+    </main>
 
-                <div class="section-header">
-                    <h2>Dispositivos conectados</h2>
-                </div>
+</div>
 
-                <div class="empty-activity">
-                    Nenhum dispositivo conectado.
-                </div>
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+    const token = getToken();
 
-            </section>
+    if (!token) {
+        window.location.replace("login.html");
+    }
 
-        </main>
+    const userName = document.getElementById("userName");
+    const topUserName = document.getElementById("topUserName");
+    const avatarTargets = [
+        [document.getElementById("sidebarUserAvatar"), document.getElementById("sidebarUserInitials")],
+        [document.getElementById("topUserAvatar"), document.getElementById("topUserInitials")]
+    ];
 
-    </div>
+    function initials(name) {
+        return String(name || "Usuário")
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean)
+            .slice(0, 2)
+            .map(word => word[0])
+            .join("")
+            .toUpperCase() || "?";
+    }
+
+    function applyUser(user) {
+        const name = user.username || "Usuário";
+        userName.textContent = name;
+        topUserName.textContent = name;
+
+        avatarTargets.forEach(([image, fallback]) => {
+            fallback.textContent = initials(name);
+            image.hidden = true;
+            fallback.hidden = false;
+            image.onerror = () => {
+                image.hidden = true;
+                fallback.hidden = false;
+            };
+            if (user.picture_url) {
+                image.src = user.picture_url;
+                image.hidden = false;
+                fallback.hidden = true;
+            }
+        });
+    }
+
+    function browserName() {
+        const agent = navigator.userAgent;
+        if (agent.includes("Edg/")) return "Microsoft Edge";
+        if (agent.includes("Chrome/")) return "Google Chrome";
+        if (agent.includes("Firefox/")) return "Mozilla Firefox";
+        if (agent.includes("Safari/")) return "Safari";
+        return "Navegador web";
+    }
+
+    async function refreshDeviceStatus() {
+        const feedback = document.getElementById("deviceFeedback");
+        const button = document.getElementById("refreshDeviceButton");
+        button.disabled = true;
+        feedback.textContent = "Verificando...";
+        feedback.className = "form-feedback";
+        document.getElementById("deviceLastSeen").textContent =
+            new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+
+        try {
+            const health = await apiRequest("/health");
+            document.getElementById("deviceDetails").textContent =
+                `${browserName()} · ${navigator.platform || "Sistema atual"}`;
+            document.getElementById("databaseDeviceStatus").textContent =
+                health.database === "online" ? "Online" : "Indisponível";
+            feedback.textContent = "Status atualizado.";
+            feedback.className = "form-feedback success";
+        } catch (error) {
+            document.getElementById("backendDeviceStatus").textContent = "Backend indisponível";
+            document.getElementById("databaseDeviceStatus").textContent = "Verifique a conexão";
+            feedback.textContent = "Não foi possível atualizar o status.";
+            feedback.className = "form-feedback error";
+        } finally {
+            button.disabled = false;
+        }
+    }
+
+    function logout() {
+        removeToken();
+        window.location.replace("login.html");
+    }
+
+    document.getElementById("logoutButton").addEventListener("click", logout);
+    document.getElementById("topLogoutButton").addEventListener("click", logout);
+    document.getElementById("refreshDeviceButton").addEventListener("click", refreshDeviceStatus);
+
+    apiRequest("/me", {
+        method: "GET",
+        headers: { Authorization: "Bearer " + token }
+    }).then(applyUser).catch(error => {
+        if (error.status === 401) logout();
+    });
+
+    refreshDeviceStatus();
+</script>
 
 </body>
-
 </html>
