@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>JARVIS | Dashboard</title>
+
+    <link rel="stylesheet" href="../css/dashboard.css?v=config-4">
+
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <!-- ========================================================
+         SIDEBAR
+         ======================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                ◉
+            </div>
+
+            <span>
+                J.A.R.V.I.S.
+            </span>
+
+        </div>
+
+
+        <!-- NOVA CONVERSA -->
+
+        <a
+            href="#"
+            class="new-chat"
+            id="newChatButton"
+        >
+            <span>＋</span>
+            <span>Nova conversa</span>
+        </a>
+
+
+        <!-- NAVEGAÇÃO -->
+
+        <div class="nav-title">
+            NAVEGAÇÃO
+        </div>
+
+
+        <nav class="nav">
+
+            <a
+                href="#"
+                class="nav-item active"
+                data-section="dashboard"
+            >
+                <span>⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a
+                href="#"
+                class="nav-item"
+                data-section="conversations"
+            >
+                <span>◫</span>
+                <span>Conversas</span>
+            </a>
+
+
+            <a
+                href="#"
+                class="nav-item"
+                data-section="memories"
+            >
+                <span>◈</span>
+                <span>Memórias</span>
+            </a>
+
+
+            <a
+                href="#"
+                class="nav-item"
+                data-section="settings"
+            >
+                <span>⚙</span>
+                <span>Configurações</span>
+            </a>
+
+        </nav>
+
+
+        <!-- CONVERSAS RECENTES -->
+
+        <div class="recent-title">
+            CONVERSAS RECENTES
+        </div>
+
+        <div class="recent-empty">
+            Suas conversas aparecerão aqui.
+        </div>
+
+
+        <!-- USUÁRIO -->
+
+        <div class="sidebar-footer">
+
+            <div class="user-avatar avatar-small">
+
+                <img
+                    id="sidebarUserAvatar"
+                    alt="Foto do perfil"
+                    hidden
+                >
+
+                <span id="sidebarUserInitials">?</span>
+
+            </div>
+
+            <div>
+
+                <div
+                    class="user-name"
+                    id="userName"
+                >
+                    Carregando...
+                </div>
+
+                <div class="user-status">
+
+                    <span class="status-dot"></span>
+
+                    Online
+
+                </div>
+
+            </div>
+
+
+            <button
+                id="logoutButton"
+                class="logout-button"
+            >
+                Sair
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ========================================================
+         CONTEÚDO
+         ======================================================== -->
+
+    <main class="content">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <h1 id="pageTitle">
+                Dashboard
+            </h1>
+
+
+            <div class="topbar-right">
+
+                <div class="profile-chip">
+
+                    <div class="user-avatar avatar-topbar">
+
+                        <img
+                            id="topUserAvatar"
+                            alt="Foto do perfil"
+                            hidden
+                        >
+
+                        <span id="topUserInitials">?</span>
+
+                    </div>
+
+                    <span id="topUserName">
+                        Usuário
+                    </span>
+
+                </div>
+
+                <span class="online-badge">
+
+                    <span class="status-dot"></span>
+
+                    Online
+
+                </span>
+
+
+                <button
+                    id="topLogoutButton"
+                    class="icon-button"
+                    title="Sair"
+                >
+                    ⇥
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- ====================================================
+             DASHBOARD
+             ==================================================== -->
+
+        <section
+            id="dashboardSection"
+            class="section active-section"
+        >
+
+            <div class="welcome">
+
+                <h2>
+                    Bem-vindo ao J.A.R.V.I.S.
+                </h2>
+
+                <p>
+                    Central de comando do sistema.
+                </p>
+
+            </div>
+
+
+            <div class="status-grid">
+
+
+                <!-- BACKEND -->
+
+                <article class="status-card">
+
+                    <div class="card-icon">
+                        ☁
+                    </div>
+
+                    <div class="card-label">
+                        Backend
+                    </div>
+
+                    <div
+                        class="card-value"
+                        id="backendStatus"
+                    >
+                        Online
+                    </div>
+
+                    <div class="card-description">
+                        Servidor conectado
+                    </div>
+
+                </article>
+
+
+                <!-- MEMÓRIAS -->
+
+                <article class="status-card">
+
+                    <div class="card-icon">
+                        ◈
+                    </div>
+
+                    <div class="card-label">
+                        Memórias
+                    </div>
+
+                    <div class="card-value">
+                        Ativas
+                    </div>
+
+                    <div class="card-description">
+                        Sistema de memória disponível
+                    </div>
+
+                </article>
+
+
+                <!-- IA -->
+
+                <article class="status-card">
+
+                    <div class="card-icon">
+                        ✦
+                    </div>
+
+                    <div class="card-label">
+                        Inteligência
+                    </div>
+
+                    <div class="card-value">
+                        ChatGPT
+                    </div>
+
+                    <div class="card-description">
+                        Motor de IA conectado
+                    </div>
+
+                </article>
+
+
+            </div>
+
+
+            <!-- CENTRAL DE COMANDO -->
+
+            <article class="command-card">
+
+                <div class="command-icon">
+                    ✦
+                </div>
+
+                <h3>
+                    Central de Comando
+                </h3>
+
+                <p>
+                    Acesse suas conversas e interaja
+                    diretamente com o J.A.R.V.I.S.
+                </p>
+
+                <button
+                    class="primary-button"
+                    id="openConversations"
+                >
+                    Abrir conversas
+                </button>
+
+            </article>
+
+        </section>
+
+
+        <!-- ====================================================
+             CONVERSAS
+             ==================================================== -->
+
+        <section
+            id="conversationsSection"
+            class="section"
+        >
+
+            <div class="page-heading">
+
+                <div class="heading-icon">
+                    ◫
+                </div>
+
+                <div>
+
+                    <h2>
+                        Conversas
+                    </h2>
+
+                    <p>
+                        Área de conversas do J.A.R.V.I.S.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="placeholder-card">
+
+                <strong>
+                    Conversas
+                </strong>
+
+                <p>
+                    A estrutura do painel está pronta.
+                    O próximo passo será conectar
+                    a interface ao chat autenticado.
+                </p>
+
+                <button
+                    class="primary-button"
+                    id="conversationNewButton"
+                >
+                    Nova conversa
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- ====================================================
+             MEMÓRIAS
+             ==================================================== -->
+
+        <section
+            id="memoriesSection"
+            class="section"
+        >
+
+            <div class="page-heading">
+
+                <div class="heading-icon">
+                    ◈
+                </div>
+
+                <div>
+
+                    <h2>
+                        Memórias
+                    </h2>
+
+                    <p>
+                        Informações armazenadas
+                        pelo J.A.R.V.I.S.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="placeholder-card">
+
+                <strong>
+                    Memórias
+                </strong>
+
+                <p>
+                    A página está pronta para receber
+                    a integração com o sistema de
+                    memória do backend.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ====================================================
+             CONFIGURAÇÕES
+             ==================================================== -->
+
+        <section
+            id="settingsSection"
+            class="section"
+        >
+
+            <div class="page-heading">
+
+                <div class="heading-icon">
+                    ⚙
+                </div>
+
+                <div>
+
+                    <h2>
+                        Configurações
+                    </h2>
+
+                    <p>
+                        Configurações da conta e do
+                        sistema J.A.R.V.I.S.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="settings-list">
+
+                <div class="profile-card">
+
+                    <div class="user-avatar avatar-settings">
+
+                        <img
+                            id="settingsUserAvatar"
+                            alt="Foto do perfil"
+                            hidden
+                        >
+
+                        <span id="settingsUserInitials">?</span>
+
+                    </div>
+
+                    <div>
+
+                        <strong id="settingsUserName">
+                            Usuário
+                        </strong>
+
+                        <span>
+                            Perfil da sua conta
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <form
+                    class="profile-editor"
+                    id="profileForm"
+                >
+
+                    <div class="profile-editor-heading">
+
+                        <div>
+
+                            <strong>Editar perfil</strong>
+
+                            <span>Atualize como seu perfil aparece no J.A.R.V.I.S.</span>
+
+                        </div>
+
+                        <span class="profile-editor-icon">✦</span>
+
+                    </div>
+
+                    <div class="profile-editor-fields">
+
+                        <div class="profile-field">
+
+                            <label for="profileUsername">Nome de exibição</label>
+
+                            <input
+                                id="profileUsername"
+                                name="username"
+                                type="text"
+                                minlength="3"
+                                maxlength="100"
+                                autocomplete="nickname"
+                                placeholder="Como quer ser chamado?"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="profile-field">
+
+                            <label for="profilePictureUrl">URL da foto</label>
+
+                            <input
+                                id="profilePictureUrl"
+                                name="picture_url"
+                                type="url"
+                                placeholder="https://exemplo.com/minha-foto.jpg"
+                                autocomplete="url"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <div class="profile-editor-actions">
+
+                        <button
+                            type="submit"
+                            class="primary-button"
+                            id="saveProfileButton"
+                        >
+                            Salvar alterações
+                        </button>
+
+                        <span
+                            class="form-feedback"
+                            id="profileFeedback"
+                            role="status"
+                            aria-live="polite"
+                        ></span>
+
+                    </div>
+
+                </form>
+
+
+                <button
+                    type="button"
+                    class="setting-card"
+                    data-settings-panel="account"
+                >
+
+                    <div>
+
+                        <strong>
+                            Conta
+                        </strong>
+
+                        <span>
+                            Gerenciar sua conta
+                        </span>
+
+                    </div>
+
+                    <span>
+                        ›
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="setting-card"
+                    data-settings-panel="appearance"
+                >
+
+                    <div>
+
+                        <strong>
+                            Aparência
+                        </strong>
+
+                        <span>
+                            Tema e interface
+                        </span>
+
+                    </div>
+
+                    <span>
+                        ›
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="setting-card"
+                    data-settings-panel="voice"
+                >
+
+                    <div>
+
+                        <strong>
+                            Voz
+                        </strong>
+
+                        <span>
+                            Configurações de voz
+                        </span>
+
+                    </div>
+
+                    <span>
+                        ›
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="setting-card"
+                    data-settings-panel="security"
+                >
+
+                    <div>
+
+                        <strong>
+                            Segurança
+                        </strong>
+
+                        <span>
+                            Sessão e segurança
+                        </span>
+
+                    </div>
+
+                    <span>
+                        ›
+                    </span>
+
+                </button>
+
+
+                <div
+                    class="settings-details"
+                    id="settingsDetails"
+                    hidden
+                >
+
+                    <div class="settings-details-header">
+
+                        <div>
+                            <span class="settings-details-kicker">PREFERÊNCIAS</span>
+                            <strong id="settingsDetailsTitle">Configurações</strong>
+                        </div>
+
+                        <button
+                            type="button"
+                            class="settings-close"
+                            id="closeSettingsDetails"
+                            aria-label="Fechar painel"
+                        >
+                            ×
+                        </button>
+
+                    </div>
+
+                    <section
+                        class="settings-detail-panel"
+                        data-settings-content="account"
+                        hidden
+                    >
+                        <div class="detail-copy">
+                            <strong>Dados da conta</strong>
+                            <span>Confira os dados usados pelo J.A.R.V.I.S.</span>
+                        </div>
+                        <div class="detail-grid">
+                            <div class="detail-stat">
+                                <span>Nome atual</span>
+                                <strong id="accountDetailName">—</strong>
+                            </div>
+                            <div class="detail-stat">
+                                <span>ID da conta</span>
+                                <strong id="accountDetailId">—</strong>
+                            </div>
+                            <div class="detail-stat">
+                                <span>Status</span>
+                                <strong class="detail-online">Ativa</strong>
+                            </div>
+                        </div>
+                        <button type="button" class="secondary-button" id="focusProfileButton">
+                            Editar dados do perfil
+                        </button>
+                    </section>
+
+                    <section
+                        class="settings-detail-panel"
+                        data-settings-content="appearance"
+                        hidden
+                    >
+                        <div class="detail-copy">
+                            <strong>Aparência</strong>
+                            <span>Personalize o tema e a leitura do painel neste dispositivo.</span>
+                        </div>
+                        <div class="theme-choice">
+                            <div>
+                                <label for="themeSelect">Tema da interface</label>
+                                <small>Escolha como o J.A.R.V.I.S. deve aparecer.</small>
+                            </div>
+                            <select id="themeSelect">
+                                <option value="dark">Escuro</option>
+                                <option value="light">Claro</option>
+                                <option value="system">Cores do sistema</option>
+                            </select>
+                        </div>
+                        <label class="preference-row" for="contrastToggle">
+                            <span>
+                                <strong>Contraste elevado</strong>
+                                <small>Deixa bordas e textos mais destacados.</small>
+                            </span>
+                            <input type="checkbox" id="contrastToggle">
+                        </label>
+                        <label class="preference-row" for="compactToggle">
+                            <span>
+                                <strong>Modo compacto</strong>
+                                <small>Reduz espaçamentos para mostrar mais conteúdo.</small>
+                            </span>
+                            <input type="checkbox" id="compactToggle">
+                        </label>
+                    </section>
+
+                    <section
+                        class="settings-detail-panel"
+                        data-settings-content="voice"
+                        hidden
+                    >
+                        <div class="detail-copy">
+                            <strong>Voz do J.A.R.V.I.S.</strong>
+                            <span>Configure a leitura de respostas no navegador.</span>
+                        </div>
+                        <label class="preference-row" for="voiceToggle">
+                            <span>
+                                <strong>Ativar voz</strong>
+                                <small>Permite testar a leitura das respostas.</small>
+                            </span>
+                            <input type="checkbox" id="voiceToggle">
+                        </label>
+                        <div class="voice-controls">
+                            <label for="voiceSelect">Voz disponível</label>
+                            <select id="voiceSelect"></select>
+                            <label for="voiceRate">Velocidade <output id="voiceRateValue">1.0×</output></label>
+                            <input type="range" id="voiceRate" min="0.6" max="1.6" step="0.1" value="1">
+                            <button type="button" class="secondary-button" id="testVoiceButton">
+                                Ouvir teste
+                            </button>
+                            <span class="form-feedback" id="voiceFeedback" role="status"></span>
+                        </div>
+                    </section>
+
+                    <section
+                        class="settings-detail-panel"
+                        data-settings-content="security"
+                        hidden
+                    >
+                        <div class="detail-copy">
+                            <strong>Sessão e segurança</strong>
+                            <span>Veja o estado da sessão atual neste navegador.</span>
+                        </div>
+                        <div class="detail-grid">
+                            <div class="detail-stat">
+                                <span>Sessão</span>
+                                <strong class="detail-online">Ativa agora</strong>
+                            </div>
+                            <div class="detail-stat">
+                                <span>Autenticação</span>
+                                <strong id="securityMethod">—</strong>
+                            </div>
+                            <div class="detail-stat">
+                                <span>Armazenamento</span>
+                                <strong>Este navegador</strong>
+                            </div>
+                        </div>
+                        <button type="button" class="danger-button inline-danger" id="securityLogoutButton">
+                            Encerrar esta sessão
+                        </button>
+                    </section>
+
+                </div>
+
+
+                <button
+                    class="danger-button"
+                    id="settingsLogoutButton"
+                >
+                    Sair da conta
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+
+<script>
+
+/* ============================================================
+   AUTENTICAÇÃO
+   ============================================================ */
+
+const token = getToken();
+
+
+if (!token) {
+
+    window.location.replace(
+        "login.html"
+    );
+
+}
+
+
+/* ============================================================
+   ELEMENTOS
+   ============================================================ */
+
+const sections = {
+
+    dashboard:
+        document.getElementById(
+            "dashboardSection"
+        ),
+
+    conversations:
+        document.getElementById(
+            "conversationsSection"
+        ),
+
+    memories:
+        document.getElementById(
+            "memoriesSection"
+        ),
+
+    settings:
+        document.getElementById(
+            "settingsSection"
+        )
+
+};
+
+
+const pageTitle =
+    document.getElementById(
+        "pageTitle"
+    );
+
+
+const userName =
+    document.getElementById(
+        "userName"
+    );
+
+const topUserName =
+    document.getElementById(
+        "topUserName"
+    );
+
+const settingsUserName =
+    document.getElementById(
+        "settingsUserName"
+    );
+
+const profileForm =
+    document.getElementById(
+        "profileForm"
+    );
+
+const profileUsername =
+    document.getElementById(
+        "profileUsername"
+    );
+
+const profilePictureUrl =
+    document.getElementById(
+        "profilePictureUrl"
+    );
+
+const saveProfileButton =
+    document.getElementById(
+        "saveProfileButton"
+    );
+
+const profileFeedback =
+    document.getElementById(
+        "profileFeedback"
+    );
+
+const settingsDetails =
+    document.getElementById(
+        "settingsDetails"
+    );
+
+const settingsDetailsTitle =
+    document.getElementById(
+        "settingsDetailsTitle"
+    );
+
+const closeSettingsDetails =
+    document.getElementById(
+        "closeSettingsDetails"
+    );
+
+const accountDetailName =
+    document.getElementById(
+        "accountDetailName"
+    );
+
+const accountDetailId =
+    document.getElementById(
+        "accountDetailId"
+    );
+
+const securityMethod =
+    document.getElementById(
+        "securityMethod"
+    );
+
+const contrastToggle =
+    document.getElementById(
+        "contrastToggle"
+    );
+
+const compactToggle =
+    document.getElementById(
+        "compactToggle"
+    );
+
+const themeSelect =
+    document.getElementById(
+        "themeSelect"
+    );
+
+const voiceToggle =
+    document.getElementById(
+        "voiceToggle"
+    );
+
+const voiceSelect =
+    document.getElementById(
+        "voiceSelect"
+    );
+
+const voiceRate =
+    document.getElementById(
+        "voiceRate"
+    );
+
+const voiceRateValue =
+    document.getElementById(
+        "voiceRateValue"
+    );
+
+const testVoiceButton =
+    document.getElementById(
+        "testVoiceButton"
+    );
+
+const voiceFeedback =
+    document.getElementById(
+        "voiceFeedback"
+    );
+
+let profileUser = null;
+
+const avatarTargets = [
+    [
+        document.getElementById("sidebarUserAvatar"),
+        document.getElementById("sidebarUserInitials")
+    ],
+    [
+        document.getElementById("topUserAvatar"),
+        document.getElementById("topUserInitials")
+    ],
+    [
+        document.getElementById("settingsUserAvatar"),
+        document.getElementById("settingsUserInitials")
+    ]
+];
+
+function getInitials(name) {
+
+    const words = String(name || "Usuário")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+
+    if (!words.length) {
+        return "?";
+    }
+
+    return words
+        .slice(0, 2)
+        .map(word => word[0])
+        .join("")
+        .toUpperCase();
+
+}
+
+function applyUserProfile(user) {
+
+    profileUser = user;
+
+    const name =
+        user.username ||
+        user.name ||
+        "Usuário";
+
+    userName.textContent = name;
+
+    if (topUserName) {
+        topUserName.textContent = name;
+    }
+
+    if (settingsUserName) {
+        settingsUserName.textContent = name;
+    }
+
+    if (accountDetailName) {
+        accountDetailName.textContent = name;
+    }
+
+    if (accountDetailId) {
+        accountDetailId.textContent = user.id || "—";
+    }
+
+    if (securityMethod) {
+        securityMethod.textContent = user.picture_url
+            ? "Google"
+            : "Credenciais";
+    }
+
+    if (profileUsername) {
+        profileUsername.value = name;
+    }
+
+    if (profilePictureUrl) {
+        profilePictureUrl.value = user.picture_url || "";
+    }
+
+    avatarTargets.forEach(([image, initials]) => {
+
+        if (!image || !initials) {
+            return;
+        }
+
+        initials.textContent = getInitials(name);
+        image.hidden = true;
+        initials.hidden = false;
+
+        const showFallback = () => {
+            image.hidden = true;
+            initials.hidden = false;
+        };
+
+        image.onerror = showFallback;
+
+        if (user.picture_url) {
+            image.src = user.picture_url;
+            image.alt = `Foto do perfil de ${name}`;
+            image.hidden = false;
+            initials.hidden = true;
+        }
+
+    });
+
+}
+
+
+async function saveProfile(event) {
+
+    event.preventDefault();
+
+    if (!profileForm || !profileUsername || !profilePictureUrl) {
+        return;
+    }
+
+    const username = profileUsername.value.trim();
+    const pictureUrl = profilePictureUrl.value.trim();
+
+    if (username.length < 3) {
+        profileFeedback.textContent =
+            "O nome precisa ter pelo menos 3 caracteres.";
+        profileFeedback.className = "form-feedback error";
+        return;
+    }
+
+    if (pictureUrl && !/^https?:\/\/[^\s]+$/i.test(pictureUrl)) {
+        profileFeedback.textContent =
+            "Use uma URL http ou https válida para a foto.";
+        profileFeedback.className = "form-feedback error";
+        return;
+    }
+
+    saveProfileButton.disabled = true;
+    saveProfileButton.textContent = "Salvando...";
+    profileFeedback.textContent = "";
+    profileFeedback.className = "form-feedback";
+
+    try {
+
+        const user = await apiRequest(
+            "/me",
+            {
+                method: "PATCH",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({
+                    username,
+                    picture_url: pictureUrl || null
+                })
+            }
+        );
+
+        applyUserProfile(user);
+        profileFeedback.textContent = "Perfil atualizado com sucesso.";
+        profileFeedback.className = "form-feedback success";
+
+    } catch (error) {
+
+        profileFeedback.textContent =
+            error.message || "Não foi possível atualizar o perfil.";
+        profileFeedback.className = "form-feedback error";
+
+    } finally {
+
+        saveProfileButton.disabled = false;
+        saveProfileButton.textContent = "Salvar alterações";
+
+    }
+
+}
+
+
+if (profileForm) {
+    profileForm.addEventListener("submit", saveProfile);
+}
+
+
+/* ============================================================
+   AÇÕES DAS CONFIGURAÇÕES
+   ============================================================ */
+
+const settingsPanelTitles = {
+    account: "Conta",
+    appearance: "Aparência",
+    voice: "Voz",
+    security: "Segurança"
+};
+
+function openSettingsPanel(panelName) {
+
+    if (!settingsDetails) {
+        return;
+    }
+
+    settingsDetails.hidden = false;
+    settingsDetailsTitle.textContent =
+        settingsPanelTitles[panelName] || "Configurações";
+
+    document
+        .querySelectorAll("[data-settings-content]")
+        .forEach(function (panel) {
+            panel.hidden = panel.dataset.settingsContent !== panelName;
+        });
+
+    document
+        .querySelectorAll("[data-settings-panel]")
+        .forEach(function (card) {
+            card.classList.toggle(
+                "selected",
+                card.dataset.settingsPanel === panelName
+            );
+        });
+
+    settingsDetails.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+    });
+
+}
+
+function closeSettingsPanel() {
+
+    if (!settingsDetails) {
+        return;
+    }
+
+    settingsDetails.hidden = true;
+
+    document
+        .querySelectorAll("[data-settings-panel]")
+        .forEach(function (card) {
+            card.classList.remove("selected");
+        });
+
+}
+
+document
+    .querySelectorAll("[data-settings-panel]")
+    .forEach(function (card) {
+        card.addEventListener("click", function () {
+            openSettingsPanel(card.dataset.settingsPanel);
+        });
+    });
+
+if (closeSettingsDetails) {
+    closeSettingsDetails.addEventListener("click", closeSettingsPanel);
+}
+
+const focusProfileButton =
+    document.getElementById(
+        "focusProfileButton"
+    );
+
+if (focusProfileButton) {
+    focusProfileButton.addEventListener("click", function () {
+        profileForm.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+        profileUsername.focus();
+    });
+}
+
+
+/* ============================================================
+   APARÊNCIA
+   ============================================================ */
+
+function loadAppearancePreferences() {
+
+    const savedTheme =
+        localStorage.getItem("jarvis_theme") || "dark";
+
+    const highContrast =
+        localStorage.getItem("jarvis_high_contrast") === "true";
+
+    const compactMode =
+        localStorage.getItem("jarvis_compact_mode") === "true";
+
+    document.body.classList.toggle(
+        "high-contrast",
+        highContrast
+    );
+
+    document.body.classList.toggle(
+        "compact-mode",
+        compactMode
+    );
+
+    applyTheme(savedTheme);
+
+    if (themeSelect) {
+        themeSelect.value = savedTheme;
+    }
+
+    if (contrastToggle) {
+        contrastToggle.checked = highContrast;
+    }
+
+    if (compactToggle) {
+        compactToggle.checked = compactMode;
+    }
+
+}
+
+function applyTheme(theme) {
+
+    const selectedTheme =
+        ["dark", "light", "system"].includes(theme)
+            ? theme
+            : "dark";
+
+    const followsLightSystem =
+        selectedTheme === "system" &&
+        window.matchMedia("(prefers-color-scheme: light)").matches;
+
+    document.body.classList.toggle(
+        "theme-light",
+        selectedTheme === "light" || followsLightSystem
+    );
+
+    document.body.classList.toggle(
+        "theme-system",
+        selectedTheme === "system"
+    );
+
+}
+
+const systemThemeQuery =
+    window.matchMedia("(prefers-color-scheme: light)");
+
+if (systemThemeQuery.addEventListener) {
+    systemThemeQuery.addEventListener("change", function () {
+        if (localStorage.getItem("jarvis_theme") === "system") {
+            applyTheme("system");
+        }
+    });
+}
+
+if (themeSelect) {
+    themeSelect.addEventListener("change", function () {
+        localStorage.setItem("jarvis_theme", themeSelect.value);
+        applyTheme(themeSelect.value);
+    });
+}
+
+if (contrastToggle) {
+    contrastToggle.addEventListener("change", function () {
+        const enabled = contrastToggle.checked;
+        document.body.classList.toggle("high-contrast", enabled);
+        localStorage.setItem("jarvis_high_contrast", enabled);
+    });
+}
+
+if (compactToggle) {
+    compactToggle.addEventListener("change", function () {
+        const enabled = compactToggle.checked;
+        document.body.classList.toggle("compact-mode", enabled);
+        localStorage.setItem("jarvis_compact_mode", enabled);
+    });
+}
+
+loadAppearancePreferences();
+
+
+/* ============================================================
+   VOZ
+   ============================================================ */
+
+const voiceSupported =
+    "speechSynthesis" in window &&
+    "SpeechSynthesisUtterance" in window;
+
+function populateVoices() {
+
+    if (!voiceSelect || !voiceSupported) {
+        return;
+    }
+
+    const voices = window.speechSynthesis
+        .getVoices()
+        .filter(function (voice) {
+            return voice.lang && voice.name;
+        });
+
+    const savedVoice =
+        localStorage.getItem("jarvis_voice_name");
+
+    voiceSelect.innerHTML = "";
+
+    voices.forEach(function (voice) {
+        const option = document.createElement("option");
+        option.value = voice.name;
+        option.textContent = `${voice.name} (${voice.lang})`;
+        option.dataset.voiceUri = voice.voiceURI;
+        voiceSelect.appendChild(option);
+    });
+
+    if (savedVoice && voices.some(function (voice) {
+        return voice.name === savedVoice;
+    })) {
+        voiceSelect.value = savedVoice;
+    }
+
+}
+
+function loadVoicePreferences() {
+
+    const enabled =
+        localStorage.getItem("jarvis_voice_enabled") === "true";
+
+    const savedRate =
+        Number(localStorage.getItem("jarvis_voice_rate") || 1);
+
+    if (voiceToggle) {
+        voiceToggle.checked = enabled;
+    }
+
+    if (voiceRate) {
+        voiceRate.value = String(
+            Math.min(1.6, Math.max(0.6, savedRate))
+        );
+    }
+
+    if (voiceRateValue && voiceRate) {
+        voiceRateValue.textContent = `${Number(voiceRate.value).toFixed(1)}×`;
+    }
+
+    if (!voiceSupported && voiceFeedback) {
+        voiceFeedback.textContent =
+            "Seu navegador não oferece leitura de voz.";
+        voiceFeedback.className = "form-feedback error";
+    }
+
+    populateVoices();
+
+}
+
+if (voiceSupported) {
+    window.speechSynthesis.onvoiceschanged = populateVoices;
+}
+
+if (voiceToggle) {
+    voiceToggle.addEventListener("change", function () {
+        localStorage.setItem(
+            "jarvis_voice_enabled",
+            voiceToggle.checked
+        );
+        if (voiceFeedback) {
+            voiceFeedback.textContent = voiceToggle.checked
+                ? "Voz ativada neste navegador."
+                : "Voz desativada.";
+            voiceFeedback.className = "form-feedback success";
+        }
+    });
+}
+
+if (voiceSelect) {
+    voiceSelect.addEventListener("change", function () {
+        localStorage.setItem(
+            "jarvis_voice_name",
+            voiceSelect.value
+        );
+    });
+}
+
+if (voiceRate) {
+    voiceRate.addEventListener("input", function () {
+        localStorage.setItem("jarvis_voice_rate", voiceRate.value);
+        voiceRateValue.textContent = `${Number(voiceRate.value).toFixed(1)}×`;
+    });
+}
+
+if (testVoiceButton) {
+    testVoiceButton.addEventListener("click", function () {
+
+        if (!voiceSupported) {
+            return;
+        }
+
+        if (!voiceToggle.checked) {
+            voiceFeedback.textContent = "Ative a voz antes de testar.";
+            voiceFeedback.className = "form-feedback error";
+            return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(
+            `Olá, ${profileUser?.username || "usuário"}. A voz do JARVIS está funcionando.`
+        );
+
+        const selectedVoice = window.speechSynthesis
+            .getVoices()
+            .find(function (voice) {
+                return voice.name === voiceSelect.value;
+            });
+
+        if (selectedVoice) {
+            utterance.voice = selectedVoice;
+            utterance.lang = selectedVoice.lang;
+        } else {
+            utterance.lang = "pt-BR";
+        }
+
+        utterance.rate = Number(voiceRate.value);
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utterance);
+        voiceFeedback.textContent = "Reproduzindo teste de voz.";
+        voiceFeedback.className = "form-feedback success";
+
+    });
+}
+
+loadVoicePreferences();
+
+
+/* ============================================================
+   TÍTULOS
+   ============================================================ */
+
+const titles = {
+
+    dashboard:
+        "Dashboard",
+
+    conversations:
+        "Conversas",
+
+    memories:
+        "Memórias",
+
+    settings:
+        "Configurações"
+
+};
+
+
+/* ============================================================
+   TROCA DE SEÇÃO
+   ============================================================ */
+
+function showSection(name) {
+
+    Object.keys(sections).forEach(
+        function (key) {
+
+            sections[key]
+                .classList
+                .remove(
+                    "active-section"
+                );
+
+        }
+    );
+
+
+    sections[name]
+        .classList
+        .add(
+            "active-section"
+        );
+
+
+    pageTitle.textContent =
+        titles[name];
+
+
+    document
+        .querySelectorAll(".nav-item")
+        .forEach(
+            function (item) {
+
+                item.classList.toggle(
+                    "active",
+                    item.dataset.section === name
+                );
+
+            }
+        );
+
+}
+
+
+/* ============================================================
+   NAVEGAÇÃO
+   ============================================================ */
+
+document
+    .querySelectorAll(".nav-item")
+    .forEach(
+        function (item) {
+
+            item.addEventListener(
+                "click",
+                function (event) {
+
+                    event.preventDefault();
+
+                    showSection(
+                        item.dataset.section
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+/* ============================================================
+   ABRIR CONVERSAS
+   ============================================================ */
+
+document
+    .getElementById("openConversations")
+    .addEventListener(
+        "click",
+        function () {
+
+            showSection(
+                "conversations"
+            );
+
+        }
+    );
+
+
+/* ============================================================
+   NOVA CONVERSA
+   ============================================================ */
+
+document
+    .getElementById("newChatButton")
+    .addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+
+            showSection(
+                "conversations"
+            );
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "conversationNewButton"
+    )
+    .addEventListener(
+        "click",
+        function () {
+
+            showSection(
+                "conversations"
+            );
+
+        }
+    );
+
+
+/* ============================================================
+   LOGOUT
+   ============================================================ */
+
+function logout() {
+
+    removeToken();
+
+    window.location.replace(
+        "login.html"
+    );
+
+}
+
+
+document
+    .getElementById(
+        "logoutButton"
+    )
+    .addEventListener(
+        "click",
+        logout
+    );
+
+
+document
+    .getElementById(
+        "topLogoutButton"
+    )
+    .addEventListener(
+        "click",
+        logout
+    );
+
+
+document
+    .getElementById(
+        "settingsLogoutButton"
+    )
+    .addEventListener(
+        "click",
+        logout
+    );
+
+
+document
+    .getElementById(
+        "securityLogoutButton"
+    )
+    .addEventListener(
+        "click",
+        logout
+    );
+
+
+/* ============================================================
+   VALIDAR USUÁRIO
+   ============================================================ */
+
+async function loadUser() {
+
+    try {
+
+        const user =
+            await apiRequest(
+                "/me",
+                {
+                    method: "GET",
+
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
+                }
+            );
+
+
+        if (user) {
+
+            applyUserProfile(user);
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Erro ao validar sessão:",
+            error
+        );
+
+
+        if (
+            error.status === 401
+        ) {
+
+            removeToken();
+
+            window.location.replace(
+                "login.html"
+            );
+
+            return;
+
+        }
+
+
+        userName.textContent =
+            "Usuário";
+
+    }
+
+}
+
+
+loadUser();
+
+</script>
+
+</body>
+</html>

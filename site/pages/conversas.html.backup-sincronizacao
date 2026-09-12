@@ -219,69 +219,33 @@
             }
         }
     </style>
-
-    <link rel="stylesheet" href="../css/dashboard.css?v=conversas-2">
 </head>
 
 <body>
-    <div class="conversation-page app-shell">
+    <div class="conversation-page">
         <aside class="sidebar">
-            <div class="brand">
-                <div class="brand-icon">◉</div>
-                <span>J.A.R.V.I.S.</span>
-            </div>
-            <a href="dashboard.html" class="new-chat">
-                <span>＋</span>
-                <span>Nova conversa</span>
-            </a>
-            <div class="nav-title">NAVEGAÇÃO</div>
-            <nav class="nav">
-                <a href="dashboard.html" class="nav-item">
-                    <span>⌂</span>
-                    <span>Dashboard</span>
-                </a>
-                <a href="conversas.html" class="nav-item active">
-                    <span>◫</span>
-                    <span>Conversas</span>
-                </a>
-                <a href="memorias.html" class="nav-item">
-                    <span>◈</span>
-                    <span>Memórias</span>
-                </a>
-                <a href="dispositivos.html" class="nav-item">
-                    <span>▣</span>
-                    <span>Dispositivos</span>
-                </a>
-                <a href="dashboard.html?section=settings" class="nav-item">
-                    <span>⚙</span>
-                    <span>Configurações</span>
-                </a>
+            <div class="logo">JARVIS</div>
+            <nav>
+                <a href="../index.html">Dashboard</a>
+                <a href="conversas.html" class="active">Conversas</a>
+                <a href="memorias.html">Memórias</a>
+                <a href="dispositivos.html">Dispositivos</a>
+                <a href="configuracoes.html">Configurações</a>
             </nav>
-            <div class="sidebar-footer">
-                <div class="user-avatar avatar-small">
-                    <img id="sidebarUserAvatar" alt="Foto do perfil" hidden>
-                    <span id="sidebarUserInitials">?</span>
-                </div>
-                <div>
-                    <div class="user-name" id="sidebarUserName">Carregando...</div>
-                    <div class="user-status"><span class="status-dot"></span>Online</div>
-                </div>
-                <button id="sidebarLogoutButton" class="logout-button">Sair</button>
+            <div class="sidebar-bottom">
+                <span class="status-dot"></span>
+                Sistema online
             </div>
         </aside>
 
-        <main class="conversation-content content">
+        <main class="conversation-content">
             <header class="topbar">
-                <h1>Conversas</h1>
+                <div>
+                    <span class="page-label">JARVIS</span>
+                    <h1>Conversas</h1>
+                </div>
                 <div class="conversation-actions">
-                    <div class="profile-chip">
-                        <div class="user-avatar avatar-topbar">
-                            <img id="topUserAvatar" alt="Foto do perfil" hidden>
-                            <span id="topUserInitials">?</span>
-                        </div>
-                        <span id="topUserName">Usuário</span>
-                    </div>
-                    <span class="online-badge"><span class="status-dot"></span>Online</span>
+                    <span class="conversation-status" id="conversationStatus">Online</span>
                     <button class="primary-button" id="newConversationButton" type="button">
                         + Nova conversa
                     </button>
@@ -340,40 +304,6 @@
         const deleteConversationButton = document.getElementById("deleteConversationButton");
         const errorMessage = document.getElementById("errorMessage");
         const conversationStatus = document.getElementById("conversationStatus");
-        const sidebarUserName = document.getElementById("sidebarUserName");
-        const topUserName = document.getElementById("topUserName");
-        const avatarTargets = [
-            [document.getElementById("sidebarUserAvatar"), document.getElementById("sidebarUserInitials")],
-            [document.getElementById("topUserAvatar"), document.getElementById("topUserInitials")]
-        ];
-
-        function applyUser(user) {
-            const name = user.username || "Usuário";
-            const initials = name.trim().split(/\s+/).slice(0, 2).map(word => word[0]).join("").toUpperCase() || "?";
-
-            if (sidebarUserName) sidebarUserName.textContent = name;
-            if (topUserName) topUserName.textContent = name;
-
-            avatarTargets.forEach(([image, fallback]) => {
-                fallback.textContent = initials;
-                image.hidden = true;
-                fallback.hidden = false;
-                image.onerror = () => {
-                    image.hidden = true;
-                    fallback.hidden = false;
-                };
-                if (user.picture_url) {
-                    image.src = user.picture_url;
-                    image.hidden = false;
-                    fallback.hidden = true;
-                }
-            });
-        }
-
-        function logout() {
-            removeToken();
-            window.location.replace("login.html");
-        }
 
         function authOptions(options = {}) {
             return {
@@ -460,13 +390,7 @@
                 state.conversations = Array.isArray(response) ? response : response.conversations || [];
                 renderConversationList();
 
-                const requestedId = Number(
-                    new URLSearchParams(window.location.search).get("id")
-                );
-
-                if (Number.isInteger(requestedId) && state.conversations.some(item => item.id === requestedId)) {
-                    await selectConversation(requestedId);
-                } else if (state.currentId && state.conversations.some(item => item.id === state.currentId)) {
+                if (state.currentId && state.conversations.some(item => item.id === state.currentId)) {
                     await selectConversation(state.currentId);
                 } else if (state.conversations.length) {
                     await selectConversation(state.conversations[0].id);
@@ -546,14 +470,6 @@
                 if (!handleUnauthorized(error)) showError(error.message || "Não foi possível excluir a conversa.");
             }
         });
-
-        document.getElementById("sidebarLogoutButton").addEventListener("click", logout);
-
-        apiRequest("/me", authOptions())
-            .then(applyUser)
-            .catch(error => {
-                if (error.status === 401) logout();
-            });
 
         if (!getToken()) {
             window.location.replace("login.html");

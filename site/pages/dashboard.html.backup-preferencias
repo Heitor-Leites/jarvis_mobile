@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>JARVIS | Dashboard</title>
+
+    <link rel="stylesheet" href="../css/dashboard.css?v=perfil-2">
+
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <!-- ========================================================
+         SIDEBAR
+         ======================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                ◉
+            </div>
+
+            <span>
+                J.A.R.V.I.S.
+            </span>
+
+        </div>
+
+
+        <!-- NOVA CONVERSA -->
+
+        <a
+            href="#"
+            class="new-chat"
+            id="newChatButton"
+        >
+            <span>＋</span>
+            <span>Nova conversa</span>
+        </a>
+
+
+        <!-- NAVEGAÇÃO -->
+
+        <div class="nav-title">
+            NAVEGAÇÃO
+        </div>
+
+
+        <nav class="nav">
+
+            <a
+                href="#"
+                class="nav-item active"
+                data-section="dashboard"
+            >
+                <span>⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a
+                href="#"
+                class="nav-item"
+                data-section="conversations"
+            >
+                <span>◫</span>
+                <span>Conversas</span>
+            </a>
+
+
+            <a
+                href="#"
+                class="nav-item"
+                data-section="memories"
+            >
+                <span>◈</span>
+                <span>Memórias</span>
+            </a>
+
+
+            <a
+                href="#"
+                class="nav-item"
+                data-section="settings"
+            >
+                <span>⚙</span>
+                <span>Configurações</span>
+            </a>
+
+        </nav>
+
+
+        <!-- CONVERSAS RECENTES -->
+
+        <div class="recent-title">
+            CONVERSAS RECENTES
+        </div>
+
+        <div class="recent-empty">
+            Suas conversas aparecerão aqui.
+        </div>
+
+
+        <!-- USUÁRIO -->
+
+        <div class="sidebar-footer">
+
+            <div class="user-avatar avatar-small">
+
+                <img
+                    id="sidebarUserAvatar"
+                    alt="Foto do perfil"
+                    hidden
+                >
+
+                <span id="sidebarUserInitials">?</span>
+
+            </div>
+
+            <div>
+
+                <div
+                    class="user-name"
+                    id="userName"
+                >
+                    Carregando...
+                </div>
+
+                <div class="user-status">
+
+                    <span class="status-dot"></span>
+
+                    Online
+
+                </div>
+
+            </div>
+
+
+            <button
+                id="logoutButton"
+                class="logout-button"
+            >
+                Sair
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ========================================================
+         CONTEÚDO
+         ======================================================== -->
+
+    <main class="content">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <h1 id="pageTitle">
+                Dashboard
+            </h1>
+
+
+            <div class="topbar-right">
+
+                <div class="profile-chip">
+
+                    <div class="user-avatar avatar-topbar">
+
+                        <img
+                            id="topUserAvatar"
+                            alt="Foto do perfil"
+                            hidden
+                        >
+
+                        <span id="topUserInitials">?</span>
+
+                    </div>
+
+                    <span id="topUserName">
+                        Usuário
+                    </span>
+
+                </div>
+
+                <span class="online-badge">
+
+                    <span class="status-dot"></span>
+
+                    Online
+
+                </span>
+
+
+                <button
+                    id="topLogoutButton"
+                    class="icon-button"
+                    title="Sair"
+                >
+                    ⇥
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- ====================================================
+             DASHBOARD
+             ==================================================== -->
+
+        <section
+            id="dashboardSection"
+            class="section active-section"
+        >
+
+            <div class="welcome">
+
+                <h2>
+                    Bem-vindo ao J.A.R.V.I.S.
+                </h2>
+
+                <p>
+                    Central de comando do sistema.
+                </p>
+
+            </div>
+
+
+            <div class="status-grid">
+
+
+                <!-- BACKEND -->
+
+                <article class="status-card">
+
+                    <div class="card-icon">
+                        ☁
+                    </div>
+
+                    <div class="card-label">
+                        Backend
+                    </div>
+
+                    <div
+                        class="card-value"
+                        id="backendStatus"
+                    >
+                        Online
+                    </div>
+
+                    <div class="card-description">
+                        Servidor conectado
+                    </div>
+
+                </article>
+
+
+                <!-- MEMÓRIAS -->
+
+                <article class="status-card">
+
+                    <div class="card-icon">
+                        ◈
+                    </div>
+
+                    <div class="card-label">
+                        Memórias
+                    </div>
+
+                    <div class="card-value">
+                        Ativas
+                    </div>
+
+                    <div class="card-description">
+                        Sistema de memória disponível
+                    </div>
+
+                </article>
+
+
+                <!-- IA -->
+
+                <article class="status-card">
+
+                    <div class="card-icon">
+                        ✦
+                    </div>
+
+                    <div class="card-label">
+                        Inteligência
+                    </div>
+
+                    <div class="card-value">
+                        ChatGPT
+                    </div>
+
+                    <div class="card-description">
+                        Motor de IA conectado
+                    </div>
+
+                </article>
+
+
+            </div>
+
+
+            <!-- CENTRAL DE COMANDO -->
+
+            <article class="command-card">
+
+                <div class="command-icon">
+                    ✦
+                </div>
+
+                <h3>
+                    Central de Comando
+                </h3>
+
+                <p>
+                    Acesse suas conversas e interaja
+                    diretamente com o J.A.R.V.I.S.
+                </p>
+
+                <button
+                    class="primary-button"
+                    id="openConversations"
+                >
+                    Abrir conversas
+                </button>
+
+            </article>
+
+        </section>
+
+
+        <!-- ====================================================
+             CONVERSAS
+             ==================================================== -->
+
+        <section
+            id="conversationsSection"
+            class="section"
+        >
+
+            <div class="page-heading">
+
+                <div class="heading-icon">
+                    ◫
+                </div>
+
+                <div>
+
+                    <h2>
+                        Conversas
+                    </h2>
+
+                    <p>
+                        Área de conversas do J.A.R.V.I.S.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="placeholder-card">
+
+                <strong>
+                    Conversas
+                </strong>
+
+                <p>
+                    A estrutura do painel está pronta.
+                    O próximo passo será conectar
+                    a interface ao chat autenticado.
+                </p>
+
+                <button
+                    class="primary-button"
+                    id="conversationNewButton"
+                >
+                    Nova conversa
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- ====================================================
+             MEMÓRIAS
+             ==================================================== -->
+
+        <section
+            id="memoriesSection"
+            class="section"
+        >
+
+            <div class="page-heading">
+
+                <div class="heading-icon">
+                    ◈
+                </div>
+
+                <div>
+
+                    <h2>
+                        Memórias
+                    </h2>
+
+                    <p>
+                        Informações armazenadas
+                        pelo J.A.R.V.I.S.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="placeholder-card">
+
+                <strong>
+                    Memórias
+                </strong>
+
+                <p>
+                    A página está pronta para receber
+                    a integração com o sistema de
+                    memória do backend.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ====================================================
+             CONFIGURAÇÕES
+             ==================================================== -->
+
+        <section
+            id="settingsSection"
+            class="section"
+        >
+
+            <div class="page-heading">
+
+                <div class="heading-icon">
+                    ⚙
+                </div>
+
+                <div>
+
+                    <h2>
+                        Configurações
+                    </h2>
+
+                    <p>
+                        Configurações da conta e do
+                        sistema J.A.R.V.I.S.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="settings-list">
+
+                <div class="profile-card">
+
+                    <div class="user-avatar avatar-settings">
+
+                        <img
+                            id="settingsUserAvatar"
+                            alt="Foto do perfil"
+                            hidden
+                        >
+
+                        <span id="settingsUserInitials">?</span>
+
+                    </div>
+
+                    <div>
+
+                        <strong id="settingsUserName">
+                            Usuário
+                        </strong>
+
+                        <span>
+                            Perfil da sua conta
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <form
+                    class="profile-editor"
+                    id="profileForm"
+                >
+
+                    <div class="profile-editor-heading">
+
+                        <div>
+
+                            <strong>Editar perfil</strong>
+
+                            <span>Atualize como seu perfil aparece no J.A.R.V.I.S.</span>
+
+                        </div>
+
+                        <span class="profile-editor-icon">✦</span>
+
+                    </div>
+
+                    <div class="profile-editor-fields">
+
+                        <div class="profile-field">
+
+                            <label for="profileUsername">Nome de exibição</label>
+
+                            <input
+                                id="profileUsername"
+                                name="username"
+                                type="text"
+                                minlength="3"
+                                maxlength="100"
+                                autocomplete="nickname"
+                                placeholder="Como quer ser chamado?"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="profile-field">
+
+                            <label for="profilePictureUrl">URL da foto</label>
+
+                            <input
+                                id="profilePictureUrl"
+                                name="picture_url"
+                                type="url"
+                                placeholder="https://exemplo.com/minha-foto.jpg"
+                                autocomplete="url"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <div class="profile-editor-actions">
+
+                        <button
+                            type="submit"
+                            class="primary-button"
+                            id="saveProfileButton"
+                        >
+                            Salvar alterações
+                        </button>
+
+                        <span
+                            class="form-feedback"
+                            id="profileFeedback"
+                            role="status"
+                            aria-live="polite"
+                        ></span>
+
+                    </div>
+
+                </form>
+
+
+                <div class="setting-card">
+
+                    <div>
+
+                        <strong>
+                            Conta
+                        </strong>
+
+                        <span>
+                            Gerenciar sua conta
+                        </span>
+
+                    </div>
+
+                    <span>
+                        ›
+                    </span>
+
+                </div>
+
+
+                <div class="setting-card">
+
+                    <div>
+
+                        <strong>
+                            Aparência
+                        </strong>
+
+                        <span>
+                            Tema e interface
+                        </span>
+
+                    </div>
+
+                    <span>
+                        ›
+                    </span>
+
+                </div>
+
+
+                <div class="setting-card">
+
+                    <div>
+
+                        <strong>
+                            Voz
+                        </strong>
+
+                        <span>
+                            Configurações de voz
+                        </span>
+
+                    </div>
+
+                    <span>
+                        ›
+                    </span>
+
+                </div>
+
+
+                <div class="setting-card">
+
+                    <div>
+
+                        <strong>
+                            Segurança
+                        </strong>
+
+                        <span>
+                            Sessão e segurança
+                        </span>
+
+                    </div>
+
+                    <span>
+                        ›
+                    </span>
+
+                </div>
+
+
+                <button
+                    class="danger-button"
+                    id="settingsLogoutButton"
+                >
+                    Sair da conta
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+
+<script>
+
+/* ============================================================
+   AUTENTICAÇÃO
+   ============================================================ */
+
+const token = getToken();
+
+
+if (!token) {
+
+    window.location.replace(
+        "login.html"
+    );
+
+}
+
+
+/* ============================================================
+   ELEMENTOS
+   ============================================================ */
+
+const sections = {
+
+    dashboard:
+        document.getElementById(
+            "dashboardSection"
+        ),
+
+    conversations:
+        document.getElementById(
+            "conversationsSection"
+        ),
+
+    memories:
+        document.getElementById(
+            "memoriesSection"
+        ),
+
+    settings:
+        document.getElementById(
+            "settingsSection"
+        )
+
+};
+
+
+const pageTitle =
+    document.getElementById(
+        "pageTitle"
+    );
+
+
+const userName =
+    document.getElementById(
+        "userName"
+    );
+
+const topUserName =
+    document.getElementById(
+        "topUserName"
+    );
+
+const settingsUserName =
+    document.getElementById(
+        "settingsUserName"
+    );
+
+const profileForm =
+    document.getElementById(
+        "profileForm"
+    );
+
+const profileUsername =
+    document.getElementById(
+        "profileUsername"
+    );
+
+const profilePictureUrl =
+    document.getElementById(
+        "profilePictureUrl"
+    );
+
+const saveProfileButton =
+    document.getElementById(
+        "saveProfileButton"
+    );
+
+const profileFeedback =
+    document.getElementById(
+        "profileFeedback"
+    );
+
+const avatarTargets = [
+    [
+        document.getElementById("sidebarUserAvatar"),
+        document.getElementById("sidebarUserInitials")
+    ],
+    [
+        document.getElementById("topUserAvatar"),
+        document.getElementById("topUserInitials")
+    ],
+    [
+        document.getElementById("settingsUserAvatar"),
+        document.getElementById("settingsUserInitials")
+    ]
+];
+
+function getInitials(name) {
+
+    const words = String(name || "Usuário")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+
+    if (!words.length) {
+        return "?";
+    }
+
+    return words
+        .slice(0, 2)
+        .map(word => word[0])
+        .join("")
+        .toUpperCase();
+
+}
+
+function applyUserProfile(user) {
+
+    const name =
+        user.username ||
+        user.name ||
+        "Usuário";
+
+    userName.textContent = name;
+
+    if (topUserName) {
+        topUserName.textContent = name;
+    }
+
+    if (settingsUserName) {
+        settingsUserName.textContent = name;
+    }
+
+    if (profileUsername) {
+        profileUsername.value = name;
+    }
+
+    if (profilePictureUrl) {
+        profilePictureUrl.value = user.picture_url || "";
+    }
+
+    avatarTargets.forEach(([image, initials]) => {
+
+        if (!image || !initials) {
+            return;
+        }
+
+        initials.textContent = getInitials(name);
+        image.hidden = true;
+        initials.hidden = false;
+
+        const showFallback = () => {
+            image.hidden = true;
+            initials.hidden = false;
+        };
+
+        image.onerror = showFallback;
+
+        if (user.picture_url) {
+            image.src = user.picture_url;
+            image.alt = `Foto do perfil de ${name}`;
+            image.hidden = false;
+            initials.hidden = true;
+        }
+
+    });
+
+}
+
+
+async function saveProfile(event) {
+
+    event.preventDefault();
+
+    if (!profileForm || !profileUsername || !profilePictureUrl) {
+        return;
+    }
+
+    const username = profileUsername.value.trim();
+    const pictureUrl = profilePictureUrl.value.trim();
+
+    if (username.length < 3) {
+        profileFeedback.textContent =
+            "O nome precisa ter pelo menos 3 caracteres.";
+        profileFeedback.className = "form-feedback error";
+        return;
+    }
+
+    if (pictureUrl && !/^https?:\/\/[^\s]+$/i.test(pictureUrl)) {
+        profileFeedback.textContent =
+            "Use uma URL http ou https válida para a foto.";
+        profileFeedback.className = "form-feedback error";
+        return;
+    }
+
+    saveProfileButton.disabled = true;
+    saveProfileButton.textContent = "Salvando...";
+    profileFeedback.textContent = "";
+    profileFeedback.className = "form-feedback";
+
+    try {
+
+        const user = await apiRequest(
+            "/me",
+            {
+                method: "PATCH",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({
+                    username,
+                    picture_url: pictureUrl || null
+                })
+            }
+        );
+
+        applyUserProfile(user);
+        profileFeedback.textContent = "Perfil atualizado com sucesso.";
+        profileFeedback.className = "form-feedback success";
+
+    } catch (error) {
+
+        profileFeedback.textContent =
+            error.message || "Não foi possível atualizar o perfil.";
+        profileFeedback.className = "form-feedback error";
+
+    } finally {
+
+        saveProfileButton.disabled = false;
+        saveProfileButton.textContent = "Salvar alterações";
+
+    }
+
+}
+
+
+if (profileForm) {
+    profileForm.addEventListener("submit", saveProfile);
+}
+
+
+/* ============================================================
+   TÍTULOS
+   ============================================================ */
+
+const titles = {
+
+    dashboard:
+        "Dashboard",
+
+    conversations:
+        "Conversas",
+
+    memories:
+        "Memórias",
+
+    settings:
+        "Configurações"
+
+};
+
+
+/* ============================================================
+   TROCA DE SEÇÃO
+   ============================================================ */
+
+function showSection(name) {
+
+    Object.keys(sections).forEach(
+        function (key) {
+
+            sections[key]
+                .classList
+                .remove(
+                    "active-section"
+                );
+
+        }
+    );
+
+
+    sections[name]
+        .classList
+        .add(
+            "active-section"
+        );
+
+
+    pageTitle.textContent =
+        titles[name];
+
+
+    document
+        .querySelectorAll(".nav-item")
+        .forEach(
+            function (item) {
+
+                item.classList.toggle(
+                    "active",
+                    item.dataset.section === name
+                );
+
+            }
+        );
+
+}
+
+
+/* ============================================================
+   NAVEGAÇÃO
+   ============================================================ */
+
+document
+    .querySelectorAll(".nav-item")
+    .forEach(
+        function (item) {
+
+            item.addEventListener(
+                "click",
+                function (event) {
+
+                    event.preventDefault();
+
+                    showSection(
+                        item.dataset.section
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+/* ============================================================
+   ABRIR CONVERSAS
+   ============================================================ */
+
+document
+    .getElementById("openConversations")
+    .addEventListener(
+        "click",
+        function () {
+
+            showSection(
+                "conversations"
+            );
+
+        }
+    );
+
+
+/* ============================================================
+   NOVA CONVERSA
+   ============================================================ */
+
+document
+    .getElementById("newChatButton")
+    .addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+
+            showSection(
+                "conversations"
+            );
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "conversationNewButton"
+    )
+    .addEventListener(
+        "click",
+        function () {
+
+            showSection(
+                "conversations"
+            );
+
+        }
+    );
+
+
+/* ============================================================
+   LOGOUT
+   ============================================================ */
+
+function logout() {
+
+    removeToken();
+
+    window.location.replace(
+        "login.html"
+    );
+
+}
+
+
+document
+    .getElementById(
+        "logoutButton"
+    )
+    .addEventListener(
+        "click",
+        logout
+    );
+
+
+document
+    .getElementById(
+        "topLogoutButton"
+    )
+    .addEventListener(
+        "click",
+        logout
+    );
+
+
+document
+    .getElementById(
+        "settingsLogoutButton"
+    )
+    .addEventListener(
+        "click",
+        logout
+    );
+
+
+/* ============================================================
+   VALIDAR USUÁRIO
+   ============================================================ */
+
+async function loadUser() {
+
+    try {
+
+        const user =
+            await apiRequest(
+                "/me",
+                {
+                    method: "GET",
+
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
+                }
+            );
+
+
+        if (user) {
+
+            applyUserProfile(user);
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Erro ao validar sessão:",
+            error
+        );
+
+
+        if (
+            error.status === 401
+        ) {
+
+            removeToken();
+
+            window.location.replace(
+                "login.html"
+            );
+
+            return;
+
+        }
+
+
+        userName.textContent =
+            "Usuário";
+
+    }
+
+}
+
+
+loadUser();
+
+</script>
+
+</body>
+</html>

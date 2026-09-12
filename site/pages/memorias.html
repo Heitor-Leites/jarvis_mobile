@@ -300,46 +300,81 @@
     }
 </style>
 
+<link rel="stylesheet" href="../css/dashboard.css?v=memorias-2">
+
 
 </head>
 
 <body>
 
-<div class="memories-page">
+<div class="memories-page app-shell">
 
 <aside class="sidebar">
 
-    <div class="sidebar-brand">
-        J.A.R.V.I.S.
+    <div class="brand">
+        <div class="brand-icon">◉</div>
+        <span>J.A.R.V.I.S.</span>
     </div>
 
-    <a href="../index.html" class="sidebar-link">
-        Início
+    <a href="dashboard.html" class="new-chat">
+        <span>＋</span>
+        <span>Nova conversa</span>
     </a>
 
-    <a href="conversas.html" class="sidebar-link">
-        Conversas
-    </a>
+    <div class="nav-title">NAVEGAÇÃO</div>
 
-    <a href="memorias.html" class="sidebar-link active">
-        Memórias
-    </a>
+    <nav class="nav">
+        <a href="dashboard.html" class="nav-item">
+            <span>⌂</span>
+            <span>Dashboard</span>
+        </a>
+        <a href="conversas.html" class="nav-item">
+            <span>◫</span>
+            <span>Conversas</span>
+        </a>
+        <a href="memorias.html" class="nav-item active">
+            <span>◈</span>
+            <span>Memórias</span>
+        </a>
+        <a href="dispositivos.html" class="nav-item">
+            <span>▣</span>
+            <span>Dispositivos</span>
+        </a>
+        <a href="dashboard.html?section=settings" class="nav-item">
+            <span>⚙</span>
+            <span>Configurações</span>
+        </a>
+    </nav>
 
-    <a href="dispositivos.html" class="sidebar-link">
-        Dispositivos
-    </a>
-
-    <a href="configuracoes.html" class="sidebar-link">
-        Configurações
-    </a>
+    <div class="sidebar-footer">
+        <div class="user-avatar avatar-small">
+            <img id="sidebarUserAvatar" alt="Foto do perfil" hidden>
+            <span id="sidebarUserInitials">?</span>
+        </div>
+        <div>
+            <div class="user-name" id="sidebarUserName">Carregando...</div>
+            <div class="user-status"><span class="status-dot"></span>Online</div>
+        </div>
+        <button id="logoutButton" class="logout-button">Sair</button>
+    </div>
 
 </aside>
 
-<main class="main-content">
+<main class="main-content content">
 
     <div class="topbar">
         <h1>Memórias</h1>
-        <span class="online-status">● JARVIS Online</span>
+        <div class="topbar-right">
+            <div class="profile-chip">
+                <div class="user-avatar avatar-topbar">
+                    <img id="topUserAvatar" alt="Foto do perfil" hidden>
+                    <span id="topUserInitials">?</span>
+                </div>
+                <span id="topUserName">Usuário</span>
+            </div>
+            <span class="online-badge"><span class="status-dot"></span>Online</span>
+            <button id="topLogoutButton" class="icon-button" title="Sair">⇥</button>
+        </div>
     </div>
 
     <section class="welcome-card">
@@ -526,6 +561,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const currentUser =
         document.getElementById("currentUser");
 
+    const sidebarUserName =
+        document.getElementById("sidebarUserName");
+
+    const topUserName =
+        document.getElementById("topUserName");
+
+    const avatarTargets = [
+        [
+            document.getElementById("sidebarUserAvatar"),
+            document.getElementById("sidebarUserInitials")
+        ],
+        [
+            document.getElementById("topUserAvatar"),
+            document.getElementById("topUserInitials")
+        ]
+    ];
+
     const modalOverlay =
         document.getElementById("modalOverlay");
 
@@ -652,10 +704,44 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 );
 
-            currentUser.textContent =
+            const name =
                 user.username ||
                 user.name ||
                 "Usuário";
+
+            currentUser.textContent = name;
+
+            if (sidebarUserName) {
+                sidebarUserName.textContent = name;
+            }
+
+            if (topUserName) {
+                topUserName.textContent = name;
+            }
+
+            avatarTargets.forEach(([image, fallback]) => {
+                const initials = name
+                    .trim()
+                    .split(/\s+/)
+                    .slice(0, 2)
+                    .map(word => word[0])
+                    .join("")
+                    .toUpperCase() || "?";
+
+                fallback.textContent = initials;
+                image.hidden = true;
+                fallback.hidden = false;
+                image.onerror = () => {
+                    image.hidden = true;
+                    fallback.hidden = false;
+                };
+
+                if (user.picture_url) {
+                    image.src = user.picture_url;
+                    image.hidden = false;
+                    fallback.hidden = true;
+                }
+            });
 
         } catch (error) {
 
@@ -1052,6 +1138,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadUser();
     loadMemories();
+
+    document
+        .getElementById("logoutButton")
+        .addEventListener("click", () => {
+            removeToken();
+            window.location.replace("login.html");
+        });
+
+    document
+        .getElementById("topLogoutButton")
+        .addEventListener("click", () => {
+            removeToken();
+            window.location.replace("login.html");
+        });
 
 });
 
