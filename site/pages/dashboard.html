@@ -1714,6 +1714,11 @@ const titles = {
 
 function showSection(name) {
 
+    if (name === "conversations") {
+        window.location.href = "conversas.html";
+        return;
+    }
+
     Object.keys(sections).forEach(
         function (key) {
 
