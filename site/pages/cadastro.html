@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS | Cadastro</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<main class="login-page">
+    <div class="login-card">
+        <div class="login-logo">JARVIS</div>
+
+        <p class="login-subtitle">
+            Crie sua conta no sistema de inteligência artificial
+        </p>
+
+        <form id="register-form">
+            <div class="input-group">
+                <label for="username">Nome de usuário</label>
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="ex.: junio.silva"
+                    autocomplete="username"
+                    minlength="3"
+                    maxlength="100"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="first-name">Nome</label>
+                <input
+                    type="text"
+                    id="first-name"
+                    placeholder="Seu nome"
+                    autocomplete="given-name"
+                    maxlength="100"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="last-name">Sobrenome</label>
+                <input
+                    type="text"
+                    id="last-name"
+                    placeholder="Seu sobrenome"
+                    autocomplete="family-name"
+                    maxlength="100"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="email">E-mail</label>
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="voce@exemplo.com"
+                    autocomplete="email"
+                    maxlength="320"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="password">Senha</label>
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Mínimo de 8 caracteres"
+                    autocomplete="new-password"
+                    minlength="8"
+                    maxlength="72"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="confirm-password">Confirmar senha</label>
+                <input
+                    type="password"
+                    id="confirm-password"
+                    placeholder="Repita sua senha"
+                    autocomplete="new-password"
+                    minlength="8"
+                    maxlength="72"
+                    required
+                >
+            </div>
+
+            <button type="submit" id="register-button">
+                Criar conta
+            </button>
+        </form>
+
+        <p class="auth-switch">
+            Já possui uma conta?
+            <a href="login.html">Entrar</a>
+        </p>
+
+        <div class="login-status" id="register-status">
+            Cadastro seguro
+        </div>
+    </div>
+</main>
+
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+const form = document.getElementById("register-form");
+const button = document.getElementById("register-button");
+const status = document.getElementById("register-status");
+
+function statusMessage(message) {
+    status.textContent = message;
+}
+
+form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const password = document.getElementById("password").value;
+    const confirmation = document.getElementById("confirm-password").value;
+
+    if (password !== confirmation) {
+        statusMessage("As senhas não coincidem.");
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Criando conta...";
+    statusMessage("Validando seus dados...");
+
+    try {
+        const data = await apiRequest("/register", {
+            method: "POST",
+            body: JSON.stringify({
+                username: document.getElementById("username").value.trim(),
+                first_name: document.getElementById("first-name").value.trim(),
+                last_name: document.getElementById("last-name").value.trim(),
+                email: document.getElementById("email").value.trim(),
+                password
+            })
+        });
+
+        if (!data.access_token) {
+            throw new Error("Token de acesso não recebido.");
+        }
+
+        saveToken(data.access_token);
+        statusMessage("Conta criada. Entrando no J.A.R.V.I.S....");
+        button.textContent = "Conta criada";
+
+        setTimeout(() => {
+            window.location.replace("dashboard.html");
+        }, 400);
+    } catch (error) {
+        statusMessage(error.message || "Não foi possível criar a conta.");
+        button.disabled = false;
+        button.textContent = "Criar conta";
+    }
+});
+</script>
+
+</body>
+</html>

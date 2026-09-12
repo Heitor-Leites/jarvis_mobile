@@ -595,6 +595,23 @@ nav a.active {
     font-size: 12px;
 }
 
+.auth-switch {
+    margin: 20px 0 0;
+    text-align: center;
+    color: #7f8a99;
+    font-size: 13px;
+}
+
+.auth-switch a {
+    color: #58c7ff;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
 /* ================================
    DASHBOARD STATUS
 ================================ */
@@ -929,27 +946,20 @@ nav a.active {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
     padding: 10px 16px;
-
     border: 1px solid rgba(0, 220, 255, 0.35);
     border-radius: 10px;
-
     background: rgba(0, 220, 255, 0.08);
-
     color: #ffffff;
-
     font-size: 14px;
     font-weight: 700;
-
     cursor: pointer;
-
     transition: 0.25s ease;
+    font-family: inherit;
 }
 
 .download-header-button:hover {
     background: rgba(0, 220, 255, 0.18);
     border-color: #00d9ff;
-
     transform: translateY(-1px);
 }
