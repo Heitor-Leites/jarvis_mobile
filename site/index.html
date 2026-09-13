@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/chat.css?v=2">
 
-    <script src="js/api.js?v=1.2.1-history"></script>
+    <script src="js/api.js?v=1.2.2-public-limit"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
@@ -859,17 +859,33 @@ chatForm.addEventListener(
                 error
             );
 
+            if (error.status === 429) {
+                await addMessage(
+                    "Você atingiu o limite de 3 pesquisas sem login. Faça login para continuar usando o J.A.R.V.I.S.",
+                    "jarvis"
+                );
 
-            await addMessage(
-                "Não consegui processar seu comando. Verifique a conexão com o núcleo JARVIS.",
-                "jarvis"
-            );
+                authButton.href =
+                    "pages/login.html";
 
+                authButton.textContent =
+                    "Entrar para continuar";
 
-            setChatStatus(
-                "Falha na comunicação.",
-                "error"
-            );
+                setChatStatus(
+                    "Login necessário.",
+                    "error"
+                );
+            } else {
+                await addMessage(
+                    "Não consegui processar seu comando. Verifique a conexão com o núcleo JARVIS.",
+                    "jarvis"
+                );
+
+                setChatStatus(
+                    "Falha na comunicação.",
+                    "error"
+                );
+            }
 
         } finally {
 
