@@ -1,4 +1,5 @@
 const API_URL = "https://api.30jarvis.com.br";
+let authenticatedConversationId = null;
 
 window.sendMessage = sendMessage;
 
@@ -59,8 +60,21 @@ async function authenticatedChat(message) {
         headers: {
             Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ message })
+        body: JSON.stringify({
+            message,
+            ...(authenticatedConversationId !== null
+                ? { conversation_id: authenticatedConversationId }
+                : {})
+        })
     });
+
+    if (response.conversation_id !== undefined) {
+        const parsedConversationId = Number(response.conversation_id);
+
+        if (Number.isInteger(parsedConversationId)) {
+            authenticatedConversationId = parsedConversationId;
+        }
+    }
 
     return response.response;
 }
@@ -74,6 +88,7 @@ async function sendMessage(message, history = []) {
         } catch (error) {
             if (error.status === 401) {
                 localStorage.removeItem("jarvis_token");
+                authenticatedConversationId = null;
             } else {
                 throw error;
             }
