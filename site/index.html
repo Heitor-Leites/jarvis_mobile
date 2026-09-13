@@ -532,6 +532,7 @@ const authButton =
     
 
 let conversationStarted = false;
+let conversationHistory = [];
 
 
 /* ==========================================
@@ -824,8 +825,20 @@ chatForm.addEventListener(
 
             const response =
                 await sendMessage(
-                    message
+                    message,
+                    conversationHistory.slice(-40)
                 );
+
+            conversationHistory.push(
+                {
+                    role: "user",
+                    content: message
+                },
+                {
+                    role: "assistant",
+                    content: response
+                }
+            );
 
 
             await addMessage(

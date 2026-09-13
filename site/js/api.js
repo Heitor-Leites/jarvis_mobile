@@ -34,10 +34,13 @@ async function apiRequest(endpoint, options = {}) {
     return data;
 }
 
-async function publicChat(message) {
+async function publicChat(message, history = []) {
     const response = await apiRequest("/public/chat", {
         method: "POST",
-        body: JSON.stringify({ message })
+        body: JSON.stringify({
+            message,
+            history
+        })
     });
 
     return response.response;
@@ -61,7 +64,7 @@ async function authenticatedChat(message) {
     return response.response;
 }
 
-async function sendMessage(message) {
+async function sendMessage(message, history = []) {
     const token = localStorage.getItem("jarvis_token");
 
     if (token) {
@@ -76,5 +79,5 @@ async function sendMessage(message) {
         }
     }
 
-    return publicChat(message);
+    return publicChat(message, history);
 }
