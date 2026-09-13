@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/chat.css?v=2">
 
-    <script src="js/api.js?v=1.2.2-public-limit"></script>
+    <script src="js/api.js?v=1.2.3-weather"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
@@ -657,6 +657,13 @@ function setChatStatus(
 }
 
 
+function messageNeedsSource(
+    message
+) {
+    return /\b(?:clima|tempo|temperatura|previs(?:ão|ao)|meteorolog(?:ia|ico|ógico)|chuva|chovendo|umidade|vento|sens(?:ação|acao)\s+térmica)\b/i.test(message);
+}
+
+
 /* ==========================================
    MODO CONVERSA
 ========================================== */
@@ -816,7 +823,9 @@ chatForm.addEventListener(
 
 
         setChatStatus(
-            "JARVIS pensando...",
+            messageNeedsSource(message)
+                ? "JARVIS está consultando fontes."
+                : "JARVIS pensando...",
             "ready"
         );
 
