@@ -561,31 +561,54 @@ nav a.active {
     padding: 13px 14px;
     background: #080c12;
     color: #ffffff;
-    border: 1px solid #202a37;
-    border-radius: 8px;
+    border: 1px solid #26384a;
+    border-radius: 10px;
     outline: none;
     font-size: 14px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .input-group input:focus {
-    border-color: #465467;
+    border-color: #58c7ff;
+    box-shadow: 0 0 0 3px rgba(88, 199, 255, 0.12);
+}
+
+.input-group input::placeholder {
+    color: #596474;
 }
 
 .login-card button {
     width: 100%;
     padding: 13px;
     margin-top: 5px;
-    background: #e5e7eb;
+    background: linear-gradient(135deg, #67d1ff, #36b9ef);
     color: #080b10;
-    border: none;
-    border-radius: 8px;
+    border: 1px solid #58c7ff;
+    border-radius: 10px;
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
 }
 
 .login-card button:hover {
-    background: #ffffff;
+    filter: brightness(1.08);
+    box-shadow: 0 8px 24px rgba(54, 185, 239, 0.2);
+    transform: translateY(-1px);
+}
+
+.login-card .google-login-button {
+    margin-top: 0;
+    background: #101923;
+    color: #d9e6f4;
+    border-color: #2c536d;
+    box-shadow: none;
+}
+
+.login-card .google-login-button:hover {
+    background: #152535;
+    filter: none;
+    box-shadow: 0 8px 24px rgba(24, 117, 166, 0.18);
 }
 
 .login-divider {
