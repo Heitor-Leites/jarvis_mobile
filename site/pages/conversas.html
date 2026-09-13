@@ -126,6 +126,13 @@
             white-space: nowrap;
         }
 
+        .chat-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-shrink: 0;
+        }
+
         .chat-delete {
             border: 0;
             background: transparent;
@@ -301,9 +308,12 @@
                 <section class="chat-panel">
                     <header class="chat-header">
                         <h2 id="conversationTitle">Nova conversa</h2>
-                        <button class="chat-delete" id="deleteConversationButton" type="button" hidden>
-                            Excluir
-                        </button>
+                        <div class="chat-header-actions">
+                            <span class="conversation-status" id="conversationStatus">Online</span>
+                            <button class="chat-delete" id="deleteConversationButton" type="button" hidden>
+                                Excluir
+                            </button>
+                        </div>
                     </header>
 
                     <div class="chat-messages" id="chatMessages">
