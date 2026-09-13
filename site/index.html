@@ -44,6 +44,23 @@
             opacity: 0.85;
         }
 
+        .jarvis-profile-fallback {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(0, 217, 255, 0.5);
+            border-radius: 50%;
+            background: rgba(0, 217, 255, 0.12);
+            color: #8beaff;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .jarvis-home .register-button[hidden] {
+            display: none !important;
+        }
+
 
         /* ==========================================
            JARVIS MOBILE - DOWNLOAD
@@ -308,6 +325,7 @@
     <a
         href="pages/cadastro.html"
         class="login-button register-button"
+        id="registerButton"
     >
         Cadastrar
     </a>
@@ -529,6 +547,9 @@ const micButton =
 
 const authButton =
     document.getElementById("authButton");
+
+const registerButton =
+    document.getElementById("registerButton");
     
 
 let conversationStarted = false;
@@ -564,13 +585,13 @@ async function loadUserProfile() {
             );
 
 
-        if (
-            user &&
-            user.picture_url
-        ) {
+        if (user) {
+            if (registerButton) {
+                registerButton.hidden = true;
+            }
 
             authButton.href =
-                "pages/profile.html";
+                "pages/dashboard.html";
 
             authButton.classList.add(
                 "jarvis-profile"
@@ -582,31 +603,25 @@ async function loadUserProfile() {
             const image =
                 document.createElement("img");
 
-            image.src =
-                user.picture_url;
-
             image.alt =
                 "Perfil";
 
-
-            image.onerror =
-                function () {
-
-                    authButton.classList.remove(
-                        "jarvis-profile"
-                    );
-
-                    authButton.href =
-                        "pages/login.html";
-
-                    authButton.textContent =
-                        "Entrar";
+            if (user.picture_url) {
+                image.src = user.picture_url;
+                image.onerror = function () {
+                    authButton.innerHTML = "";
+                    const fallback = document.createElement("span");
+                    fallback.className = "jarvis-profile-fallback";
+                    fallback.textContent = getProfileInitials(user);
+                    authButton.appendChild(fallback);
                 };
-
-
-            authButton.appendChild(
-                image
-            );
+                authButton.appendChild(image);
+            } else {
+                const fallback = document.createElement("span");
+                fallback.className = "jarvis-profile-fallback";
+                fallback.textContent = getProfileInitials(user);
+                authButton.appendChild(fallback);
+            }
         }
 
     } catch (error) {
@@ -635,8 +650,28 @@ async function loadUserProfile() {
 
             authButton.textContent =
                 "Entrar";
+
+            if (registerButton) {
+                registerButton.hidden = false;
+            }
         }
     }
+}
+
+
+function getProfileInitials(user) {
+    const name =
+        user.username ||
+        user.name ||
+        "Usuário";
+
+    return name
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((part) => part[0])
+        .join("")
+        .toUpperCase() || "U";
 }
 
 
