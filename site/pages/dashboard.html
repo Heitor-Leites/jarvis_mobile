@@ -12,7 +12,7 @@
 
     <title>JARVIS | Dashboard</title>
 
-    <link rel="stylesheet" href="../css/dashboard.css?v=config-5">
+    <link rel="stylesheet" href="../css/dashboard.css?v=admin-1">
 
 </head>
 
@@ -107,6 +107,18 @@
             >
                 <span>⚙</span>
                 <span>Configurações</span>
+            </a>
+
+
+            <a
+                href="#"
+                class="nav-item admin-nav-item"
+                id="adminNavItem"
+                data-section="admin"
+                hidden
+            >
+                <span>▤</span>
+                <span>Administração</span>
             </a>
 
         </nav>
@@ -863,6 +875,120 @@
 
         </section>
 
+
+        <!-- ====================================================
+             ADMINISTRAÇÃO
+             ==================================================== -->
+
+        <section
+            id="adminSection"
+            class="section"
+        >
+
+            <div class="page-heading">
+
+                <div class="heading-icon">
+                    ▤
+                </div>
+
+                <div>
+                    <h2>Administração</h2>
+                    <p>Visão protegida do sistema J.A.R.V.I.S.</p>
+                </div>
+
+            </div>
+
+            <div class="admin-stat-grid">
+                <article class="admin-stat-card">
+                    <span>Usuários</span>
+                    <strong id="adminUsersCount">—</strong>
+                    <small id="adminActiveUsersCount">— ativos</small>
+                </article>
+                <article class="admin-stat-card">
+                    <span>Conversas</span>
+                    <strong id="adminConversationsCount">—</strong>
+                    <small>registradas</small>
+                </article>
+                <article class="admin-stat-card">
+                    <span>Mensagens</span>
+                    <strong id="adminMessagesCount">—</strong>
+                    <small>processadas</small>
+                </article>
+                <article class="admin-stat-card">
+                    <span>Acessos em 24h</span>
+                    <strong id="adminAccessesCount">—</strong>
+                    <small id="adminAccessesTotal">— no total</small>
+                </article>
+            </div>
+
+            <div class="admin-panel-grid">
+                <article class="admin-panel">
+                    <div class="admin-panel-heading">
+                        <div>
+                            <strong>Usuários cadastrados</strong>
+                            <span>Gerencie status e permissões.</span>
+                        </div>
+                        <button type="button" class="secondary-button" id="refreshAdminButton">Atualizar</button>
+                    </div>
+                    <div class="admin-table-wrap">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Usuário</th>
+                                    <th>Status</th>
+                                    <th>Permissão</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminUsersTableBody">
+                                <tr><td colspan="4">Carregando usuários...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+
+                <article class="admin-panel">
+                    <div class="admin-panel-heading">
+                        <div>
+                            <strong>Acessos recentes</strong>
+                            <span>Últimas requisições recebidas pela API.</span>
+                        </div>
+                    </div>
+                    <div class="admin-table-wrap">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Método</th>
+                                    <th>Rota</th>
+                                    <th>Status</th>
+                                    <th>Horário</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminAccessesTableBody">
+                                <tr><td colspan="4">Carregando acessos...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </div>
+
+            <article class="admin-panel admin-sql-panel">
+                <div class="admin-panel-heading">
+                    <div>
+                        <strong>Consulta SQL</strong>
+                        <span>Somente leitura. Use para análises controladas do banco.</span>
+                    </div>
+                </div>
+                <textarea id="adminSQLQuery" class="admin-sql-input" rows="4" spellcheck="false" placeholder="SELECT COUNT(*) AS total FROM users"></textarea>
+                <div class="admin-sql-actions">
+                    <button type="button" class="primary-button" id="runAdminSQLButton">Executar consulta</button>
+                    <span class="form-feedback" id="adminSQLFeedback" role="status"></span>
+                </div>
+                <div class="admin-table-wrap" id="adminSQLResult" hidden></div>
+            </article>
+
+        </section>
+
     </main>
 
 </div>
@@ -917,6 +1043,11 @@ const sections = {
     settings:
         document.getElementById(
             "settingsSection"
+        ),
+
+    admin:
+        document.getElementById(
+            "adminSection"
         )
 
 };
@@ -926,6 +1057,9 @@ const pageTitle =
     document.getElementById(
         "pageTitle"
     );
+
+const adminNavItem =
+    document.getElementById("adminNavItem");
 
 
 const userName =
@@ -1050,6 +1184,20 @@ const recentConversations =
         "recentConversations"
     );
 
+const adminUsersCount = document.getElementById("adminUsersCount");
+const adminActiveUsersCount = document.getElementById("adminActiveUsersCount");
+const adminConversationsCount = document.getElementById("adminConversationsCount");
+const adminMessagesCount = document.getElementById("adminMessagesCount");
+const adminAccessesCount = document.getElementById("adminAccessesCount");
+const adminAccessesTotal = document.getElementById("adminAccessesTotal");
+const adminUsersTableBody = document.getElementById("adminUsersTableBody");
+const adminAccessesTableBody = document.getElementById("adminAccessesTableBody");
+const adminSQLQuery = document.getElementById("adminSQLQuery");
+const runAdminSQLButton = document.getElementById("runAdminSQLButton");
+const adminSQLFeedback = document.getElementById("adminSQLFeedback");
+const adminSQLResult = document.getElementById("adminSQLResult");
+const refreshAdminButton = document.getElementById("refreshAdminButton");
+
 const avatarTargets = [
     [
         document.getElementById("sidebarUserAvatar"),
@@ -1087,6 +1235,10 @@ function getInitials(name) {
 function applyUserProfile(user) {
 
     profileUser = user;
+
+    if (adminNavItem) {
+        adminNavItem.hidden = user.is_admin !== true;
+    }
 
     const name =
         user.username ||
@@ -1683,6 +1835,184 @@ async function loadRecentConversations() {
 
 }
 
+
+function renderAdminSQLResult(data) {
+
+    if (!adminSQLResult) {
+        return;
+    }
+
+    const columns = data.columns || [];
+    const rows = data.rows || [];
+
+    if (!columns.length) {
+        adminSQLResult.innerHTML = "<p class=\"admin-empty\">A consulta não retornou colunas.</p>";
+        adminSQLResult.hidden = false;
+        return;
+    }
+
+    adminSQLResult.innerHTML = `
+        <table class="admin-table">
+            <thead><tr>${columns.map(column => `<th>${escapeRecentText(column)}</th>`).join("")}</tr></thead>
+            <tbody>
+                ${rows.length
+                    ? rows.map(row => `<tr>${columns.map(column => `<td>${escapeRecentText(row[column] ?? "—")}</td>`).join("")}</tr>`).join("")
+                    : `<tr><td colspan="${columns.length}">Nenhum resultado.</td></tr>`}
+            </tbody>
+        </table>
+    `;
+    adminSQLResult.hidden = false;
+
+}
+
+
+function renderAdminUsers(users) {
+
+    if (!adminUsersTableBody) {
+        return;
+    }
+
+    adminUsersTableBody.innerHTML = users.length
+        ? users.map(user => `
+            <tr>
+                <td>
+                    <strong>${escapeRecentText(user.username)}</strong>
+                    <small>${escapeRecentText(user.email || "Sem e-mail")}</small>
+                </td>
+                <td><span class="admin-pill ${user.active ? "success" : "danger"}">${user.active ? "Ativo" : "Bloqueado"}</span></td>
+                <td><span class="admin-pill ${user.is_admin ? "accent" : "muted"}">${user.is_admin ? "Administrador" : "Usuário"}</span></td>
+                <td class="admin-actions">
+                    ${user.id === profileUser?.id
+                        ? "Conta atual"
+                        : `<button type="button" class="admin-action-button" data-admin-user="${user.id}" data-admin-action="active" data-admin-value="${!user.active}">${user.active ? "Bloquear" : "Ativar"}</button>
+                           <button type="button" class="admin-action-button" data-admin-user="${user.id}" data-admin-action="is_admin" data-admin-value="${!user.is_admin}">${user.is_admin ? "Remover admin" : "Tornar admin"}</button>`}
+                </td>
+            </tr>
+        `).join("")
+        : '<tr><td colspan="4">Nenhum usuário cadastrado.</td></tr>';
+
+    adminUsersTableBody.querySelectorAll("[data-admin-user]").forEach(button => {
+        button.addEventListener("click", async function () {
+            button.disabled = true;
+            try {
+                await apiRequest(`/admin/users/${button.dataset.adminUser}`, {
+                    method: "PATCH",
+                    headers: { "Authorization": "Bearer " + token },
+                    body: JSON.stringify({
+                        [button.dataset.adminAction]: button.dataset.adminValue === "true"
+                    })
+                });
+                await loadAdminData();
+            } catch (error) {
+                window.alert(error.message || "Não foi possível atualizar o usuário.");
+                button.disabled = false;
+            }
+        });
+    });
+
+}
+
+
+function renderAdminAccesses(accesses) {
+
+    if (!adminAccessesTableBody) {
+        return;
+    }
+
+    adminAccessesTableBody.innerHTML = accesses.length
+        ? accesses.map(access => `
+            <tr>
+                <td>${escapeRecentText(access.method)}</td>
+                <td>${escapeRecentText(access.path)}</td>
+                <td><span class="admin-pill ${access.status_code < 400 ? "success" : "danger"}">${access.status_code}</span></td>
+                <td>${escapeRecentText(formatRecentDate(access.created_at))}</td>
+            </tr>
+        `).join("")
+        : '<tr><td colspan="4">Nenhum acesso registrado no período.</td></tr>';
+
+}
+
+
+async function loadAdminData() {
+
+    if (!profileUser?.is_admin) {
+        return;
+    }
+
+    try {
+        const [overview, users, accesses] = await Promise.all([
+            apiRequest("/admin/overview", {
+                headers: { "Authorization": "Bearer " + token }
+            }),
+            apiRequest("/admin/users?limit=100", {
+                headers: { "Authorization": "Bearer " + token }
+            }),
+            apiRequest("/admin/accesses?hours=24&limit=100", {
+                headers: { "Authorization": "Bearer " + token }
+            })
+        ]);
+
+        adminUsersCount.textContent = overview.users.total;
+        adminActiveUsersCount.textContent = `${overview.users.active} ativos`;
+        adminConversationsCount.textContent = overview.conversations;
+        adminMessagesCount.textContent = overview.messages;
+        adminAccessesCount.textContent = overview.accesses.last_24_hours;
+        adminAccessesTotal.textContent = `${overview.accesses.total} no total`;
+        renderAdminUsers(users.users || []);
+        renderAdminAccesses(accesses.accesses || []);
+
+    } catch (error) {
+        if (error.status === 401 || error.status === 403) {
+            adminNavItem.hidden = true;
+            if (error.status === 401) {
+                removeToken();
+                window.location.replace("login.html");
+            }
+            return;
+        }
+        adminUsersTableBody.innerHTML = '<tr><td colspan="4">Não foi possível carregar os dados administrativos.</td></tr>';
+    }
+
+}
+
+
+async function runAdminSQL() {
+
+    if (!adminSQLQuery || !runAdminSQLButton || !adminSQLFeedback) {
+        return;
+    }
+
+    runAdminSQLButton.disabled = true;
+    adminSQLFeedback.textContent = "Executando...";
+    adminSQLFeedback.className = "form-feedback";
+
+    try {
+        const data = await apiRequest("/admin/sql", {
+            method: "POST",
+            headers: { "Authorization": "Bearer " + token },
+            body: JSON.stringify({ query: adminSQLQuery.value, limit: 200 })
+        });
+        renderAdminSQLResult(data);
+        adminSQLFeedback.textContent = `${data.returned_rows} linha(s) retornada(s).`;
+        adminSQLFeedback.className = "form-feedback success";
+    } catch (error) {
+        adminSQLFeedback.textContent = error.message || "Consulta não executada.";
+        adminSQLFeedback.className = "form-feedback error";
+    } finally {
+        runAdminSQLButton.disabled = false;
+    }
+
+}
+
+
+if (refreshAdminButton) {
+    refreshAdminButton.addEventListener("click", loadAdminData);
+}
+
+if (runAdminSQLButton) {
+    runAdminSQLButton.addEventListener("click", runAdminSQL);
+}
+
 loadRecentConversations();
 
 window.setInterval(
@@ -1713,7 +2043,10 @@ const titles = {
         "Memórias",
 
     settings:
-        "Configurações"
+        "Configurações",
+
+    admin:
+        "Administração"
 
 };
 
@@ -1723,6 +2056,10 @@ const titles = {
    ============================================================ */
 
 function showSection(name) {
+
+    if (name === "admin" && !profileUser?.is_admin) {
+        return;
+    }
 
     if (name === "conversations") {
         window.location.href = "conversas.html";
@@ -1934,6 +2271,10 @@ async function loadUser() {
         if (user) {
 
             applyUserProfile(user);
+
+            if (user.is_admin) {
+                loadAdminData();
+            }
 
         }
 
