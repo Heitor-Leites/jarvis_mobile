@@ -588,6 +588,23 @@ nav a.active {
     background: #ffffff;
 }
 
+.login-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 18px 0 10px;
+    color: #7f8a99;
+    font-size: 13px;
+}
+
+.login-divider::before,
+.login-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #202a37;
+}
+
 .login-status {
     margin-top: 22px;
     text-align: center;
@@ -596,7 +613,7 @@ nav a.active {
 }
 
 .auth-switch {
-    margin: 20px 0 0;
+    margin: 14px 0 0;
     text-align: center;
     color: #7f8a99;
     font-size: 13px;
