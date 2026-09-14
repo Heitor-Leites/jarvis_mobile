@@ -1288,6 +1288,33 @@ body.theme-light ::-webkit-scrollbar-thumb {
     border-color: rgba(102, 199, 255, 0.13);
 }
 
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.back-to-chat {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    color: var(--text-secondary);
+    background: rgba(56, 189, 248, 0.06);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    font-size: 20px;
+    line-height: 1;
+    text-decoration: none;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.back-to-chat:hover {
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-color: var(--accent-strong);
+}
+
 .setting-card.selected {
     background:
         linear-gradient(
@@ -2380,8 +2407,58 @@ a:focus-visible {
     background: var(--accent-soft);
 }
 
+.admin-action-button.danger {
+    color: var(--danger);
+    border-color: rgba(255, 95, 109, 0.3);
+}
+
+.admin-action-button.danger:hover {
+    background: var(--danger-soft);
+}
+
+.admin-access-table-wrap {
+    max-height: 270px;
+    overflow: auto;
+}
+
+.admin-access-table-wrap .admin-table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #101a26;
+}
+
 .admin-sql-panel {
     margin-bottom: 28px;
+}
+
+.admin-sql-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 18px;
+    align-items: stretch;
+}
+
+.admin-sql-editor,
+.admin-sql-response {
+    min-width: 0;
+}
+
+.admin-sql-response {
+    min-height: 180px;
+    padding: 14px;
+    background: rgba(4, 8, 13, 0.45);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+}
+
+.admin-response-label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
 }
 
 .admin-sql-input {
@@ -2412,7 +2489,7 @@ a:focus-visible {
     margin: 0;
 }
 
-.admin-sql-panel .admin-table-wrap {
+.admin-sql-response .admin-table-wrap {
     max-height: 330px;
     overflow: auto;
 }
@@ -2443,6 +2520,12 @@ a:focus-visible {
     .admin-sql-actions {
         align-items: flex-start;
         flex-direction: column;
+    }
+}
+
+@media (max-width: 900px) {
+    .admin-sql-workspace {
+        grid-template-columns: 1fr;
     }
 }
 

@@ -12,7 +12,7 @@
 
     <title>JARVIS | Dashboard</title>
 
-    <link rel="stylesheet" href="../css/dashboard.css?v=admin-1">
+    <link rel="stylesheet" href="../css/dashboard.css?v=admin-2">
 
 </head>
 
@@ -199,9 +199,19 @@
 
         <header class="topbar">
 
-            <h1 id="pageTitle">
-                Dashboard
-            </h1>
+            <div class="topbar-left">
+                <a
+                    href="../index.html"
+                    class="back-to-chat"
+                    title="Voltar ao JARVIS"
+                    aria-label="Voltar ao JARVIS"
+                >
+                    ←
+                </a>
+                <h1 id="pageTitle">
+                    Dashboard
+                </h1>
+            </div>
 
 
             <div class="topbar-right">
@@ -947,14 +957,14 @@
                     </div>
                 </article>
 
-                <article class="admin-panel">
+                <article class="admin-panel admin-access-panel">
                     <div class="admin-panel-heading">
                         <div>
                             <strong>Acessos recentes</strong>
                             <span>Últimas requisições recebidas pela API.</span>
                         </div>
                     </div>
-                    <div class="admin-table-wrap">
+                    <div class="admin-table-wrap admin-access-table-wrap">
                         <table class="admin-table">
                             <thead>
                                 <tr>
@@ -976,15 +986,22 @@
                 <div class="admin-panel-heading">
                     <div>
                         <strong>Consulta SQL</strong>
-                        <span>Somente leitura. Use para análises controladas do banco.</span>
+                        <span>Consultas e ações administrativas do banco.</span>
                     </div>
                 </div>
-                <textarea id="adminSQLQuery" class="admin-sql-input" rows="4" spellcheck="false" placeholder="SELECT COUNT(*) AS total FROM users"></textarea>
-                <div class="admin-sql-actions">
-                    <button type="button" class="primary-button" id="runAdminSQLButton">Executar consulta</button>
-                    <span class="form-feedback" id="adminSQLFeedback" role="status"></span>
+                <div class="admin-sql-workspace">
+                    <div class="admin-sql-editor">
+                        <textarea id="adminSQLQuery" class="admin-sql-input" rows="7" spellcheck="false" placeholder="SELECT, UPDATE ou DELETE ..."></textarea>
+                        <div class="admin-sql-actions">
+                            <button type="button" class="primary-button" id="runAdminSQLButton">Executar consulta</button>
+                            <span class="form-feedback" id="adminSQLFeedback" role="status"></span>
+                        </div>
+                    </div>
+                    <div class="admin-sql-response">
+                        <span class="admin-response-label">RESPOSTA DO CÓDIGO</span>
+                        <div class="admin-table-wrap" id="adminSQLResult" hidden></div>
+                    </div>
                 </div>
-                <div class="admin-table-wrap" id="adminSQLResult" hidden></div>
             </article>
 
         </section>
@@ -1846,7 +1863,7 @@ function renderAdminSQLResult(data) {
     const rows = data.rows || [];
 
     if (!columns.length) {
-        adminSQLResult.innerHTML = "<p class=\"admin-empty\">A consulta não retornou colunas.</p>";
+        adminSQLResult.innerHTML = `<p class="admin-empty">Consulta executada. Linhas afetadas: ${data.affected_rows || 0}.</p>`;
         adminSQLResult.hidden = false;
         return;
     }
@@ -1885,7 +1902,8 @@ function renderAdminUsers(users) {
                     ${user.id === profileUser?.id
                         ? "Conta atual"
                         : `<button type="button" class="admin-action-button" data-admin-user="${user.id}" data-admin-action="active" data-admin-value="${!user.active}">${user.active ? "Bloquear" : "Ativar"}</button>
-                           <button type="button" class="admin-action-button" data-admin-user="${user.id}" data-admin-action="is_admin" data-admin-value="${!user.is_admin}">${user.is_admin ? "Remover admin" : "Tornar admin"}</button>`}
+                           <button type="button" class="admin-action-button" data-admin-user="${user.id}" data-admin-action="is_admin" data-admin-value="${!user.is_admin}">${user.is_admin ? "Remover admin" : "Tornar admin"}</button>
+                           <button type="button" class="admin-action-button danger" data-admin-delete="${user.id}">Excluir</button>`}
                 </td>
             </tr>
         `).join("")
@@ -1905,6 +1923,27 @@ function renderAdminUsers(users) {
                 await loadAdminData();
             } catch (error) {
                 window.alert(error.message || "Não foi possível atualizar o usuário.");
+                button.disabled = false;
+            }
+        });
+    });
+
+    adminUsersTableBody.querySelectorAll("[data-admin-delete]").forEach(button => {
+        button.addEventListener("click", async function () {
+            const userId = button.dataset.adminDelete;
+            if (!window.confirm(`Excluir definitivamente o usuário ${userId}? Esta ação removerá conversas, mensagens, memórias e vínculo Google.`)) {
+                return;
+            }
+
+            button.disabled = true;
+            try {
+                await apiRequest(`/admin/users/${userId}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": "Bearer " + token }
+                });
+                await loadAdminData();
+            } catch (error) {
+                window.alert(error.message || "Não foi possível excluir o usuário.");
                 button.disabled = false;
             }
         });
@@ -1993,7 +2032,7 @@ async function runAdminSQL() {
             body: JSON.stringify({ query: adminSQLQuery.value, limit: 200 })
         });
         renderAdminSQLResult(data);
-        adminSQLFeedback.textContent = `${data.returned_rows} linha(s) retornada(s).`;
+        adminSQLFeedback.textContent = `${data.returned_rows || 0} linha(s) retornada(s), ${data.affected_rows || 0} afetada(s).`;
         adminSQLFeedback.className = "form-feedback success";
     } catch (error) {
         adminSQLFeedback.textContent = error.message || "Consulta não executada.";
