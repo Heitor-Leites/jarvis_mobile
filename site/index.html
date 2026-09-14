@@ -695,7 +695,7 @@ function setChatStatus(
 function messageNeedsSource(
     message
 ) {
-    return /\b(?:clima|tempo|temperatura|previs(?:ão|ao)|meteorolog(?:ia|ico|ógico)|chuva|chovendo|umidade|vento|sens(?:ação|acao)\s+térmica|futebol|brasileir(?:ao|ão)|fórmula\s*1|formula\s*1|f1|basquete|vôlei|volei|tabela|classificação|classificacao|posição|posicao|placar|partida|jogo|jogos)\b/i.test(message);
+    return /\b(?:clima|climático|climatico|tempo|condições?\s+do\s+tempo|temperatura|termômetros?|termometros?|calor|frio|previs(?:ão|ao)|meteorolog|chuva|chovendo|chover|garoa|pancadas?|tempestade|trovoada|raios?|relâmpagos?|relampagos?|neblina|nevoeiro|nublado|ensolarado|sol|umidade|úmido|umido|seco|vento|ventando|rajadas?|sens(?:ação|acao)\s+térmica|sensacao\s+termica|máxima|maxima|mínima|minima|vai\s+chover|probabilidade\s+de\s+chuva|futebol|brasileir(?:ao|ão)|fórmula\s*1|formula\s*1|f1|basquete|vôlei|volei|tabela|classificação|classificacao|posição|posicao|placar|partida|jogo|jogos)\b/i.test(message);
 }
 
 
@@ -917,6 +917,17 @@ chatForm.addEventListener(
 
                 setChatStatus(
                     "Login necessário.",
+                    "error"
+                );
+            } else if (error.status === 503) {
+                await addMessage(
+                    error.message ||
+                        "A fonte consultada está temporariamente indisponível. Tente novamente em alguns segundos.",
+                    "jarvis"
+                );
+
+                setChatStatus(
+                    "Fonte externa indisponível.",
                     "error"
                 );
             } else {
