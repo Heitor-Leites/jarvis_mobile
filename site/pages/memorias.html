@@ -344,6 +344,10 @@
             <span>⚙</span>
             <span>Configurações</span>
         </a>
+        <a href="dashboard.html?section=admin" class="nav-item admin-nav-item" id="adminNavItem" hidden>
+            <span>▤</span>
+            <span>Administração</span>
+        </a>
     </nav>
 
     <div class="sidebar-footer">
@@ -363,7 +367,10 @@
 <main class="main-content content">
 
     <div class="topbar">
-        <h1>Memórias</h1>
+        <div class="topbar-left">
+            <a href="../index.html" class="back-to-chat" title="Voltar ao JARVIS" aria-label="Voltar ao JARVIS">←</a>
+            <h1>Memórias</h1>
+        </div>
         <div class="topbar-right">
             <div class="profile-chip">
                 <div class="user-avatar avatar-topbar">
@@ -543,7 +550,7 @@
 
 <script src="../js/auth.js"></script>
 
-<script src="../js/api.js"></script>
+<script src="../js/api.js?v=devices-1"></script>
 
 <script>
 
@@ -708,6 +715,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 user.username ||
                 user.name ||
                 "Usuário";
+
+            const adminNavItem = document.getElementById("adminNavItem");
+            if (adminNavItem) {
+                adminNavItem.hidden = user.is_admin !== true;
+            }
 
             currentUser.textContent = name;
 

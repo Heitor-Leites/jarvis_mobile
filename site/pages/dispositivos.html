@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JARVIS | Dispositivos</title>
-    <link rel="stylesheet" href="../css/dashboard.css?v=dispositivos-1">
+    <link rel="stylesheet" href="../css/dashboard.css?v=dispositivos-2">
 </head>
 
 <body>
@@ -47,6 +47,10 @@
                 <span>⚙</span>
                 <span>Configurações</span>
             </a>
+            <a href="dashboard.html?section=admin" class="nav-item admin-nav-item" id="adminNavItem" hidden>
+                <span>▤</span>
+                <span>Administração</span>
+            </a>
         </nav>
 
         <div class="sidebar-footer">
@@ -66,7 +70,10 @@
     <main class="content">
 
         <header class="topbar">
-            <h1>Dispositivos</h1>
+            <div class="topbar-left">
+                <a href="../index.html" class="back-to-chat" title="Voltar ao JARVIS" aria-label="Voltar ao JARVIS">←</a>
+                <h1>Dispositivos</h1>
+            </div>
             <div class="topbar-right">
                 <div class="profile-chip">
                     <div class="user-avatar avatar-topbar">
@@ -122,6 +129,19 @@
 
             </div>
 
+            <article class="device-sessions-card">
+                <div class="device-sessions-heading">
+                    <div>
+                        <h3>Dispositivos conectados</h3>
+                        <p>Apresenta os aparelhos que acessaram sua conta e a última atividade registrada.</p>
+                    </div>
+                    <span class="device-online"><span class="status-dot"></span>Atualização automática</span>
+                </div>
+                <div id="connectedDevices" class="device-sessions-list">
+                    <div class="device-session-empty">Carregando dispositivos...</div>
+                </div>
+            </article>
+
             <div class="device-info-card">
                 <div class="device-info-icon">✦</div>
                 <div>
@@ -141,7 +161,7 @@
 
 </div>
 
-<script src="../js/api.js"></script>
+<script src="../js/api.js?v=devices-1"></script>
 <script src="../js/auth.js"></script>
 <script>
     const token = getToken();
@@ -152,6 +172,7 @@
 
     const userName = document.getElementById("userName");
     const topUserName = document.getElementById("topUserName");
+    const adminNavItem = document.getElementById("adminNavItem");
     const avatarTargets = [
         [document.getElementById("sidebarUserAvatar"), document.getElementById("sidebarUserInitials")],
         [document.getElementById("topUserAvatar"), document.getElementById("topUserInitials")]
@@ -172,6 +193,7 @@
         const name = user.username || "Usuário";
         userName.textContent = name;
         topUserName.textContent = name;
+        if (adminNavItem) adminNavItem.hidden = user.is_admin !== true;
 
         avatarTargets.forEach(([image, fallback]) => {
             fallback.textContent = initials(name);
@@ -187,6 +209,68 @@
                 fallback.hidden = true;
             }
         });
+    }
+
+    const connectedDevices = document.getElementById("connectedDevices");
+    const deviceIdKey = "jarvis_device_id";
+    const currentDeviceId = localStorage.getItem(deviceIdKey) ||
+        (window.crypto?.randomUUID ? window.crypto.randomUUID() : `web-${Date.now()}-${Math.random().toString(16).slice(2)}`);
+    localStorage.setItem(deviceIdKey, currentDeviceId);
+
+    function currentDeviceName() {
+        return `${browserName()} · ${navigator.platform || "Sistema atual"}`;
+    }
+
+    function formatDeviceDate(value) {
+        if (!value) return "Sem atividade registrada";
+        const date = new Date(value);
+        return Number.isNaN(date.getTime()) ? "Sem atividade registrada" : date.toLocaleString("pt-BR", {
+            day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit"
+        });
+    }
+
+    function renderConnectedDevices(devices) {
+        if (!connectedDevices) return;
+        connectedDevices.innerHTML = devices.length
+            ? devices.map(device => `
+                <div class="device-session-row">
+                    <div class="device-session-icon">${device.platform === "android" ? "▣" : "⌁"}</div>
+                    <div class="device-session-main">
+                        <strong>${device.device_name || "Dispositivo"}${device.current ? " · Este aparelho" : ""}</strong>
+                        <span>${device.platform || "Plataforma desconhecida"}</span>
+                    </div>
+                    <div class="device-session-meta">
+                        <span class="device-session-status ${device.online ? "online" : "offline"}"><span class="status-dot"></span>${device.online ? "Online" : "Offline"}</span>
+                        <small>Última atividade: ${formatDeviceDate(device.last_seen)}</small>
+                    </div>
+                </div>
+            `).join("")
+            : '<div class="device-session-empty">Nenhum dispositivo registrado.</div>';
+    }
+
+    async function syncDevice() {
+        await apiRequest("/devices/heartbeat", {
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + token,
+                "X-Jarvis-Device-Id": currentDeviceId
+            },
+            body: JSON.stringify({
+                device_id: currentDeviceId,
+                device_name: currentDeviceName(),
+                platform: "web"
+            })
+        });
+    }
+
+    async function loadConnectedDevices() {
+        const data = await apiRequest("/devices", {
+            headers: {
+                Authorization: "Bearer " + token,
+                "X-Jarvis-Device-Id": currentDeviceId
+            }
+        });
+        renderConnectedDevices(data.devices || []);
     }
 
     function browserName() {
@@ -208,6 +292,7 @@
             new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
         try {
+            await syncDevice();
             const health = await apiRequest("/health");
             document.getElementById("deviceDetails").textContent =
                 `${browserName()} · ${navigator.platform || "Sistema atual"}`;
@@ -215,6 +300,7 @@
                 health.database === "online" ? "Online" : "Indisponível";
             feedback.textContent = "Status atualizado.";
             feedback.className = "form-feedback success";
+            await loadConnectedDevices();
         } catch (error) {
             document.getElementById("backendDeviceStatus").textContent = "Backend indisponível";
             document.getElementById("databaseDeviceStatus").textContent = "Verifique a conexão";

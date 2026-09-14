@@ -1764,6 +1764,118 @@ body.compact-mode .setting-card {
     border-radius: 13px;
 }
 
+.device-sessions-card {
+    max-width: 900px;
+    margin-top: 18px;
+    padding: 20px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(18, 27, 40, 0.86),
+            rgba(9, 14, 22, 0.78)
+        );
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+}
+
+.device-sessions-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.device-sessions-heading h3 {
+    margin-bottom: 5px;
+    color: var(--text-main);
+    font-size: 15px;
+}
+
+.device-sessions-heading p {
+    color: var(--text-secondary);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.device-sessions-list {
+    max-height: 280px;
+    overflow-y: auto;
+    border-top: 1px solid var(--border);
+}
+
+.device-session-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 2px;
+    border-bottom: 1px solid var(--border);
+}
+
+.device-session-icon {
+    display: grid;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    place-items: center;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid rgba(102, 199, 255, 0.16);
+    border-radius: 10px;
+}
+
+.device-session-main {
+    min-width: 0;
+    flex: 1;
+}
+
+.device-session-main strong,
+.device-session-main span,
+.device-session-meta small {
+    display: block;
+}
+
+.device-session-main strong {
+    overflow: hidden;
+    color: var(--text-main);
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.device-session-main span,
+.device-session-meta small {
+    margin-top: 4px;
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+.device-session-meta {
+    flex-shrink: 0;
+    text-align: right;
+}
+
+.device-session-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--success);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.device-session-status.offline {
+    color: var(--text-muted);
+}
+
+.device-session-empty {
+    padding: 24px 4px;
+    color: var(--text-muted);
+    font-size: 12px;
+    text-align: center;
+}
+
 .device-info-icon {
     width: 34px;
     height: 34px;
@@ -2158,6 +2270,19 @@ a:focus-visible {
 
     .device-info-card {
         align-items: flex-start;
+    }
+
+    .device-sessions-heading {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .device-session-row {
+        align-items: flex-start;
+    }
+
+    .device-session-meta {
+        text-align: left;
     }
 
     .theme-choice {

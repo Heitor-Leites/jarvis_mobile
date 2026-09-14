@@ -1,6 +1,62 @@
 const API_URL = "https://api.30jarvis.com.br";
 let authenticatedConversationId = null;
 
+function getBrowserDeviceId() {
+    const key = "jarvis_device_id";
+    let deviceId = localStorage.getItem(key);
+
+    if (!deviceId) {
+        deviceId = window.crypto?.randomUUID
+            ? window.crypto.randomUUID()
+            : `web-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+        localStorage.setItem(key, deviceId);
+    }
+
+    return deviceId;
+}
+
+function getBrowserDeviceName() {
+    const agent = navigator.userAgent || "";
+    const browser = agent.includes("Edg/")
+        ? "Microsoft Edge"
+        : agent.includes("Chrome/")
+            ? "Google Chrome"
+            : agent.includes("Firefox/")
+                ? "Mozilla Firefox"
+                : agent.includes("Safari/")
+                    ? "Safari"
+                    : "Navegador web";
+
+    return `${browser} · ${navigator.platform || "Sistema atual"}`;
+}
+
+async function registerBrowserDevice() {
+    const token = localStorage.getItem("jarvis_token");
+    if (!token) return;
+
+    try {
+        await fetch(`${API_URL}/devices/heartbeat`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+                "X-Jarvis-Device-Id": getBrowserDeviceId()
+            },
+            body: JSON.stringify({
+                device_id: getBrowserDeviceId(),
+                device_name: getBrowserDeviceName(),
+                platform: "web"
+            })
+        });
+    } catch (_) {
+        // O registro do aparelho não deve impedir o uso do JARVIS.
+    }
+}
+
+window.jarvisRegisterBrowserDevice = registerBrowserDevice;
+window.setTimeout(registerBrowserDevice, 0);
+
 window.sendMessage = sendMessage;
 
 async function apiRequest(endpoint, options = {}) {

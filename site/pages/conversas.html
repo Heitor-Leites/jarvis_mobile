@@ -268,6 +268,10 @@
                     <span>⚙</span>
                     <span>Configurações</span>
                 </a>
+                <a href="dashboard.html?section=admin" class="nav-item admin-nav-item" id="adminNavItem" hidden>
+                    <span>▤</span>
+                    <span>Administração</span>
+                </a>
             </nav>
             <div class="sidebar-footer">
                 <div class="user-avatar avatar-small">
@@ -284,7 +288,10 @@
 
         <main class="conversation-content content">
             <header class="topbar">
-                <h1>Conversas</h1>
+                <div class="topbar-left">
+                    <a href="../index.html" class="back-to-chat" title="Voltar ao JARVIS" aria-label="Voltar ao JARVIS">←</a>
+                    <h1>Conversas</h1>
+                </div>
                 <div class="conversation-actions">
                     <div class="profile-chip">
                         <div class="user-avatar avatar-topbar">
@@ -337,7 +344,7 @@
     </div>
 
     <script src="../js/auth.js"></script>
-    <script src="../js/api.js"></script>
+    <script src="../js/api.js?v=devices-1"></script>
     <script>
         const state = {
             conversations: [],
@@ -357,6 +364,7 @@
         const conversationStatus = document.getElementById("conversationStatus");
         const sidebarUserName = document.getElementById("sidebarUserName");
         const topUserName = document.getElementById("topUserName");
+        const adminNavItem = document.getElementById("adminNavItem");
         const avatarTargets = [
             [document.getElementById("sidebarUserAvatar"), document.getElementById("sidebarUserInitials")],
             [document.getElementById("topUserAvatar"), document.getElementById("topUserInitials")]
@@ -365,6 +373,8 @@
         function applyUser(user) {
             const name = user.username || "Usuário";
             const initials = name.trim().split(/\s+/).slice(0, 2).map(word => word[0]).join("").toUpperCase() || "?";
+
+            if (adminNavItem) adminNavItem.hidden = user.is_admin !== true;
 
             if (sidebarUserName) sidebarUserName.textContent = name;
             if (topUserName) topUserName.textContent = name;
