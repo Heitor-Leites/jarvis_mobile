@@ -9,7 +9,7 @@
     <title>JARVIS</title>
 
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/chat.css?v=4">
+    <link rel="stylesheet" href="css/chat.css?v=5">
 
     <script src="js/api.js?v=1.2.5-devices"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -374,6 +374,16 @@
             id="publicPromo"
             hidden
         >
+            <button
+                type="button"
+                id="closePublicPromo"
+                class="public-promo-close"
+                aria-label="Ocultar convite"
+                title="Ocultar convite"
+            >
+                ×
+            </button>
+
             <div class="public-promo-copy">
                 <span class="public-promo-label">J.A.R.V.I.S. CORE</span>
                 <h2>Use grátis agora.</h2>
@@ -638,6 +648,9 @@ const authenticatedMode =
 const publicPromo =
     document.getElementById("publicPromo");
 
+const closePublicPromo =
+    document.getElementById("closePublicPromo");
+
 const publicSignupCard =
     document.getElementById("publicSignupCard");
 
@@ -649,6 +662,12 @@ const chatSuggestions =
 
 if (publicPromo) {
     publicPromo.hidden = authenticatedMode;
+}
+
+if (closePublicPromo && publicPromo) {
+    closePublicPromo.addEventListener("click", () => {
+        publicPromo.hidden = true;
+    });
 }
 
 if (authenticatedMode) {

@@ -1684,10 +1684,11 @@
 }
 
 .public-promo {
+    position: relative;
     width: 100%;
     max-width: 900px;
     margin-top: 26px;
-    padding: 22px 24px;
+    padding: 22px 24px 22px 62px;
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -1700,6 +1701,33 @@
     box-shadow:
         0 0 26px rgba(0, 170, 255, 0.12),
         inset 0 0 26px rgba(0, 170, 255, 0.04);
+}
+
+.public-promo-close {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1px solid rgba(75, 231, 255, 0.34);
+    border-radius: 50%;
+    background: rgba(3, 20, 32, 0.76);
+    color: rgba(255, 255, 255, 0.78);
+    font-family: inherit;
+    font-size: 19px;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.public-promo-close:hover {
+    border-color: #4be7ff;
+    background: rgba(0, 92, 126, 0.72);
+    color: #ffffff;
+    transform: scale(1.05);
 }
 
 .public-promo-copy {
@@ -2041,7 +2069,7 @@
         flex-direction: column;
         gap: 16px;
         margin-top: 20px;
-        padding: 18px;
+        padding: 48px 18px 18px;
         border-radius: 18px;
     }
 
