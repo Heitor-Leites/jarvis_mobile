@@ -369,6 +369,24 @@
         </section>
 
 
+        <section
+            class="authenticated-promo"
+            id="authenticatedPromo"
+            hidden
+        >
+            <div class="authenticated-promo-copy">
+                <span class="authenticated-promo-label">J.A.R.V.I.S. CORE</span>
+                <h2>Mais contexto. Mais possibilidades.</h2>
+                <p>Converse com o JARVIS usando sua sessão, com histórico salvo e uma experiência mais completa.</p>
+            </div>
+            <div class="authenticated-features" aria-label="Recursos da conta">
+                <span><strong>◫</strong> Histórico salvo</span>
+                <span><strong>◈</strong> Memórias pessoais</span>
+                <span><strong>✦</strong> Mais recursos</span>
+            </div>
+        </section>
+
+
         <!-- ==========================================
              CHAT
         ========================================== -->
@@ -485,7 +503,7 @@
                     Versão:
                 </strong>
 
-                1.2.3
+                1.2.4
 
                 <br>
 
@@ -507,7 +525,7 @@
 
 
             <a
-    href="/downloads/jarvis_mobile-v1.2.3.apk"
+    href="/downloads/jarvis_mobile-v1.2.4.apk"
     class="jarvis-download-main-button"
 >
     Baixar APK
@@ -529,6 +547,19 @@
 
 const jarvisHome =
     document.getElementById("jarvisHome");
+
+const authenticatedMode =
+    new URLSearchParams(window.location.search).get("mode") === "authenticated";
+
+const authenticatedPromo =
+    document.getElementById("authenticatedPromo");
+
+if (authenticatedMode) {
+    jarvisHome.classList.add("authenticated-home");
+    if (authenticatedPromo) {
+        authenticatedPromo.hidden = false;
+    }
+}
 
 const chatForm =
     document.getElementById("chatForm");
