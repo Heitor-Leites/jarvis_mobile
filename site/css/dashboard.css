@@ -305,6 +305,11 @@ body {
     transition: color 0.2s ease;
 }
 
+/* A propriedade HTML hidden precisa vencer o display flex dos itens de navegação. */
+.nav-item[hidden] {
+    display: none !important;
+}
+
 .nav-item:hover {
     color: var(--text-main);
     background: rgba(255, 255, 255, 0.045);
