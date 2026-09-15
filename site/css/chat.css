@@ -1769,55 +1769,90 @@
 .chat-suggestions {
     width: 100%;
     max-width: 900px;
-    margin-top: 24px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(80, 190, 255, 0.14);
+}
+
+.chat-suggestions-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
 }
 
 .chat-suggestions-label {
     display: block;
-    margin-bottom: 10px;
-    color: rgba(255, 255, 255, 0.42);
+    color: rgba(255, 255, 255, 0.76);
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 2px;
-    text-align: center;
+}
+
+.chat-suggestions-hint {
+    color: rgba(255, 255, 255, 0.38);
+    font-size: 10px;
 }
 
 .chat-suggestions-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    gap: 12px;
 }
 
 .chat-suggestion {
-    min-height: 82px;
-    padding: 14px;
+    position: relative;
+    min-height: 92px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 3px;
-    border: 1px solid rgba(67, 168, 255, 0.18);
+    gap: 5px;
+    overflow: hidden;
+    appearance: none;
+    -webkit-appearance: none;
+    border: 1px solid rgba(67, 168, 255, 0.3);
     border-radius: 14px;
-    background: linear-gradient(145deg, rgba(10, 42, 68, 0.72), rgba(7, 16, 27, 0.86));
+    background: linear-gradient(145deg, rgba(11, 48, 76, 0.76), rgba(7, 16, 27, 0.92));
     color: rgba(255, 255, 255, 0.9);
     font-family: inherit;
     text-align: left;
     cursor: pointer;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    box-shadow: inset 0 0 18px rgba(0, 180, 255, 0.04);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+
+.chat-suggestion::after {
+    position: absolute;
+    right: 13px;
+    bottom: 10px;
+    color: rgba(75, 231, 255, 0.48);
+    content: "→";
+    font-size: 16px;
+    transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .chat-suggestion:hover {
-    border-color: rgba(67, 220, 255, 0.7);
-    box-shadow: 0 0 20px rgba(0, 170, 255, 0.12);
+    border-color: rgba(67, 220, 255, 0.82);
+    background: linear-gradient(145deg, rgba(13, 62, 94, 0.9), rgba(7, 20, 33, 0.96));
+    box-shadow: 0 0 20px rgba(0, 170, 255, 0.16), inset 0 0 18px rgba(0, 217, 255, 0.08);
     transform: translateY(-2px);
+}
+
+.chat-suggestion:hover::after {
+    color: #4be7ff;
+    transform: translateX(3px);
 }
 
 .chat-suggestion strong {
     color: #4be7ff;
-    font-size: 18px;
+    font-size: 20px;
+    line-height: 1;
 }
 
 .chat-suggestion span {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
 }
 
@@ -1992,6 +2027,13 @@
 
     .chat-suggestions {
         margin-top: 18px;
+        padding-top: 14px;
+    }
+
+    .chat-suggestions-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
     }
 
     .chat-suggestions-grid {
