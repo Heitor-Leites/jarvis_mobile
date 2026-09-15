@@ -42,7 +42,7 @@
         <!-- NOVA CONVERSA -->
 
         <a
-            href="#"
+            href="../index.html?mode=authenticated&new=1"
             class="new-chat"
             id="newChatButton"
         >
@@ -2206,9 +2206,7 @@ document
 
             event.preventDefault();
 
-            showSection(
-                "conversations"
-            );
+            window.location.href = "../index.html?mode=authenticated&new=1";
 
         }
     );
@@ -2222,9 +2220,7 @@ document
         "click",
         function () {
 
-            showSection(
-                "conversations"
-            );
+            window.location.href = "../index.html?mode=authenticated&new=1";
 
         }
     );

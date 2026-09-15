@@ -242,7 +242,7 @@
                 <div class="brand-icon">◉</div>
                 <span>J.A.R.V.I.S.</span>
             </div>
-            <a href="dashboard.html" class="new-chat">
+            <a href="../index.html?mode=authenticated&new=1" class="new-chat">
                 <span>＋</span>
                 <span>Nova conversa</span>
             </a>
@@ -516,9 +516,7 @@
         }
 
         newConversationButton.addEventListener("click", () => {
-            clearError();
-            renderConversation(null);
-            chatInput.focus();
+            window.location.href = "../index.html?mode=authenticated&new=1";
         });
 
         chatForm.addEventListener("submit", async event => {
