@@ -9,7 +9,7 @@
     <title>JARVIS</title>
 
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/chat.css?v=3">
+    <link rel="stylesheet" href="css/chat.css?v=4">
 
     <script src="js/api.js?v=1.2.5-devices"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -405,6 +405,16 @@
                 aria-label="Crie sua conta grátis"
                 hidden
             >
+                <button
+                    type="button"
+                    id="closePublicSignupCard"
+                    class="public-signup-close"
+                    aria-label="Ocultar convite"
+                    title="Ocultar convite"
+                >
+                    ×
+                </button>
+
                 <div class="public-signup-heading">
                     <div class="public-signup-avatar" aria-hidden="true">
                         <svg viewBox="0 0 48 48" role="presentation">
@@ -438,7 +448,11 @@
             </aside>
 
 
-            <section class="chat-suggestions" aria-label="Sugestões para começar">
+            <section
+                id="chatSuggestions"
+                class="chat-suggestions"
+                aria-label="Sugestões para começar"
+            >
                 <div class="chat-suggestions-heading">
                     <span class="chat-suggestions-label">EXPERIMENTE O JARVIS</span>
                     <span class="chat-suggestions-hint">Toque em uma opção para começar</span>
@@ -627,6 +641,12 @@ const publicPromo =
 const publicSignupCard =
     document.getElementById("publicSignupCard");
 
+const closePublicSignupCard =
+    document.getElementById("closePublicSignupCard");
+
+const chatSuggestions =
+    document.getElementById("chatSuggestions");
+
 if (publicPromo) {
     publicPromo.hidden = authenticatedMode;
 }
@@ -639,6 +659,7 @@ function revealPublicSignupCard() {
     if (
         authenticatedMode ||
         !publicSignupCard ||
+        publicSignupCard.dataset.dismissed === "true" ||
         publicSignupCard.dataset.revealed === "true"
     ) {
         return;
@@ -649,6 +670,30 @@ function revealPublicSignupCard() {
 
     requestAnimationFrame(() => {
         publicSignupCard.classList.add("is-visible");
+    });
+}
+
+function hideChatSuggestions() {
+    if (!chatSuggestions || chatSuggestions.dataset.hidden === "true") {
+        return;
+    }
+
+    chatSuggestions.dataset.hidden = "true";
+    chatSuggestions.classList.add("is-hidden");
+
+    window.setTimeout(() => {
+        chatSuggestions.hidden = true;
+    }, 280);
+}
+
+if (closePublicSignupCard && publicSignupCard) {
+    closePublicSignupCard.addEventListener("click", () => {
+        publicSignupCard.dataset.dismissed = "true";
+        publicSignupCard.classList.remove("is-visible");
+
+        window.setTimeout(() => {
+            publicSignupCard.hidden = true;
+        }, 280);
     });
 }
 
@@ -683,6 +728,7 @@ const registerButton =
 
 let conversationStarted = false;
 let conversationHistory = [];
+let sentPromptCount = 0;
 
 
 /* ==========================================
@@ -974,6 +1020,12 @@ chatForm.addEventListener(
 
         activateChatMode();
         revealPublicSignupCard();
+
+        sentPromptCount += 1;
+
+        if (sentPromptCount >= 2) {
+            hideChatSuggestions();
+        }
 
 
         await addMessage(
