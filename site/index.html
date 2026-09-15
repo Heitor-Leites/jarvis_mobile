@@ -370,19 +370,46 @@
 
 
         <section
-            class="authenticated-promo"
-            id="authenticatedPromo"
+            class="public-promo"
+            id="publicPromo"
             hidden
         >
-            <div class="authenticated-promo-copy">
-                <span class="authenticated-promo-label">J.A.R.V.I.S. CORE</span>
-                <h2>Mais contexto. Mais possibilidades.</h2>
-                <p>Converse com o JARVIS usando sua sessão, com histórico salvo e uma experiência mais completa.</p>
+            <div class="public-promo-copy">
+                <span class="public-promo-label">J.A.R.V.I.S. CORE</span>
+                <h2>Use grátis agora.</h2>
+                <p>Converse gratuitamente e crie sua conta para salvar conversas, ativar memórias e aproveitar mais recursos.</p>
             </div>
-            <div class="authenticated-features" aria-label="Recursos da conta">
+            <div class="public-features" aria-label="Recursos da conta">
                 <span><strong>◫</strong> Histórico salvo</span>
                 <span><strong>◈</strong> Memórias pessoais</span>
                 <span><strong>✦</strong> Mais recursos</span>
+            </div>
+        </section>
+
+
+        <section class="chat-suggestions" aria-label="Sugestões para começar">
+            <span class="chat-suggestions-label">EXPERIMENTE O JARVIS</span>
+            <div class="chat-suggestions-grid">
+                <button type="button" class="chat-suggestion" data-suggestion="Gere 10 perguntas aleatórias">
+                    <strong>✦</strong>
+                    <span>Gere perguntas</span>
+                    <small>Para uma entrevista</small>
+                </button>
+                <button type="button" class="chat-suggestion" data-suggestion="Qual o clima em Nova Santa Rita - RS?">
+                    <strong>☼</strong>
+                    <span>Consulte o clima</span>
+                    <small>Em qualquer cidade</small>
+                </button>
+                <button type="button" class="chat-suggestion" data-suggestion="Faça uma conta: 9 * 81">
+                    <strong>∑</strong>
+                    <span>Faça uma conta</span>
+                    <small>Resultado imediato</small>
+                </button>
+                <button type="button" class="chat-suggestion" data-suggestion="Me dê ideias para um projeto">
+                    <strong>⌁</strong>
+                    <span>Tenha ideias</span>
+                    <small>Para seu próximo projeto</small>
+                </button>
             </div>
         </section>
 
@@ -549,16 +576,18 @@ const jarvisHome =
     document.getElementById("jarvisHome");
 
 const authenticatedMode =
-    new URLSearchParams(window.location.search).get("mode") === "authenticated";
+    new URLSearchParams(window.location.search).get("mode") === "authenticated" ||
+    Boolean(localStorage.getItem("jarvis_token"));
 
-const authenticatedPromo =
-    document.getElementById("authenticatedPromo");
+const publicPromo =
+    document.getElementById("publicPromo");
+
+if (publicPromo) {
+    publicPromo.hidden = authenticatedMode;
+}
 
 if (authenticatedMode) {
     jarvisHome.classList.add("authenticated-home");
-    if (authenticatedPromo) {
-        authenticatedPromo.hidden = false;
-    }
 }
 
 const chatForm =
@@ -575,6 +604,13 @@ const chatStatus =
 
 const micButton =
     document.getElementById("micButton");
+
+document.querySelectorAll("[data-suggestion]").forEach((button) => {
+    button.addEventListener("click", () => {
+        chatInput.value = button.dataset.suggestion || "";
+        chatForm.requestSubmit();
+    });
+});
 
 const authButton =
     document.getElementById("authButton");
@@ -661,6 +697,11 @@ async function loadUserProfile() {
             "Erro ao carregar perfil:",
             error
         );
+
+        if (error.status === 401 && publicPromo) {
+            publicPromo.hidden = false;
+            jarvisHome.classList.remove("authenticated-home");
+        }
 
 
         if (error.status === 401) {

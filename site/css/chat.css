@@ -858,7 +858,7 @@
         font-size: 14px;
     }
 
-    .authenticated-promo {
+    .public-promo {
         align-items: flex-start;
         flex-direction: column;
         gap: 16px;
@@ -867,26 +867,40 @@
         border-radius: 18px;
     }
 
-    .authenticated-promo h2 {
+    .public-promo h2 {
         font-size: 22px;
     }
 
-    .authenticated-promo p {
+    .public-promo p {
         font-size: 12px;
     }
 
-    .authenticated-features {
+    .public-features {
         width: 100%;
         grid-template-columns: repeat(3, 1fr);
         gap: 6px;
     }
 
-    .authenticated-features span {
+    .public-features span {
         align-items: flex-start;
         flex-direction: column;
         gap: 3px;
         white-space: normal;
         font-size: 10px;
+    }
+
+    .chat-suggestions {
+        margin-top: 18px;
+    }
+
+    .chat-suggestions-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .chat-suggestion {
+        min-height: 76px;
+        padding: 11px;
     }
 
     .jarvis-home.authenticated-home .jarvis-chat {
@@ -1665,11 +1679,11 @@
    CHAT AUTENTICADO — REFERÊNCIA VISUAL DO JARVIS
    ============================================================ */
 
-.authenticated-promo[hidden] {
+.public-promo[hidden] {
     display: none !important;
 }
 
-.authenticated-promo {
+.public-promo {
     width: 100%;
     max-width: 900px;
     margin-top: 26px;
@@ -1688,25 +1702,25 @@
         inset 0 0 26px rgba(0, 170, 255, 0.04);
 }
 
-.authenticated-promo-copy {
+.public-promo-copy {
     min-width: 0;
 }
 
-.authenticated-promo-label {
+.public-promo-label {
     color: #45e7ff;
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 3px;
 }
 
-.authenticated-promo h2 {
+.public-promo h2 {
     margin: 8px 0 5px;
     color: #ffffff;
     font-size: clamp(20px, 3vw, 28px);
     line-height: 1.1;
 }
 
-.authenticated-promo p {
+.public-promo p {
     max-width: 520px;
     margin: 0;
     color: rgba(255, 255, 255, 0.68);
@@ -1714,7 +1728,7 @@
     line-height: 1.5;
 }
 
-.authenticated-features {
+.public-features {
     display: grid;
     gap: 8px;
     flex-shrink: 0;
@@ -1722,14 +1736,14 @@
     font-size: 12px;
 }
 
-.authenticated-features span {
+.public-features span {
     display: flex;
     align-items: center;
     gap: 8px;
     white-space: nowrap;
 }
 
-.authenticated-features strong {
+.public-features strong {
     color: #4be7ff;
     font-size: 16px;
 }
@@ -1750,4 +1764,64 @@
     box-shadow:
         0 16px 45px rgba(0, 0, 0, 0.28),
         0 0 24px rgba(0, 170, 255, 0.1);
+}
+
+.chat-suggestions {
+    width: 100%;
+    max-width: 900px;
+    margin-top: 24px;
+}
+
+.chat-suggestions-label {
+    display: block;
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 0.42);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+.chat-suggestions-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.chat-suggestion {
+    min-height: 82px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    border: 1px solid rgba(67, 168, 255, 0.18);
+    border-radius: 14px;
+    background: linear-gradient(145deg, rgba(10, 42, 68, 0.72), rgba(7, 16, 27, 0.86));
+    color: rgba(255, 255, 255, 0.9);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.chat-suggestion:hover {
+    border-color: rgba(67, 220, 255, 0.7);
+    box-shadow: 0 0 20px rgba(0, 170, 255, 0.12);
+    transform: translateY(-2px);
+}
+
+.chat-suggestion strong {
+    color: #4be7ff;
+    font-size: 18px;
+}
+
+.chat-suggestion span {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.chat-suggestion small {
+    color: rgba(255, 255, 255, 0.48);
+    font-size: 10px;
 }
