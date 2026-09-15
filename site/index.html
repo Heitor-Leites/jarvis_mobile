@@ -426,6 +426,45 @@
             ></div>
 
 
+            <aside
+                id="publicSignupCard"
+                class="public-signup-card"
+                aria-label="Crie sua conta grátis"
+                hidden
+            >
+                <div class="public-signup-heading">
+                    <div class="public-signup-avatar" aria-hidden="true">
+                        <svg viewBox="0 0 48 48" role="presentation">
+                            <circle cx="24" cy="15" r="8"></circle>
+                            <path d="M10 40c1.5-8 6.5-12 14-12s12.5 4 14 12"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2>Crie sua conta grátis</h2>
+                        <p>Leve sua experiência com o J.A.R.V.I.S. para o próximo nível.</p>
+                    </div>
+                </div>
+
+                <ul class="public-signup-benefits">
+                    <li><strong>▣</strong> Salvar histórico</li>
+                    <li><strong>✦</strong> Memórias pessoais</li>
+                    <li><strong>▯</strong> Sincronização web + mobile</li>
+                    <li><strong>⊞</strong> Mais mensagens e ferramentas</li>
+                </ul>
+
+                <div class="public-signup-actions">
+                    <a href="pages/cadastro.html" class="public-signup-button primary">
+                        Criar conta grátis <span aria-hidden="true">→</span>
+                    </a>
+                    <a href="pages/login.html" class="public-signup-button secondary">
+                        Entrar
+                    </a>
+                </div>
+
+                <p class="public-signup-note">✧ Comece grátis. Sem complicação.</p>
+            </aside>
+
+
             <form
                 id="chatForm"
                 class="chat-input-container"
@@ -582,12 +621,32 @@ const authenticatedMode =
 const publicPromo =
     document.getElementById("publicPromo");
 
+const publicSignupCard =
+    document.getElementById("publicSignupCard");
+
 if (publicPromo) {
     publicPromo.hidden = authenticatedMode;
 }
 
 if (authenticatedMode) {
     jarvisHome.classList.add("authenticated-home");
+}
+
+function revealPublicSignupCard() {
+    if (
+        authenticatedMode ||
+        !publicSignupCard ||
+        publicSignupCard.dataset.revealed === "true"
+    ) {
+        return;
+    }
+
+    publicSignupCard.hidden = false;
+    publicSignupCard.dataset.revealed = "true";
+
+    requestAnimationFrame(() => {
+        publicSignupCard.classList.add("is-visible");
+    });
 }
 
 const chatForm =
@@ -911,6 +970,7 @@ chatForm.addEventListener(
 
 
         activateChatMode();
+        revealPublicSignupCard();
 
 
         await addMessage(

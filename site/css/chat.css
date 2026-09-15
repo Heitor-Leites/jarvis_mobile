@@ -1676,7 +1676,7 @@
 
 
 /* ============================================================
-   CHAT AUTENTICADO — REFERÊNCIA VISUAL DO JARVIS
+   CHAT PÚBLICO E CONVERSÃO — REFERÊNCIA VISUAL DO JARVIS
    ============================================================ */
 
 .public-promo[hidden] {
@@ -1824,4 +1824,193 @@
 .chat-suggestion small {
     color: rgba(255, 255, 255, 0.48);
     font-size: 10px;
+}
+
+.public-signup-card[hidden] {
+    display: none !important;
+}
+
+.public-signup-card {
+    align-self: flex-end;
+    width: min(100%, 360px);
+    margin: 18px 6px 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid rgba(69, 231, 255, 0.82);
+    border-radius: 18px;
+    background:
+        linear-gradient(145deg, rgba(3, 34, 55, 0.96), rgba(3, 12, 22, 0.98));
+    box-shadow:
+        0 0 14px rgba(0, 217, 255, 0.34),
+        0 0 34px rgba(0, 140, 255, 0.16),
+        inset 0 0 18px rgba(0, 217, 255, 0.08);
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.public-signup-card.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.public-signup-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.public-signup-avatar {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    display: grid;
+    place-items: center;
+    color: #4be7ff;
+}
+
+.public-signup-avatar svg {
+    width: 42px;
+    height: 42px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2.5;
+}
+
+.public-signup-heading h2 {
+    margin: 0 0 6px;
+    color: #ffffff;
+    font-size: 22px;
+    line-height: 1.08;
+}
+
+.public-signup-heading p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.public-signup-benefits {
+    display: grid;
+    gap: 9px;
+    margin: 18px 0;
+    padding: 0;
+    list-style: none;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 12px;
+}
+
+.public-signup-benefits li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.public-signup-benefits strong {
+    width: 20px;
+    color: #4be7ff;
+    font-size: 18px;
+    text-align: center;
+}
+
+.public-signup-actions {
+    display: grid;
+    gap: 9px;
+}
+
+.public-signup-button {
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.public-signup-button:hover {
+    transform: translateY(-1px);
+}
+
+.public-signup-button.primary {
+    color: #03131d;
+    background: linear-gradient(135deg, #38e8ff, #24aef1);
+    box-shadow: 0 0 18px rgba(38, 213, 255, 0.35);
+}
+
+.public-signup-button.secondary {
+    color: #4be7ff;
+    border: 1px solid rgba(69, 231, 255, 0.7);
+    background: rgba(3, 24, 38, 0.68);
+}
+
+.public-signup-note {
+    margin: 15px 0 0;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 11px;
+    text-align: center;
+}
+
+@media (max-width: 640px) {
+    .public-promo {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 20px;
+        padding: 18px;
+        border-radius: 18px;
+    }
+
+    .public-promo h2 {
+        font-size: 22px;
+    }
+
+    .public-promo p {
+        font-size: 12px;
+    }
+
+    .public-features {
+        width: 100%;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+    }
+
+    .public-features span {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 3px;
+        white-space: normal;
+        font-size: 10px;
+    }
+
+    .chat-suggestions {
+        margin-top: 18px;
+    }
+
+    .chat-suggestions-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .chat-suggestion {
+        min-height: 76px;
+        padding: 11px;
+    }
+
+    .public-signup-card {
+        width: min(100%, 340px);
+        margin-right: 0;
+        padding: 18px;
+    }
+
+    .public-signup-heading h2 {
+        font-size: 20px;
+    }
 }
