@@ -369,6 +369,16 @@
             </a>
         </nav>
 
+        <section class="workspace-conversations" aria-labelledby="workspaceConversationsTitle">
+            <div class="workspace-conversations-heading">
+                <span id="workspaceConversationsTitle">CONVERSAS RECENTES</span>
+                <button type="button" id="refreshWorkspaceConversations" aria-label="Atualizar conversas" title="Atualizar conversas">↻</button>
+            </div>
+            <div id="workspaceConversationList" class="workspace-conversation-list">
+                <span class="workspace-conversation-empty">Carregando conversas...</span>
+            </div>
+        </section>
+
         <div class="workspace-sidebar-footer">
             <span class="workspace-online-dot" aria-hidden="true"></span>
             <span>JARVIS online</span>
@@ -788,11 +798,177 @@ const registerButton =
 
 const workspaceAdminNavItem =
     document.getElementById("workspaceAdminNavItem");
+
+const workspaceConversationList =
+    document.getElementById("workspaceConversationList");
+
+const refreshWorkspaceConversations =
+    document.getElementById("refreshWorkspaceConversations");
     
 
 let conversationStarted = false;
 let conversationHistory = [];
 let sentPromptCount = 0;
+
+function escapeWorkspaceText(value) {
+    const element = document.createElement("span");
+    element.textContent = value ?? "";
+    return element.innerHTML;
+}
+
+function formatWorkspaceDate(value) {
+    if (!value) {
+        return "";
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return "";
+    }
+
+    return date.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit"
+    });
+}
+
+function renderWorkspaceConversationList(conversations) {
+    if (!workspaceConversationList) {
+        return;
+    }
+
+    if (!conversations.length) {
+        workspaceConversationList.innerHTML =
+            '<span class="workspace-conversation-empty">Nenhuma conversa ainda.</span>';
+        return;
+    }
+
+    workspaceConversationList.innerHTML = conversations
+        .slice(0, 12)
+        .map((conversation) => `
+            <button
+                type="button"
+                class="workspace-conversation-item ${Number(conversation.id) === Number(authenticatedConversationId) ? "active" : ""}"
+                data-workspace-conversation-id="${conversation.id}"
+                title="Abrir ${escapeWorkspaceText(conversation.title || "Nova conversa")}"
+            >
+                <span class="workspace-conversation-icon" aria-hidden="true">◫</span>
+                <span class="workspace-conversation-copy">
+                    <strong>${escapeWorkspaceText(conversation.title || "Nova conversa")}</strong>
+                    <small>${escapeWorkspaceText(formatWorkspaceDate(conversation.updated_at || conversation.created_at))}</small>
+                </span>
+            </button>
+        `)
+        .join("");
+
+    workspaceConversationList
+        .querySelectorAll("[data-workspace-conversation-id]")
+        .forEach((button) => {
+            button.addEventListener("click", () => {
+                openWorkspaceConversation(Number(button.dataset.workspaceConversationId));
+            });
+        });
+}
+
+async function loadWorkspaceConversations(openRequested = true) {
+    if (!authenticatedMode || !workspaceConversationList) {
+        return;
+    }
+
+    try {
+        const response = await apiRequest(
+            "/conversations",
+            {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("jarvis_token")}`
+                }
+            }
+        );
+
+        const conversations = Array.isArray(response)
+            ? response
+            : response.conversations || [];
+
+        renderWorkspaceConversationList(conversations);
+
+        if (!openRequested) {
+            return;
+        }
+
+        const requestedId = Number(
+            new URLSearchParams(window.location.search).get("conversation")
+        );
+
+        if (Number.isInteger(requestedId) && conversations.some(item => Number(item.id) === requestedId)) {
+            await openWorkspaceConversation(requestedId);
+        }
+    } catch (error) {
+        workspaceConversationList.innerHTML =
+            '<span class="workspace-conversation-empty">Não foi possível carregar.</span>';
+        console.error("Erro ao carregar conversas do workspace:", error);
+    }
+}
+
+async function openWorkspaceConversation(id) {
+    if (!Number.isInteger(id)) {
+        return;
+    }
+
+    try {
+        const conversation = await apiRequest(
+            `/conversations/${id}`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("jarvis_token")}`
+                }
+            }
+        );
+
+        authenticatedConversationId = Number(conversation.id || id);
+        conversationStarted = true;
+        conversationHistory = [];
+        jarvisHome.classList.add("chat-mode");
+
+        if (chatSuggestions) {
+            chatSuggestions.hidden = true;
+        }
+
+        chatMessages.innerHTML = "";
+
+        (conversation.messages || []).forEach((message) => {
+            const element = document.createElement("div");
+            const sender = message.role === "user" ? "user" : "jarvis";
+            element.className = `chat-message ${sender}`;
+            element.innerHTML = marked.parse(message.content || "", { breaks: true });
+            chatMessages.appendChild(element);
+
+            conversationHistory.push({
+                role: message.role === "user" ? "user" : "assistant",
+                content: message.content || ""
+            });
+        });
+
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        renderWorkspaceConversationList(
+            Array.from(workspaceConversationList.querySelectorAll("[data-workspace-conversation-id]")).map((item) => ({
+                id: Number(item.dataset.workspaceConversationId),
+                title: item.querySelector("strong")?.textContent || "Nova conversa"
+            }))
+        );
+        setChatStatus("Conversa carregada.", "ready");
+    } catch (error) {
+        console.error("Erro ao abrir conversa:", error);
+        setChatStatus("Não foi possível carregar a conversa.", "error");
+    }
+}
+
+if (refreshWorkspaceConversations) {
+    refreshWorkspaceConversations.addEventListener("click", () => {
+        loadWorkspaceConversations(false);
+    });
+}
 
 
 /* ==========================================
@@ -832,6 +1008,8 @@ async function loadUserProfile() {
             if (workspaceAdminNavItem) {
                 workspaceAdminNavItem.hidden = user.is_admin !== true;
             }
+
+            await loadWorkspaceConversations();
 
             authButton.href =
                 "pages/dashboard.html";
@@ -1148,6 +1326,8 @@ chatForm.addEventListener(
                 response,
                 "jarvis"
             );
+
+            await loadWorkspaceConversations(false);
 
 
             setChatStatus(

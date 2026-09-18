@@ -1805,10 +1805,10 @@ function renderRecentConversations(conversations) {
     recentConversations
         .querySelectorAll("[data-conversation-id]")
         .forEach(function (item) {
-            item.addEventListener("click", function () {
+                item.addEventListener("click", function () {
                 const id = item.dataset.conversationId;
                 window.location.href =
-                    `conversas.html?id=${encodeURIComponent(id)}`;
+                    `../index.html?mode=authenticated&conversation=${encodeURIComponent(id)}`;
             });
         });
 
