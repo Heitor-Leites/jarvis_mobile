@@ -348,9 +348,7 @@
                 aria-controls="workspaceSidebar"
                 aria-label="Recolher barra lateral"
                 title="Recolher barra lateral"
-            >
-                ‹
-            </button>
+            ></button>
         </div>
 
         <nav class="workspace-sidebar-nav" aria-label="Áreas do JARVIS">
@@ -704,9 +702,11 @@
 const jarvisHome =
     document.getElementById("jarvisHome");
 
+const authenticatedRoute =
+    new URLSearchParams(window.location.search).get("mode") === "authenticated";
+
 const authenticatedMode =
-    new URLSearchParams(window.location.search).get("mode") === "authenticated" ||
-    Boolean(localStorage.getItem("jarvis_token"));
+    authenticatedRoute && Boolean(localStorage.getItem("jarvis_token"));
 
 const publicPromo =
     document.getElementById("publicPromo");
@@ -836,7 +836,6 @@ function setWorkspaceSidebarCollapsed(collapsed) {
         workspaceSidebarToggle.title = collapsed
             ? "Abrir barra lateral"
             : "Recolher barra lateral";
-        workspaceSidebarToggle.textContent = collapsed ? "›" : "‹";
     }
 
     localStorage.setItem("jarvis_workspace_sidebar_collapsed", String(collapsed));
