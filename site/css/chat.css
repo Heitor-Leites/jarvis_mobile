@@ -2362,11 +2362,11 @@
 }
 
 .jarvis-home.authenticated-home .jarvis-main {
-    width: min(100%, 1180px);
+    width: calc(100% - var(--workspace-sidebar-width) - 18px);
     max-width: none;
     box-sizing: border-box;
     margin-left: calc(var(--workspace-sidebar-width) + 18px);
-    margin-right: 18px;
+    margin-right: 0;
     padding: 34px clamp(26px, 5vw, 86px) 24px;
     align-items: stretch;
 }
@@ -2379,7 +2379,7 @@
 .jarvis-home.authenticated-home .jarvis-chat,
 .jarvis-home.authenticated-home.chat-mode .jarvis-chat {
     width: 100%;
-    max-width: 920px;
+    max-width: 980px;
     margin: 30px auto 0 !important;
     padding: 0 !important;
     border: 0 !important;
@@ -2401,7 +2401,7 @@
 }
 
 .jarvis-home.authenticated-home .chat-suggestions {
-    max-width: 920px;
+    max-width: 980px;
     margin-left: auto;
     margin-right: auto;
 }
