@@ -2126,3 +2126,217 @@
         font-size: 20px;
     }
 }
+
+/* ============================================================
+   WORKSPACE LOGADO — ESTRUTURA PRINCIPAL
+   Mantém o chat público simples e reserva a navegação lateral
+   para a experiência autenticada.
+   ============================================================ */
+
+.jarvis-workspace-sidebar {
+    display: none;
+}
+
+.jarvis-home.authenticated-home {
+    --workspace-sidebar-width: 236px;
+}
+
+.jarvis-home.authenticated-home .jarvis-workspace-sidebar {
+    position: fixed;
+    z-index: 20;
+    top: 72px;
+    bottom: 0;
+    left: 0;
+    width: var(--workspace-sidebar-width);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    padding: 28px 16px 18px;
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(5, 8, 13, 0.78);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+}
+
+.workspace-sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 0 8px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.workspace-sidebar-mark {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(75, 231, 255, 0.44);
+    border-radius: 11px;
+    background: rgba(0, 183, 255, 0.1);
+    color: #4be7ff;
+    box-shadow: 0 0 18px rgba(0, 217, 255, 0.12);
+}
+
+.workspace-sidebar-brand strong,
+.workspace-sidebar-brand small {
+    display: block;
+}
+
+.workspace-sidebar-brand strong {
+    color: #ffffff;
+    font-size: 13px;
+    letter-spacing: 1.8px;
+}
+
+.workspace-sidebar-brand small {
+    margin-top: 3px;
+    color: rgba(255, 255, 255, 0.38);
+    font-size: 9px;
+    letter-spacing: 2.4px;
+}
+
+.workspace-sidebar-nav {
+    display: grid;
+    gap: 6px;
+}
+
+.workspace-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-height: 42px;
+    padding: 0 12px;
+    border: 1px solid transparent;
+    border-radius: 11px;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 13px;
+    text-decoration: none;
+    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.workspace-nav-item > span:first-child {
+    width: 18px;
+    color: rgba(75, 231, 255, 0.76);
+    font-size: 18px;
+    text-align: center;
+}
+
+.workspace-nav-item:hover,
+.workspace-nav-item.active {
+    border-color: rgba(0, 217, 255, 0.2);
+    background: rgba(0, 174, 255, 0.1);
+    color: #ffffff;
+}
+
+.workspace-nav-item:hover {
+    transform: translateX(2px);
+}
+
+.workspace-sidebar-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    padding: 14px 10px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    color: rgba(255, 255, 255, 0.38);
+    font-size: 11px;
+}
+
+.workspace-online-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #29e88d;
+    box-shadow: 0 0 10px rgba(41, 232, 141, 0.8);
+}
+
+.jarvis-home.authenticated-home .jarvis-main {
+    width: min(100%, 1180px);
+    max-width: none;
+    box-sizing: border-box;
+    margin-left: calc(var(--workspace-sidebar-width) + 18px);
+    margin-right: 18px;
+    padding: 34px clamp(26px, 5vw, 86px) 24px;
+    align-items: stretch;
+}
+
+.jarvis-home.authenticated-home .jarvis-greeting {
+    max-width: 920px;
+    margin: 0 auto;
+}
+
+.jarvis-home.authenticated-home .jarvis-chat,
+.jarvis-home.authenticated-home.chat-mode .jarvis-chat {
+    width: 100%;
+    max-width: 920px;
+    margin: 30px auto 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.jarvis-home.authenticated-home .chat-messages {
+    max-height: none;
+    padding: 12px 2px 22px;
+}
+
+.jarvis-home.authenticated-home .chat-input-container {
+    position: sticky;
+    bottom: 12px;
+    z-index: 5;
+    margin-top: auto;
+}
+
+.jarvis-home.authenticated-home .chat-suggestions {
+    max-width: 920px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 700px) {
+    .jarvis-home.authenticated-home .jarvis-workspace-sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 8px 12px;
+        border-right: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .jarvis-home.authenticated-home .workspace-sidebar-brand,
+    .jarvis-home.authenticated-home .workspace-sidebar-footer {
+        display: none;
+    }
+
+    .jarvis-home.authenticated-home .workspace-sidebar-nav {
+        display: flex;
+        width: 100%;
+        gap: 6px;
+    }
+
+    .jarvis-home.authenticated-home .workspace-nav-item {
+        flex: 0 0 auto;
+        min-height: 36px;
+        padding: 0 10px;
+        font-size: 11px;
+    }
+
+    .jarvis-home.authenticated-home .workspace-nav-item > span:first-child {
+        width: auto;
+        font-size: 15px;
+    }
+
+    .jarvis-home.authenticated-home .jarvis-main {
+        width: 100%;
+        margin: 0;
+        padding: 18px 14px 14px;
+    }
+}
