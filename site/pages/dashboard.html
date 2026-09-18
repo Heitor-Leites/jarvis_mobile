@@ -2346,14 +2346,20 @@ async function loadUser() {
 }
 
 
-loadUser();
-
 const requestedSection =
     new URLSearchParams(window.location.search).get("section");
 
+loadUser().then(function () {
 if (requestedSection === "settings") {
-    showSection("settings");
-}
+        showSection("settings");
+    } else if (requestedSection === "memories") {
+        showSection("memories");
+    } else if (requestedSection === "conversations") {
+        showSection("conversations");
+    } else if (requestedSection === "admin" && profileUser?.is_admin) {
+        showSection("admin");
+    }
+});
 
 </script>
 

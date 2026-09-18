@@ -347,11 +347,11 @@
                 <span aria-hidden="true">＋</span>
                 <span>Nova conversa</span>
             </a>
-            <a class="workspace-nav-item" href="pages/conversas.html">
+            <a class="workspace-nav-item" href="pages/dashboard.html?section=conversations">
                 <span aria-hidden="true">▤</span>
                 <span>Conversas</span>
             </a>
-            <a class="workspace-nav-item" href="pages/memorias.html">
+            <a class="workspace-nav-item" href="pages/dashboard.html?section=memories">
                 <span aria-hidden="true">◇</span>
                 <span>Memórias</span>
             </a>
@@ -359,9 +359,13 @@
                 <span aria-hidden="true">▣</span>
                 <span>Dispositivos</span>
             </a>
-            <a class="workspace-nav-item" href="pages/configuracoes.html">
+            <a class="workspace-nav-item" href="pages/dashboard.html?section=settings">
                 <span aria-hidden="true">⚙</span>
                 <span>Configurações</span>
+            </a>
+            <a class="workspace-nav-item admin-workspace-nav-item" href="pages/dashboard.html?section=admin" id="workspaceAdminNavItem" hidden>
+                <span aria-hidden="true">▤</span>
+                <span>Administração</span>
             </a>
         </nav>
 
@@ -781,6 +785,9 @@ const authButton =
 
 const registerButton =
     document.getElementById("registerButton");
+
+const workspaceAdminNavItem =
+    document.getElementById("workspaceAdminNavItem");
     
 
 let conversationStarted = false;
@@ -820,6 +827,10 @@ async function loadUserProfile() {
         if (user) {
             if (registerButton) {
                 registerButton.hidden = true;
+            }
+
+            if (workspaceAdminNavItem) {
+                workspaceAdminNavItem.hidden = user.is_admin !== true;
             }
 
             authButton.href =
@@ -890,6 +901,10 @@ async function loadUserProfile() {
 
             if (registerButton) {
                 registerButton.hidden = false;
+            }
+
+            if (workspaceAdminNavItem) {
+                workspaceAdminNavItem.hidden = true;
             }
         }
     }
