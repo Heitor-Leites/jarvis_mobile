@@ -2197,6 +2197,61 @@
     letter-spacing: 2.4px;
 }
 
+.workspace-sidebar-toggle {
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    display: grid;
+    place-items: center;
+    padding: 0 0 2px;
+    border: 1px solid rgba(75, 231, 255, 0.26);
+    border-radius: 8px;
+    background: rgba(0, 174, 255, 0.08);
+    color: #4be7ff;
+    font: inherit;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.workspace-sidebar-toggle:hover {
+    border-color: rgba(75, 231, 255, 0.72);
+    background: rgba(0, 174, 255, 0.18);
+    color: #ffffff;
+    transform: scale(1.04);
+}
+
+.jarvis-home.authenticated-home.workspace-sidebar-collapsed {
+    --workspace-sidebar-width: 58px;
+}
+
+.jarvis-home.authenticated-home.workspace-sidebar-collapsed .jarvis-workspace-sidebar {
+    gap: 0;
+    padding: 28px 8px 18px;
+}
+
+.jarvis-home.authenticated-home.workspace-sidebar-collapsed .workspace-sidebar-brand {
+    justify-content: center;
+    padding: 0 0 18px;
+}
+
+.jarvis-home.authenticated-home.workspace-sidebar-collapsed .workspace-sidebar-brand > div,
+.jarvis-home.authenticated-home.workspace-sidebar-collapsed .workspace-sidebar-mark,
+.jarvis-home.authenticated-home.workspace-sidebar-collapsed .workspace-sidebar-nav,
+.jarvis-home.authenticated-home.workspace-sidebar-collapsed .workspace-conversations,
+.jarvis-home.authenticated-home.workspace-sidebar-collapsed .workspace-sidebar-footer {
+    display: none;
+}
+
+.jarvis-home.authenticated-home.workspace-sidebar-collapsed .workspace-sidebar-toggle {
+    transform: none;
+}
+
+.jarvis-home.authenticated-home.workspace-sidebar-collapsed .workspace-sidebar-toggle:hover {
+    transform: scale(1.04);
+}
+
 .workspace-sidebar-nav {
     display: grid;
     gap: 6px;
@@ -2422,6 +2477,14 @@
     .jarvis-home.authenticated-home .workspace-sidebar-brand,
     .jarvis-home.authenticated-home .workspace-sidebar-footer {
         display: none;
+    }
+
+    .jarvis-home.authenticated-home .workspace-sidebar-toggle {
+        display: none;
+    }
+
+    .jarvis-home.authenticated-home.workspace-sidebar-collapsed .workspace-sidebar-nav {
+        display: flex;
     }
 
     .jarvis-home.authenticated-home .workspace-conversations {

@@ -340,6 +340,17 @@
                 <strong>J.A.R.V.I.S.</strong>
                 <small>WORKSPACE</small>
             </div>
+            <button
+                type="button"
+                class="workspace-sidebar-toggle"
+                id="workspaceSidebarToggle"
+                aria-expanded="true"
+                aria-controls="workspaceSidebar"
+                aria-label="Recolher barra lateral"
+                title="Recolher barra lateral"
+            >
+                ‹
+            </button>
         </div>
 
         <nav class="workspace-sidebar-nav" aria-label="Áreas do JARVIS">
@@ -799,6 +810,9 @@ const registerButton =
 const workspaceAdminNavItem =
     document.getElementById("workspaceAdminNavItem");
 
+const workspaceSidebarToggle =
+    document.getElementById("workspaceSidebarToggle");
+
 const workspaceConversationList =
     document.getElementById("workspaceConversationList");
 
@@ -809,6 +823,36 @@ const refreshWorkspaceConversations =
 let conversationStarted = false;
 let conversationHistory = [];
 let sentPromptCount = 0;
+
+function setWorkspaceSidebarCollapsed(collapsed) {
+    jarvisHome.classList.toggle("workspace-sidebar-collapsed", collapsed);
+
+    if (workspaceSidebarToggle) {
+        workspaceSidebarToggle.setAttribute("aria-expanded", String(!collapsed));
+        workspaceSidebarToggle.setAttribute(
+            "aria-label",
+            collapsed ? "Abrir barra lateral" : "Recolher barra lateral"
+        );
+        workspaceSidebarToggle.title = collapsed
+            ? "Abrir barra lateral"
+            : "Recolher barra lateral";
+        workspaceSidebarToggle.textContent = collapsed ? "›" : "‹";
+    }
+
+    localStorage.setItem("jarvis_workspace_sidebar_collapsed", String(collapsed));
+}
+
+if (workspaceSidebarToggle) {
+    setWorkspaceSidebarCollapsed(
+        localStorage.getItem("jarvis_workspace_sidebar_collapsed") === "true"
+    );
+
+    workspaceSidebarToggle.addEventListener("click", () => {
+        setWorkspaceSidebarCollapsed(
+            !jarvisHome.classList.contains("workspace-sidebar-collapsed")
+        );
+    });
+}
 
 function escapeWorkspaceText(value) {
     const element = document.createElement("span");
