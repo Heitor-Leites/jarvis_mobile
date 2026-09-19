@@ -1,7 +1,9 @@
 import os
 import secrets
 import time
+import logging
 
+import httpx
 from dotenv import load_dotenv
 
 from fastapi import Depends, FastAPI, HTTPException, Request
@@ -55,6 +57,8 @@ from memory.manager import (
 # ============================================================
 
 load_dotenv()
+
+logger = logging.getLogger("jarvis.backend")
 
 
 # ============================================================
@@ -115,6 +119,16 @@ SESSION_SECRET = os.getenv(
 FRONTEND_URL = os.getenv(
     "FRONTEND_URL",
     "https://30jarvis.com.br",
+)
+
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
+RESEND_FROM_EMAIL = os.getenv(
+    "RESEND_FROM_EMAIL",
+    "J.A.R.V.I.S. <no-reply@30jarvis.com.br>",
+)
+FEEDBACK_TO_EMAIL = os.getenv(
+    "FEEDBACK_TO_EMAIL",
+    "30jarvis.ia@gmail.com",
 )
 
 if not GOOGLE_CLIENT_ID:
@@ -270,6 +284,13 @@ class MemoryRequest(BaseModel):
     content: str
     category: str = "general"
     importance: int = 3
+
+
+class FeedbackRequest(BaseModel):
+    category: str
+    name: str
+    email: str
+    message: str
 
 
 # ============================================================
@@ -552,9 +573,7 @@ async def google_callback(
         )
 
     except Exception as error:
-        print(
-            f"Erro no Google OAuth: {error}"
-        )
+        logger.exception("Erro no Google OAuth")
 
         error_url = (
             f"{FRONTEND_URL}/pages/login.html"
@@ -651,10 +670,10 @@ def chat(
                 break
 
             except Exception as error:
-                print(
-                    f"Erro no /chat "
-                    f"(tentativa {tentativa + 1}/3): "
-                    f"{error}"
+                logger.warning(
+                    "Erro no /chat (tentativa %s/3)",
+                    tentativa + 1,
+                    exc_info=True,
                 )
 
                 if tentativa == 2:
@@ -677,9 +696,7 @@ def chat(
         raise
 
     except Exception as error:
-        print(
-            f"Erro final no /chat: {error}"
-        )
+        logger.exception("Erro final no /chat")
 
         raise HTTPException(
             status_code=503,
@@ -731,10 +748,10 @@ def public_chat(
             }
 
         except Exception as error:
-            print(
-                f"Erro no /public/chat "
-                f"(tentativa {tentativa + 1}/3): "
-                f"{error}"
+            logger.warning(
+                "Erro no /public/chat (tentativa %s/3)",
+                tentativa + 1,
+                exc_info=True,
             )
 
             if tentativa < 2:
@@ -747,6 +764,104 @@ def public_chat(
             "indisponível. Tente novamente em alguns segundos."
         ),
     )
+
+
+# ============================================================
+# FEEDBACK PÚBLICO
+# ============================================================
+
+@app.post("/feedback")
+def feedback(request: FeedbackRequest):
+    category = request.category.strip().lower()
+    name = request.name.strip()
+    email = request.email.strip()
+    message = request.message.strip()
+    allowed_categories = {
+        "elogio",
+        "comentario",
+        "sugestao",
+        "reclamacao",
+    }
+
+    if category not in allowed_categories:
+        raise HTTPException(
+            status_code=422,
+            detail="Tipo de mensagem inválido.",
+        )
+
+    if not name or len(name) > 160:
+        raise HTTPException(
+            status_code=422,
+            detail="Informe um nome válido.",
+        )
+
+    if (
+        not email
+        or len(email) > 320
+        or "@" not in email
+        or " " in email
+    ):
+        raise HTTPException(
+            status_code=422,
+            detail="Informe um e-mail válido.",
+        )
+
+    if not message or len(message) > 4000:
+        raise HTTPException(
+            status_code=422,
+            detail="Informe uma mensagem de até 4.000 caracteres.",
+        )
+
+    if not RESEND_API_KEY:
+        logger.error("Feedback recebido, mas RESEND_API_KEY não está configurada")
+        raise HTTPException(
+            status_code=503,
+            detail="O serviço de mensagens está temporariamente indisponível.",
+        )
+
+    subject = f"[J.A.R.V.I.S.] Novo {category} recebido"
+    body = (
+        "Novo feedback recebido pelo site 30jarvis.com.br.\n\n"
+        f"Tipo: {category}\n"
+        f"Nome: {name}\n"
+        f"E-mail: {email}\n\n"
+        f"Mensagem:\n{message}\n"
+    )
+
+    try:
+        response = httpx.post(
+            "https://api.resend.com/emails",
+            headers={
+                "Authorization": f"Bearer {RESEND_API_KEY}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "from": RESEND_FROM_EMAIL,
+                "to": [FEEDBACK_TO_EMAIL],
+                "reply_to": email,
+                "subject": subject,
+                "text": body,
+            },
+            timeout=15.0,
+        )
+        response.raise_for_status()
+    except httpx.HTTPStatusError:
+        logger.exception("Resend recusou o envio do feedback")
+        raise HTTPException(
+            status_code=502,
+            detail="Não foi possível encaminhar sua mensagem agora.",
+        )
+    except httpx.HTTPError:
+        logger.exception("Falha de comunicação com o Resend")
+        raise HTTPException(
+            status_code=503,
+            detail="Não foi possível encaminhar sua mensagem agora.",
+        )
+
+    return {
+        "success": True,
+        "notification_sent": True,
+    }
 
 
 # ============================================================

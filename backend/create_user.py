@@ -1,10 +1,20 @@
+import os
+
+from dotenv import load_dotenv
 from database.connection import SessionLocal
 from database.models import User
 from auth import hash_password
 
 
-USERNAME = "admin"
-PASSWORD = "Jarvis@123"
+load_dotenv()
+
+USERNAME = os.getenv("ADMIN_USERNAME", "admin")
+PASSWORD = os.getenv("ADMIN_PASSWORD")
+
+if not PASSWORD:
+    raise RuntimeError(
+        "ADMIN_PASSWORD não foi encontrada nas variáveis de ambiente."
+    )
 
 
 db = SessionLocal()
