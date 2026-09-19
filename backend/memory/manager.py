@@ -85,20 +85,21 @@ def get_memories(
         db.scalars(statement).all()
     )
 
-    return [
-        {
-            "id": memory.id,
-            "content": memory.content,
-            "category": memory.category,
-            "importance": memory.importance,
-            "created_at": (
-                memory.created_at.isoformat()
-                if memory.created_at
-                else None
-            ),
-        }
-        for memory in memories
-    ]
+    return [memory_to_dict(memory) for memory in memories]
+
+
+def memory_to_dict(memory: Memory) -> dict:
+    return {
+        "id": memory.id,
+        "content": memory.content,
+        "category": memory.category,
+        "importance": memory.importance,
+        "created_at": (
+            memory.created_at.isoformat()
+            if memory.created_at
+            else None
+        ),
+    }
 
 
 def delete_memory(

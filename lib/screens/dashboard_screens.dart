@@ -317,6 +317,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
             itemBuilder: (context, index) {
               final item = conversations[index];
+              final title = item is Map
+                  ? (item['title']?.toString() ?? 'Nova conversa')
+                  : item.toString();
+              final updatedAt = item is Map
+                  ? (item['updated_at']?.toString() ?? '')
+                  : '';
 
               return Container(
                 padding: const EdgeInsets.all(18),
@@ -324,11 +330,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   color: Colors.white.withValues(alpha: 0.04),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: Text(
-                  item.toString(),
-                  style: const TextStyle(
-                    fontSize: 14,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    if (updatedAt.isNotEmpty) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        updatedAt,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white.withValues(alpha: 0.5),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               );
             },

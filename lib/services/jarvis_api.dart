@@ -135,14 +135,27 @@ class JarvisApi {
   Future<String> chat({
     required String message,
   }) async {
+    final prefs = await _preferences();
+    final conversationId = prefs.getInt(
+      'jarvis_conversation_id',
+    );
+    final body = <String, dynamic>{
+      'message': message,
+      if (conversationId != null)
+        'conversation_id': conversationId,
+    };
+
     final response = await _authorizedPost(
       '/chat',
-      {
-        'message': message,
-      },
+      body,
     );
 
     final data = _decodeResponse(response);
+
+    if (response.statusCode == 404 && conversationId != null) {
+      await prefs.remove('jarvis_conversation_id');
+      return chat(message: message);
+    }
 
     if (response.statusCode == 401) {
       await logout();
@@ -168,6 +181,14 @@ class JarvisApi {
       throw Exception(
         data['detail'] ??
             'SERVER_ERROR',
+      );
+    }
+
+    final responseConversationId = data['conversation_id'];
+    if (responseConversationId is int) {
+      await prefs.setInt(
+        'jarvis_conversation_id',
+        responseConversationId,
       );
     }
 
@@ -375,6 +396,42 @@ class JarvisApi {
   }
 
 
+  Future<Map<String, dynamic>> heartbeatDevice() async {
+    final prefs = await _preferences();
+    var deviceId = prefs.getString('jarvis_device_id');
+
+    if (deviceId == null || deviceId.trim().isEmpty) {
+      deviceId = 'android-${DateTime.now().microsecondsSinceEpoch}';
+      await prefs.setString('jarvis_device_id', deviceId);
+    }
+
+    final response = await _authorizedPost(
+      '/devices/heartbeat',
+      {
+        'device_id': deviceId,
+        'device_name': 'J.A.R.V.I.S. Mobile',
+        'platform': 'android',
+      },
+    );
+
+    final data = _decodeResponse(response);
+
+    if (response.statusCode == 401) {
+      await logout();
+      throw Exception('SESSION_EXPIRED');
+    }
+
+    if (response.statusCode != 200) {
+      throw Exception(
+        data['detail'] ??
+            'Não foi possível sincronizar este dispositivo.',
+      );
+    }
+
+    return data;
+  }
+
+
   Future<void> logout() async {
     final prefs = await _preferences();
 
@@ -388,6 +445,10 @@ class JarvisApi {
 
     await prefs.remove(
       'jarvis_user_id',
+    );
+
+    await prefs.remove(
+      'jarvis_conversation_id',
     );
   }
 

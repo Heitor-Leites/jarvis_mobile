@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 
 import 'package:jarvis_mobile/screens/dashboard_screens.dart';
+import 'dart:async';
 import 'package:jarvis_mobile/screens/Login_screen.dart';
 import 'package:jarvis_mobile/services/Jarvis_api.dart';
 
@@ -44,6 +45,10 @@ class _JarvisAppState extends State<JarvisApp> {
         _authenticated = loggedIn;
         _checkingSession = false;
       });
+
+      if (loggedIn) {
+        unawaited(_syncCurrentDevice());
+      }
     } catch (error) {
       debugPrint(
         'Erro ao verificar sessão: $error',
@@ -64,6 +69,16 @@ class _JarvisAppState extends State<JarvisApp> {
     setState(() {
       _authenticated = true;
     });
+
+    unawaited(_syncCurrentDevice());
+  }
+
+  Future<void> _syncCurrentDevice() async {
+    try {
+      await _api.heartbeatDevice();
+    } catch (error) {
+      debugPrint('Não foi possível sincronizar o dispositivo: $error');
+    }
   }
 
   void _handleLogout() {

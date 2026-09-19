@@ -803,7 +803,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const response =
                 await apiRequest(
-                    "/memory",
+                    "/memories",
                     {
                         method: "GET",
                         headers:
@@ -988,7 +988,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
 
             await apiRequest(
-                "/memory",
+                "/memories",
                 {
                     method: "POST",
 
@@ -1061,7 +1061,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
 
             await apiRequest(
-                `/memory/${memoryId}`,
+                `/memories/${memoryId}`,
                 {
                     method: "DELETE",
                     headers:
