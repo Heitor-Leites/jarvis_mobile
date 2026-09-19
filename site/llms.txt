@@ -1,0 +1,27 @@
+# J.A.R.V.I.S.
+
+> J.A.R.V.I.S. é um assistente de inteligência artificial em português do Brasil para conversas, produtividade e consultas baseadas em fontes externas.
+
+## Site público
+
+- [Página inicial](https://30jarvis.com.br/): chat público e apresentação do J.A.R.V.I.S.
+- [Download do aplicativo Android](https://30jarvis.com.br/downloads/jarvis_mobile-v1.2.4.apk): versão publicada do aplicativo mobile.
+
+## Recursos
+
+- Conversas com histórico para usuários autenticados.
+- Memórias e sincronização entre dispositivos.
+- Consultas meteorológicas por fontes externas.
+- Consultas esportivas quando a fonte correspondente estiver disponível.
+- Aplicativo Android integrado ao mesmo serviço.
+
+## Limites e segurança
+
+- O chat público possui limite de uso sem login.
+- Histórico, memórias, dispositivos e administração exigem autenticação.
+- Informações administrativas e consultas SQL não são áreas públicas.
+- Não inclua senhas, tokens ou chaves de API em mensagens públicas.
+
+## Fonte oficial
+
+- [J.A.R.V.I.S.](https://30jarvis.com.br/)

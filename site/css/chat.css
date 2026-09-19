@@ -2203,16 +2203,28 @@
     flex: 0 0 28px;
     display: grid;
     place-items: center;
-    padding: 0 0 2px;
+    padding: 0;
     border: 1px solid rgba(75, 231, 255, 0.26);
     border-radius: 8px;
     background: rgba(0, 174, 255, 0.08);
     color: #4be7ff;
-    font: inherit;
-    font-size: 22px;
-    line-height: 1;
     cursor: pointer;
     transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.workspace-sidebar-toggle::before {
+    display: block;
+    content: "‹";
+    color: currentColor;
+    font-family: Arial, sans-serif;
+    font-size: 23px;
+    font-weight: 400;
+    line-height: 24px;
+    transform: translateY(-1px);
+}
+
+.jarvis-home.authenticated-home.workspace-sidebar-collapsed .workspace-sidebar-toggle::before {
+    content: "›";
 }
 
 .workspace-sidebar-toggle:hover {
@@ -2379,6 +2391,10 @@
     transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
+.workspace-nav-item[hidden] {
+    display: none !important;
+}
+
 .workspace-nav-item > span:first-child {
     width: 18px;
     color: rgba(75, 231, 255, 0.76);
@@ -2459,6 +2475,10 @@
     max-width: 980px;
     margin-left: auto;
     margin-right: auto;
+}
+
+.jarvis-home .chat-suggestions + .chat-input-container {
+    margin-top: 22px !important;
 }
 
 @media (max-width: 700px) {
