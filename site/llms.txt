@@ -6,6 +6,7 @@
 
 - [Página inicial](https://30jarvis.com.br/): chat público e apresentação do J.A.R.V.I.S.
 - [Download do aplicativo Android](https://30jarvis.com.br/downloads/jarvis_mobile-v1.2.5.apk): versão publicada do aplicativo mobile.
+- [Download do APK Lite](https://30jarvis.com.br/downloads/jarvis_mobile-lite-v1.2.5.apk): versão arm64-v8a compacta do aplicativo mobile.
 
 ## Recursos
 

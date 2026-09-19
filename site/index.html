@@ -296,6 +296,47 @@
             line-height: 1.7;
         }
 
+        .jarvis-download-tabs {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+            margin: 0 0 16px;
+            padding: 5px;
+            border: 1px solid rgba(0, 220, 255, 0.16);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .jarvis-download-tab {
+            border: 0;
+            border-radius: 8px;
+            padding: 11px 10px;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.58);
+            font: inherit;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .jarvis-download-tab:hover,
+        .jarvis-download-tab[aria-selected="true"] {
+            background: rgba(0, 217, 255, 0.16);
+            color: #ffffff;
+        }
+
+        .jarvis-download-variant {
+            margin: -8px 0 18px;
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .jarvis-download-variant strong {
+            color: #00d9ff;
+        }
+
         .jarvis-download-main-button {
             display: inline-flex;
 
@@ -706,6 +747,38 @@
             </p>
 
 
+            <div
+                class="jarvis-download-tabs"
+                role="tablist"
+                aria-label="Versão do aplicativo"
+            >
+                <button
+                    type="button"
+                    class="jarvis-download-tab"
+                    data-download-variant="normal"
+                    role="tab"
+                    aria-selected="true"
+                >
+                    APK normal
+                </button>
+
+                <button
+                    type="button"
+                    class="jarvis-download-tab"
+                    data-download-variant="lite"
+                    role="tab"
+                    aria-selected="false"
+                >
+                    APK Lite
+                </button>
+            </div>
+
+
+            <p class="jarvis-download-variant" id="downloadVariantDescription">
+                Versão universal, compatível com mais arquiteturas Android.
+            </p>
+
+
             <div class="jarvis-download-info">
 
                 <strong>
@@ -728,17 +801,27 @@
                     Formato:
                 </strong>
 
-                APK
+                <span id="downloadVariantFormat">APK universal</span>
+
+                <br>
+
+                <strong>
+                    Tamanho aproximado:
+                </strong>
+
+                <span id="downloadVariantSize">52,9 MB</span>
 
             </div>
 
 
             <a
-    href="/downloads/jarvis_mobile-v1.2.5.apk"
-    class="jarvis-download-main-button"
->
-    Baixar APK
-</a>
+                href="/downloads/jarvis_mobile-v1.2.5.apk"
+                class="jarvis-download-main-button"
+                id="downloadVariantLink"
+                download
+            >
+                Baixar APK normal
+            </a>
 
         </div>
 
@@ -1686,6 +1769,83 @@ const closeDownloadButton =
     document.getElementById(
         "closeDownloadButton"
     );
+
+
+const downloadVariantLink =
+    document.getElementById(
+        "downloadVariantLink"
+    );
+
+
+const downloadVariantDescription =
+    document.getElementById(
+        "downloadVariantDescription"
+    );
+
+
+const downloadVariantFormat =
+    document.getElementById(
+        "downloadVariantFormat"
+    );
+
+
+const downloadVariantSize =
+    document.getElementById(
+        "downloadVariantSize"
+    );
+
+
+const downloadVariants = {
+    normal: {
+        href: "/downloads/jarvis_mobile-v1.2.5.apk",
+        label: "Baixar APK normal",
+        description: "Versão universal, compatível com mais arquiteturas Android.",
+        format: "APK universal",
+        size: "52,9 MB"
+    },
+    lite: {
+        href: "/downloads/jarvis_mobile-lite-v1.2.5.apk",
+        label: "Baixar APK Lite",
+        description: "Versão compacta para celulares Android com arquitetura arm64-v8a.",
+        format: "APK arm64-v8a",
+        size: "20,7 MB"
+    }
+};
+
+
+function selectDownloadVariant(variantName) {
+    const variant = downloadVariants[variantName] || downloadVariants.normal;
+
+    document
+        .querySelectorAll("[data-download-variant]")
+        .forEach((button) => {
+            button.setAttribute(
+                "aria-selected",
+                button.dataset.downloadVariant === variantName
+                    ? "true"
+                    : "false"
+            );
+        });
+
+    downloadVariantLink.href = variant.href;
+    downloadVariantLink.textContent = variant.label;
+    downloadVariantDescription.textContent = variant.description;
+    downloadVariantFormat.textContent = variant.format;
+    downloadVariantSize.textContent = variant.size;
+}
+
+
+document
+    .querySelectorAll("[data-download-variant]")
+    .forEach((button) => {
+        button.addEventListener(
+            "click",
+            () => selectDownloadVariant(button.dataset.downloadVariant)
+        );
+    });
+
+
+selectDownloadVariant("normal");
 
 
 /* ==========================================
