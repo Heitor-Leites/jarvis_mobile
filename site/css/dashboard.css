@@ -428,6 +428,53 @@ body {
     border-top: 1px solid var(--border);
 }
 
+.sidebar-help-links {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 2px 0;
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.sidebar-help-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 28px;
+    color: inherit;
+    text-decoration: none;
+    transition: color 160ms ease, transform 160ms ease;
+}
+
+.sidebar-help-link:hover {
+    color: var(--text-main);
+    transform: translateX(2px);
+}
+
+.sidebar-help-link > span:first-child {
+    width: 18px;
+    color: var(--accent);
+    text-align: center;
+    font-size: 15px;
+}
+
+.sidebar-help-divider {
+    height: 1px;
+    margin: 8px 0 4px;
+    background: var(--border);
+}
+
+.sidebar-legal-links {
+    display: flex;
+    gap: 18px;
+}
+
+.sidebar-legal-links .sidebar-help-link {
+    min-height: 24px;
+    color: var(--text-muted);
+}
+
 body.theme-light {
     --bg-main: #f3f6fa;
     --bg-sidebar: rgba(255, 255, 255, 0.94);
@@ -2198,6 +2245,7 @@ a:focus-visible {
     .recent-title,
     .recent-empty,
     .recent-conversations,
+    .sidebar-help-links,
     .user-name,
     .user-status,
     .logout-button {
