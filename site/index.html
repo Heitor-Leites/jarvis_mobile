@@ -430,8 +430,8 @@
             <span>JARVIS online</span>
         </div>
         <nav class="workspace-help-links" aria-label="Ajuda e informações">
-            <a href="#feedback" class="workspace-help-link"><span aria-hidden="true">▣</span><span>Enviar comentário</span></a>
-            <a href="https://search.google.com/search-console/about" class="workspace-help-link" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">ⓘ</span><span>Sobre o Search Console</span></a>
+            <a href="pages/feedback.html" class="workspace-help-link"><span aria-hidden="true">▣</span><span>Enviar comentário</span></a>
+            <a href="pages/sobre.html" class="workspace-help-link"><span aria-hidden="true">ⓘ</span><span>Sobre o J.A.R.V.I.S.</span></a>
             <div class="workspace-help-divider" role="separator"></div>
             <div class="workspace-legal-links"><a href="pages/privacidade.html" class="workspace-help-link">Privacidade</a><a href="pages/termos.html" class="workspace-help-link">Termos</a></div>
         </nav>
@@ -745,11 +745,18 @@
 const jarvisHome =
     document.getElementById("jarvisHome");
 
+const requestedMode =
+    new URLSearchParams(window.location.search).get("mode");
+
+const hasStoredToken =
+    Boolean(localStorage.getItem("jarvis_token"));
+
 const authenticatedRoute =
-    new URLSearchParams(window.location.search).get("mode") === "authenticated";
+    requestedMode === "authenticated" ||
+    (requestedMode !== "public" && hasStoredToken);
 
 const authenticatedMode =
-    authenticatedRoute && Boolean(localStorage.getItem("jarvis_token"));
+    authenticatedRoute && hasStoredToken;
 
 const publicPromo =
     document.getElementById("publicPromo");

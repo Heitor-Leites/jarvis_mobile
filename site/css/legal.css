@@ -50,3 +50,70 @@ li {
 small {
     color: rgba(238, 243, 248, 0.42);
 }
+
+.feedback-form {
+    display: grid;
+    gap: 16px;
+    margin-top: 28px;
+}
+
+.feedback-form label {
+    display: grid;
+    gap: 7px;
+    color: rgba(238, 243, 248, 0.78);
+    font-size: 13px;
+}
+
+.feedback-form input,
+.feedback-form select,
+.feedback-form textarea {
+    width: 100%;
+    border: 1px solid rgba(120, 216, 255, 0.24);
+    border-radius: 10px;
+    padding: 12px 13px;
+    color: #eef3f8;
+    background: rgba(3, 8, 14, 0.8);
+    font: inherit;
+}
+
+.feedback-form textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.feedback-form input:focus,
+.feedback-form select:focus,
+.feedback-form textarea:focus {
+    outline: 2px solid rgba(120, 216, 255, 0.55);
+    outline-offset: 2px;
+}
+
+.feedback-submit {
+    justify-self: start;
+    border: 0;
+    border-radius: 10px;
+    padding: 13px 22px;
+    color: #041016;
+    background: #78d8ff;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.feedback-submit:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+.feedback-status {
+    min-height: 22px;
+    color: rgba(238, 243, 248, 0.7);
+}
+
+.feedback-status.success {
+    color: #55e6a8;
+}
+
+.feedback-status.error {
+    color: #ff8790;
+}
