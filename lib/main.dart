@@ -27,7 +27,7 @@ class _JarvisAppState extends State<JarvisApp> {
     super.initState();
 
     _api = JarvisApi(
-      baseUrl: 'https://jarvis-backend-mzhe.onrender.com',
+      baseUrl: 'https://api.30jarvis.com.br',
     );
 
     _checkSession();

@@ -264,7 +264,7 @@ class JarvisApi {
 
   Future<List<dynamic>> getMemories() async {
     final response = await _authorizedGet(
-      '/memories',
+      '/memory',
     );
 
     final data = _decodeResponse(response);
@@ -298,7 +298,7 @@ class JarvisApi {
     int importance = 3,
   }) async {
     final response = await _authorizedPost(
-      '/memories',
+      '/memory',
       {
         'content': content,
         'category': category,
@@ -337,7 +337,7 @@ class JarvisApi {
     required String content,
   }) async {
     final response = await _authorizedPost(
-      '/memories/detect',
+      '/memory/detect',
       {
         'content': content,
       },
@@ -374,7 +374,7 @@ class JarvisApi {
     int memoryId,
   ) async {
     final response = await _authorizedDelete(
-      '/memories/$memoryId',
+      '/memory/$memoryId',
     );
 
     final data = _decodeResponse(response);

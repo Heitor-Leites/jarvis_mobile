@@ -139,6 +139,10 @@ const googleButton =
 const status =
     document.getElementById("login-status");
 
+const nextTarget =
+    new URLSearchParams(window.location.search).get("next") ||
+    "dashboard.html";
+
 
 /* ============================================================
    STATUS
@@ -189,9 +193,7 @@ async function checkExistingSession() {
             "Sessão ativa. Entrando..."
         );
 
-        window.location.replace(
-            "dashboard.html"
-        );
+        window.location.replace(nextTarget);
 
     }
 
@@ -253,9 +255,7 @@ if (oauthToken) {
     setTimeout(
         function () {
 
-            window.location.replace(
-                "dashboard.html"
-            );
+            window.location.replace(nextTarget);
 
         },
         300
@@ -351,9 +351,7 @@ form.addEventListener(
             setTimeout(
                 function () {
 
-                    window.location.replace(
-                        "dashboard.html"
-                    );
+                    window.location.replace(nextTarget);
 
                 },
                 350

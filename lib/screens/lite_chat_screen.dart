@@ -83,14 +83,16 @@ class _LiteChatScreenState extends State<LiteChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: const Color(0xFF050A0F),
+      backgroundColor: const Color(0xFFF4F8FB),
       appBar: AppBar(
         title: const Text(
           'J.A.R.V.I.S. Lite',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF070D13),
+        backgroundColor: Colors.white,
         actions: [
           IconButton(
             tooltip: 'Sair',
@@ -119,21 +121,23 @@ class _LiteChatScreenState extends State<LiteChatScreen> {
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
                         color: message.fromUser
-                            ? Colors.blueAccent.withValues(alpha: 0.85)
-                            : Colors.white.withValues(alpha: 0.06),
+                            ? colorScheme.primary
+                            : Colors.white,
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
                           color: message.isError
-                              ? Colors.redAccent.withValues(alpha: 0.6)
-                              : Colors.white.withValues(alpha: 0.08),
+                              ? colorScheme.error.withValues(alpha: 0.6)
+                              : colorScheme.outlineVariant,
                         ),
                       ),
                       child: Text(
                         message.text,
                         style: TextStyle(
                           color: message.isError
-                              ? Colors.redAccent.shade100
-                              : Colors.white,
+                              ? colorScheme.error
+                              : message.fromUser
+                                  ? colorScheme.onPrimary
+                                  : colorScheme.onSurface,
                           height: 1.35,
                         ),
                       ),
@@ -167,7 +171,7 @@ class _LiteChatScreenState extends State<LiteChatScreen> {
                       decoration: InputDecoration(
                         hintText: 'Digite uma mensagem...',
                         filled: true,
-                        fillColor: Colors.white.withValues(alpha: 0.05),
+                        fillColor: Colors.white,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
                           borderSide: BorderSide.none,
@@ -181,8 +185,8 @@ class _LiteChatScreenState extends State<LiteChatScreen> {
                     icon: const Icon(Icons.send_rounded),
                     color: Colors.black,
                     style: IconButton.styleFrom(
-                      backgroundColor: Colors.cyanAccent,
-                      disabledBackgroundColor: Colors.white24,
+                      backgroundColor: colorScheme.primary,
+                      disabledBackgroundColor: colorScheme.surfaceContainerHighest,
                     ),
                   ),
                 ],

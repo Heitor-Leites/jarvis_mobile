@@ -88,8 +88,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: const Color(0xFF050A0F),
+      backgroundColor: colorScheme.surface,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -100,14 +102,14 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Container(
               padding: const EdgeInsets.all(28),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
+                color: colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(
-                  color: Colors.cyanAccent.withValues(alpha: 0.25),
+                  color: colorScheme.primary.withValues(alpha: 0.25),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.cyan.withValues(alpha: 0.08),
+                    color: colorScheme.primary.withValues(alpha: 0.08),
                     blurRadius: 30,
                     spreadRadius: 2,
                   ),
@@ -122,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: Colors.cyanAccent,
+                        color: colorScheme.primary,
                         width: 2,
                       ),
                     ),
@@ -135,10 +137,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   const SizedBox(height: 24),
 
-                  const Text(
+                  Text(
                     'J.A.R.V.I.S.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
+                      color: colorScheme.onSurface,
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 4,
@@ -147,11 +150,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   const SizedBox(height: 8),
 
-                  const Text(
+                  Text(
                     'CENTRAL DE COMANDO',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.cyanAccent,
+                      color: colorScheme.primary,
                       fontSize: 11,
                       letterSpacing: 2,
                     ),
@@ -169,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Icons.person_outline,
                       ),
                       filled: true,
-                      fillColor: Colors.white.withValues(alpha: 0.05),
+                      fillColor: colorScheme.surfaceContainerHighest,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
                         borderSide: BorderSide.none,
@@ -203,7 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       filled: true,
-                      fillColor: Colors.white.withValues(alpha: 0.05),
+                      fillColor: colorScheme.surfaceContainerHighest,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
                         borderSide: BorderSide.none,
@@ -217,8 +220,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     Text(
                       _errorMessage!,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.redAccent,
+                      style: TextStyle(
+                        color: colorScheme.error,
                         fontSize: 13,
                       ),
                     ),
@@ -231,19 +234,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: ElevatedButton(
                       onPressed: _isLoading ? null : _login,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.cyanAccent,
-                        foregroundColor: Colors.black,
+                        backgroundColor: colorScheme.primary,
+                        foregroundColor: colorScheme.onPrimary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
                       child: _isLoading
-                          ? const SizedBox(
+                          ? SizedBox(
                               width: 22,
                               height: 22,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: Colors.black,
+                                color: colorScheme.onPrimary,
                               ),
                             )
                           : const Text(

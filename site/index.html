@@ -368,6 +368,39 @@
             filter: brightness(1.08);
         }
 
+        .jarvis-download-login-required {
+            padding: 18px;
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 14px;
+            background: rgba(0, 217, 255, 0.06);
+            color: rgba(255, 255, 255, 0.72);
+            line-height: 1.55;
+        }
+
+        .jarvis-download-login-required strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .jarvis-download-login-required p {
+            margin: 0 0 16px;
+            font-size: 13px;
+        }
+
+        .jarvis-download-login-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 42px;
+            padding: 0 18px;
+            border-radius: 10px;
+            background: #00aee8;
+            color: #031017;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
     </style>
 </head>
 
@@ -746,6 +779,23 @@
                 Aplicativo oficial para Android.
             </p>
 
+            <div
+                class="jarvis-download-login-required"
+                id="downloadLoginRequired"
+            >
+                <strong>Login necessário</strong>
+                <p>Entre na sua conta para liberar os APKs e baixar a versão escolhida.</p>
+                <a
+                    class="jarvis-download-login-link"
+                    id="downloadLoginLink"
+                    href="pages/login.html"
+                >
+                    Entrar para baixar
+                </a>
+            </div>
+
+            <div id="downloadAuthenticatedContent" hidden>
+
 
             <div
                 class="jarvis-download-tabs"
@@ -785,7 +835,7 @@
                     Versão:
                 </strong>
 
-                1.2.5
+                1.2.6
 
                 <br>
 
@@ -815,13 +865,15 @@
 
 
             <a
-                href="/downloads/jarvis_mobile-v1.2.5.apk"
+                href="#"
                 class="jarvis-download-main-button"
                 id="downloadVariantLink"
                 download
             >
                 Baixar APK normal
             </a>
+
+            </div>
 
         </div>
 
@@ -1251,6 +1303,10 @@ async function loadUserProfile() {
             localStorage.removeItem(
                 "jarvis_token"
             );
+
+            if (typeof updateDownloadAccess === "function") {
+                updateDownloadAccess();
+            }
 
 
             authButton.href =
@@ -1794,26 +1850,81 @@ const downloadVariantSize =
         "downloadVariantSize"
     );
 
+const downloadLoginRequired =
+    document.getElementById(
+        "downloadLoginRequired"
+    );
+
+const downloadAuthenticatedContent =
+    document.getElementById(
+        "downloadAuthenticatedContent"
+    );
+
+const downloadLoginLink =
+    document.getElementById(
+        "downloadLoginLink"
+    );
+
+const downloadReturnUrl =
+    "../index.html?mode=authenticated&download=1";
+
+const requestedDownload =
+    new URLSearchParams(window.location.search).get("download") === "1";
+
+const downloadLoginUrl =
+    "pages/login.html?next=" +
+    encodeURIComponent(downloadReturnUrl);
+
 
 const downloadVariants = {
     normal: {
-        href: "/downloads/jarvis_mobile-v1.2.5.apk",
+        href: "/downloads/jarvis_mobile-v1.2.6.apk",
         label: "Baixar APK normal",
         description: "Versão universal, compatível com mais arquiteturas Android.",
         format: "APK universal",
         size: "52,9 MB"
     },
     lite: {
-        href: "/downloads/jarvis_mobile-lite-v1.2.5-arm64.apk?v=1.2.5-arm64",
+        href: "/downloads/jarvis_mobile-lite-v1.2.6-arm64.apk?v=1.2.6-arm64",
         label: "Baixar APK Lite",
         description: "Versão compacta para celulares Android com arquitetura arm64-v8a.",
         format: "APK arm64-v8a",
-        size: "20,7 MB"
+        size: "20,6 MB"
     }
 };
 
 
+function hasDownloadAccess() {
+    return Boolean(
+        localStorage.getItem("jarvis_token")
+    );
+}
+
+
+function updateDownloadAccess() {
+    const allowed = hasDownloadAccess();
+
+    if (downloadLoginRequired) {
+        downloadLoginRequired.hidden = allowed;
+    }
+
+    if (downloadAuthenticatedContent) {
+        downloadAuthenticatedContent.hidden = !allowed;
+    }
+
+    if (downloadLoginLink) {
+        downloadLoginLink.href = downloadLoginUrl;
+    }
+
+    openDownloadButton.textContent = "Android";
+}
+
+
 function selectDownloadVariant(variantName) {
+    if (!hasDownloadAccess()) {
+        return;
+    }
+
     const variant = downloadVariants[variantName] || downloadVariants.normal;
 
     document
@@ -1846,6 +1957,11 @@ document
 
 
 selectDownloadVariant("normal");
+updateDownloadAccess();
+
+if (requestedDownload && hasDownloadAccess()) {
+    downloadModal.classList.add("active");
+}
 
 
 /* ==========================================
@@ -1855,6 +1971,13 @@ selectDownloadVariant("normal");
 openDownloadButton.addEventListener(
     "click",
     function () {
+
+        if (!hasDownloadAccess()) {
+            downloadModal.classList.add(
+                "active"
+            );
+            return;
+        }
 
         downloadModal.classList.add(
             "active"

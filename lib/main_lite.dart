@@ -26,7 +26,7 @@ class _JarvisLiteAppState extends State<JarvisLiteApp> {
   void initState() {
     super.initState();
     _api = JarvisApi(
-      baseUrl: 'https://jarvis-backend-mzhe.onrender.com',
+      baseUrl: 'https://api.30jarvis.com.br',
     );
     _checkSession();
   }
@@ -73,9 +73,9 @@ class _JarvisLiteAppState extends State<JarvisLiteApp> {
   Widget _home() {
     if (_checkingSession) {
       return const Scaffold(
-        backgroundColor: Color(0xFF050A0F),
+        backgroundColor: Color(0xFFF4F8FB),
         body: Center(
-          child: CircularProgressIndicator(color: Colors.cyanAccent),
+          child: CircularProgressIndicator(color: Color(0xFF007C91)),
         ),
       );
     }
@@ -92,11 +92,17 @@ class _JarvisLiteAppState extends State<JarvisLiteApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'J.A.R.V.I.S. Lite',
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: const Color(0xFF050A0F),
+      themeMode: ThemeMode.light,
+      theme: ThemeData.light().copyWith(
+        scaffoldBackgroundColor: const Color(0xFFF4F8FB),
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.cyan,
-          brightness: Brightness.dark,
+          seedColor: const Color(0xFF007C91),
+          brightness: Brightness.light,
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+          foregroundColor: Color(0xFF102027),
+          elevation: 0,
         ),
       ),
       home: _home(),
