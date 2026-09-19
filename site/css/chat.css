@@ -766,6 +766,8 @@
 .jarvis-footer {
     width: 100%;
 
+    position: relative;
+
     padding: 18px 42px;
 
     display: flex;
@@ -2531,6 +2533,26 @@
 .jarvis-home .chat-input-container,
 .jarvis-home .chat-status {
     flex-shrink: 0;
+}
+
+.jarvis-footer-center {
+    position: absolute;
+    left: 50%;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+.jarvis-footer-center a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.jarvis-footer-center a:hover {
+    color: rgba(255, 255, 255, 0.78);
 }
 
 .jarvis-home.authenticated-home .jarvis-greeting {
