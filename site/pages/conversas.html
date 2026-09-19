@@ -433,6 +433,17 @@
             errorMessage.style.display = "none";
         }
 
+        function followLatestMessage(behavior = "auto") {
+            if (!chatMessages) return;
+
+            requestAnimationFrame(() => {
+                chatMessages.scrollTo({
+                    top: chatMessages.scrollHeight,
+                    behavior
+                });
+            });
+        }
+
         function formatDate(value) {
             if (!value) return "";
             const date = new Date(value);
@@ -480,7 +491,7 @@
                 chatMessages.innerHTML = messages.map(message => `
                     <div class="chat-message ${message.role === "user" ? "user" : "assistant"}">${escapeHtml(message.content)}</div>
                 `).join("");
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+                followLatestMessage();
             }
 
             renderConversationList();

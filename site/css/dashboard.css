@@ -1340,6 +1340,60 @@ body.theme-light ::-webkit-scrollbar-thumb {
     border-color: rgba(102, 199, 255, 0.13);
 }
 
+/* ============================================================
+   WORKSPACE: CABEÇALHO FIXO E ÁREA DE CONTEÚDO ROLÁVEL
+   ============================================================ */
+
+.conversation-page {
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
+}
+
+.conversation-page .conversation-content {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.conversation-page .conversation-content > .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    flex: 0 0 auto;
+    background: rgba(7, 10, 15, 0.94);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+.conversation-page .conversation-layout {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.conversation-page .conversation-panel,
+.conversation-page .chat-panel,
+.conversation-page .chat-messages {
+    min-height: 0;
+}
+
+.conversation-page .conversation-panel {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.conversation-page .chat-messages {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    overflow-anchor: auto;
+}
+
+.conversation-page .chat-composer {
+    flex: 0 0 auto;
+}
+
 .topbar-left {
     display: flex;
     align-items: center;

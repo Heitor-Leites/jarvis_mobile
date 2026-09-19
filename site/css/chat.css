@@ -2490,6 +2490,49 @@
     align-items: stretch;
 }
 
+/* ============================================================
+   ROLAGEM CONTROLADA DO CHAT
+   O cabeçalho e o compositor permanecem fixos na viewport; somente
+   as mensagens podem crescer e rolar verticalmente.
+   ============================================================ */
+
+.jarvis-home {
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
+}
+
+.jarvis-home .jarvis-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    flex: 0 0 72px;
+}
+
+.jarvis-home .jarvis-main {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.jarvis-home .jarvis-chat {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.jarvis-home .chat-messages {
+    min-height: 0;
+    max-height: none;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    overflow-anchor: auto;
+}
+
+.jarvis-home .chat-suggestions,
+.jarvis-home .chat-input-container,
+.jarvis-home .chat-status {
+    flex-shrink: 0;
+}
+
 .jarvis-home.authenticated-home .jarvis-greeting {
     max-width: 920px;
     margin: 0 auto;
