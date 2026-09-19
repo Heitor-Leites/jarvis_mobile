@@ -2538,8 +2538,9 @@
 .jarvis-footer-center {
     position: absolute;
     left: 50%;
-    display: inline-flex;
-    flex-direction: row;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center;
     align-items: center;
     gap: 10px;
     transform: translateX(-50%);
