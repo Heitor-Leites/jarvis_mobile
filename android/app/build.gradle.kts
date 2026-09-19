@@ -4,6 +4,13 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// A release APK must use a stable production key. Credentials stay in
+// environment variables and are never committed to the repository.
+val releaseStoreFile = System.getenv("JARVIS_RELEASE_STORE_FILE")
+    ?: "keystore/jarvis-release-key.jks"
+val releaseStorePassword = System.getenv("JARVIS_RELEASE_STORE_PASSWORD")
+val releaseKeyPassword = System.getenv("JARVIS_RELEASE_KEY_PASSWORD")
+
 android {
     namespace = "com.example.jarvis_mobile"
     compileSdk = flutter.compileSdkVersion
@@ -29,11 +36,24 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        create("release") {
+            if (releaseStorePassword.isNullOrBlank() || releaseKeyPassword.isNullOrBlank()) {
+                throw GradleException(
+                    "Defina JARVIS_RELEASE_STORE_PASSWORD e JARVIS_RELEASE_KEY_PASSWORD " +
+                        "para compilar o APK de produção."
+                )
+            }
+            storeFile = rootProject.file(releaseStoreFile)
+            storePassword = releaseStorePassword
+            keyAlias = "jarvis-release"
+            keyPassword = releaseKeyPassword
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }
