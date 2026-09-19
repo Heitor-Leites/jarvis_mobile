@@ -1878,14 +1878,16 @@ const downloadLoginUrl =
 
 const downloadVariants = {
     normal: {
-        href: "/downloads/jarvis_mobile-v1.2.6.apk",
+        path: "/downloads/universal",
+        filename: "jarvis_mobile-v1.2.6.apk",
         label: "Baixar APK normal",
         description: "Versão universal, compatível com mais arquiteturas Android.",
         format: "APK universal",
         size: "52,9 MB"
     },
     lite: {
-        href: "/downloads/jarvis_mobile-lite-v1.2.6-arm64.apk?v=1.2.6-arm64",
+        path: "/downloads/lite",
+        filename: "jarvis_mobile-lite-v1.2.6-arm64.apk",
         label: "Baixar APK Lite",
         description: "Versão compacta para celulares Android com arquitetura arm64-v8a.",
         format: "APK arm64-v8a",
@@ -1938,7 +1940,10 @@ function selectDownloadVariant(variantName) {
             );
         });
 
-    downloadVariantLink.href = variant.href;
+    downloadVariantLink.href = "#";
+    downloadVariantLink.dataset.downloadPath = variant.path;
+    downloadVariantLink.dataset.downloadVariant = variantName;
+    downloadVariantLink.download = variant.filename;
     downloadVariantLink.textContent = variant.label;
     downloadVariantDescription.textContent = variant.description;
     downloadVariantFormat.textContent = variant.format;
@@ -1962,6 +1967,76 @@ updateDownloadAccess();
 if (requestedDownload && hasDownloadAccess()) {
     downloadModal.classList.add("active");
 }
+
+
+downloadVariantLink.addEventListener(
+    "click",
+    async function (event) {
+        event.preventDefault();
+
+        if (!hasDownloadAccess()) {
+            downloadModal.classList.add("active");
+            return;
+        }
+
+        const token = localStorage.getItem("jarvis_token");
+        const variantName =
+            downloadVariantLink.dataset.downloadVariant || "normal";
+        const variant = downloadVariants[variantName];
+
+        if (!token || !variant) {
+            return;
+        }
+
+        const originalLabel = variant.label;
+        downloadVariantLink.textContent = "Autorizando download...";
+        downloadVariantLink.setAttribute("aria-busy", "true");
+
+        try {
+            const response = await fetch(
+                `${API_URL}${variant.path}`,
+                {
+                    method: "GET",
+                    credentials: "include",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            if (response.status === 401) {
+                localStorage.removeItem("jarvis_token");
+                updateDownloadAccess();
+                throw new Error("Sua sessão expirou. Entre novamente.");
+            }
+
+            if (!response.ok) {
+                const data = await response.json().catch(() => ({}));
+                throw new Error(
+                    data.detail || "Não foi possível iniciar o download."
+                );
+            }
+
+            const blob = await response.blob();
+            const objectUrl = URL.createObjectURL(blob);
+            const anchor = document.createElement("a");
+            anchor.href = objectUrl;
+            anchor.download = variant.filename;
+            document.body.appendChild(anchor);
+            anchor.click();
+            anchor.remove();
+            window.setTimeout(
+                () => URL.revokeObjectURL(objectUrl),
+                60_000
+            );
+        } catch (error) {
+            downloadVariantDescription.textContent = error.message;
+        } finally {
+            downloadVariantLink.textContent = originalLabel;
+            downloadVariantLink.removeAttribute("aria-busy");
+        }
+    }
+);
 
 
 /* ==========================================

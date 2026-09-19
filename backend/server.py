@@ -3,13 +3,14 @@ import secrets
 import time
 import logging
 from datetime import datetime, timedelta
+from pathlib import Path
 
 import httpx
 from dotenv import load_dotenv
 
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse
 
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -69,6 +70,24 @@ from memory.manager import (
 load_dotenv()
 
 logger = logging.getLogger("jarvis.backend")
+
+APK_DOWNLOAD_DIR = Path(__file__).resolve().parent / "downloads"
+APK_DOWNLOADS_ENABLED = os.getenv(
+    "APK_DOWNLOADS_ENABLED",
+    "true",
+).strip().lower() not in {"0", "false", "no", "off"}
+_apk_downloads_paused_until: float | None = None
+
+APK_DOWNLOADS = {
+    "universal": {
+        "filename": "jarvis_mobile-v1.2.6.apk",
+        "download_name": "jarvis_mobile-v1.2.6.apk",
+    },
+    "lite": {
+        "filename": "jarvis_mobile-lite-v1.2.6-arm64.apk",
+        "download_name": "jarvis_mobile-lite-v1.2.6-arm64.apk",
+    },
+}
 
 
 # ============================================================
@@ -321,6 +340,46 @@ class DeviceRequest(BaseModel):
     device_id: str
     device_name: str = "Dispositivo"
     platform: str = "web"
+
+
+class DownloadPauseRequest(BaseModel):
+    minutes: int = 10
+
+
+def _apk_downloads_are_enabled() -> bool:
+    if not APK_DOWNLOADS_ENABLED:
+        return False
+
+    if (
+        _apk_downloads_paused_until is not None
+        and time.time() < _apk_downloads_paused_until
+    ):
+        return False
+
+    return True
+
+
+def _require_admin(
+    user_id: int,
+    db: Session,
+) -> User:
+    user = (
+        db.query(User)
+        .filter(User.id == user_id)
+        .first()
+    )
+
+    if (
+        user is None
+        or not user.active
+        or user.username != ADMIN_USERNAME
+    ):
+        raise HTTPException(
+            status_code=403,
+            detail="Apenas o administrador pode alterar o download dos APKs.",
+        )
+
+    return user
 
 
 # ============================================================
@@ -647,6 +706,94 @@ def get_me(
         "active": user.active,
         "picture_url": user.picture_url,
     }
+
+
+# ============================================================
+# DOWNLOADS PROTEGIDOS
+# ============================================================
+
+@app.get("/downloads/{variant}")
+def download_apk(
+    variant: str,
+    user_id: int = Depends(get_current_user_id),
+    db: Session = Depends(get_db),
+):
+    if not _apk_downloads_are_enabled():
+        raise HTTPException(
+            status_code=503,
+            detail="Os downloads dos APKs estão temporariamente pausados.",
+        )
+
+    user = (
+        db.query(User)
+        .filter(User.id == user_id)
+        .first()
+    )
+
+    if user is None or not user.active:
+        raise HTTPException(
+            status_code=403,
+            detail="A conta não está autorizada para baixar APKs.",
+        )
+
+    download = APK_DOWNLOADS.get(variant)
+    if download is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Variante de APK não encontrada.",
+        )
+
+    apk_path = APK_DOWNLOAD_DIR / download["filename"]
+    if not apk_path.is_file():
+        logger.error("APK não encontrado: %s", apk_path)
+        raise HTTPException(
+            status_code=503,
+            detail="O APK está temporariamente indisponível.",
+        )
+
+    return FileResponse(
+        apk_path,
+        media_type="application/vnd.android.package-archive",
+        filename=download["download_name"],
+        headers={
+            "Cache-Control": "private, no-store",
+            "X-Content-Type-Options": "nosniff",
+        },
+    )
+
+
+@app.post("/admin/downloads/pause")
+def pause_apk_downloads(
+    request: DownloadPauseRequest,
+    user_id: int = Depends(get_current_user_id),
+    db: Session = Depends(get_db),
+):
+    _require_admin(user_id, db)
+
+    minutes = max(1, min(request.minutes, 1440))
+    global _apk_downloads_paused_until
+    _apk_downloads_paused_until = time.time() + minutes * 60
+
+    return {
+        "enabled": False,
+        "paused_for_minutes": minutes,
+        "reactivates_at": datetime.fromtimestamp(
+            _apk_downloads_paused_until,
+        ).isoformat(),
+    }
+
+
+@app.post("/admin/downloads/enable")
+def enable_apk_downloads(
+    user_id: int = Depends(get_current_user_id),
+    db: Session = Depends(get_db),
+):
+    _require_admin(user_id, db)
+
+    global _apk_downloads_paused_until
+    _apk_downloads_paused_until = None
+
+    return {"enabled": _apk_downloads_are_enabled()}
 
 
 # ============================================================
