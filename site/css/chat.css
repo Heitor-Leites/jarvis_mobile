@@ -2539,6 +2539,7 @@
     position: absolute;
     left: 50%;
     display: inline-flex;
+    flex-direction: row;
     align-items: center;
     gap: 10px;
     transform: translateX(-50%);
