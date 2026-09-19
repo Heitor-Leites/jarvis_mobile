@@ -1451,25 +1451,17 @@ chatForm.addEventListener(
                     "Login necessário.",
                     "error"
                 );
-            } else if (error.status === 503) {
-                await addMessage(
-                    error.message ||
-                        "A fonte consultada está temporariamente indisponível. Tente novamente em alguns segundos.",
-                    "jarvis"
-                );
-
-                setChatStatus(
-                    "Fonte externa indisponível.",
-                    "error"
-                );
             } else {
                 await addMessage(
-                    "Não consegui processar seu comando. Verifique a conexão com o núcleo JARVIS.",
+                    error.message ||
+                        "Não consegui processar seu comando. Verifique a conexão com o núcleo JARVIS.",
                     "jarvis"
                 );
 
                 setChatStatus(
-                    "Falha na comunicação.",
+                    error.status === 503
+                        ? "Núcleo de IA indisponível."
+                        : "Falha na comunicação.",
                     "error"
                 );
             }
