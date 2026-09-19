@@ -26,13 +26,13 @@
                 </label>
 
                 <label>
-                    Nome <span>(opcional)</span>
-                    <input type="text" name="name" maxlength="160" autocomplete="name">
+                    Nome
+                    <input type="text" name="name" maxlength="160" autocomplete="name" required>
                 </label>
 
                 <label>
-                    E-mail <span>(opcional)</span>
-                    <input type="email" name="email" maxlength="320" autocomplete="email">
+                    E-mail ou Gmail
+                    <input type="email" name="email" maxlength="320" autocomplete="email" required>
                 </label>
 
                 <label>
@@ -76,7 +76,9 @@
 
                 feedbackForm.reset();
                 feedbackStatus.className = "feedback-status success";
-                feedbackStatus.textContent = "Mensagem enviada. Obrigado por ajudar a melhorar o J.A.R.V.I.S.!";
+                feedbackStatus.textContent = data.notification_sent
+                    ? "Mensagem enviada e encaminhada para a equipe do J.A.R.V.I.S. Obrigado!"
+                    : "Mensagem registrada. A notificação por e-mail ainda está sendo configurada.";
             } catch (error) {
                 feedbackStatus.className = "feedback-status error";
                 feedbackStatus.textContent = error.message || "Não foi possível enviar sua mensagem.";
