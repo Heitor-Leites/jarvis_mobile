@@ -1,29 +1,60 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
-  <title id="title">J.A.R.V.I.S.</title>
-  <desc id="desc">Ícone tecnológico azul do J.A.R.V.I.S.</desc>
+  <title id="title">J.A.R.V.I.S. Reactor Core</title>
+  <desc id="desc">Reator circular geométrico azul do J.A.R.V.I.S.</desc>
   <defs>
-    <radialGradient id="bg" cx="50%" cy="42%" r="70%">
-      <stop offset="0" stop-color="#102c4a"/>
-      <stop offset="1" stop-color="#04090f"/>
+    <radialGradient id="bg" cx="50%" cy="44%" r="76%">
+      <stop offset="0" stop-color="#12334f"/>
+      <stop offset=".58" stop-color="#071725"/>
+      <stop offset="1" stop-color="#02060c"/>
     </radialGradient>
-    <radialGradient id="core" cx="35%" cy="30%" r="70%">
+    <radialGradient id="core" cx="34%" cy="25%" r="80%">
       <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="0.22" stop-color="#73dcff"/>
-      <stop offset="0.62" stop-color="#149bff"/>
-      <stop offset="1" stop-color="#0754a8"/>
+      <stop offset=".2" stop-color="#d4ffff"/>
+      <stop offset=".46" stop-color="#35ddff"/>
+      <stop offset=".8" stop-color="#087edf"/>
+      <stop offset="1" stop-color="#052c75"/>
     </radialGradient>
-    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
-      <feGaussianBlur stdDeviation="2.4" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c1fcff"/>
+      <stop offset=".46" stop-color="#24d8ff"/>
+      <stop offset="1" stop-color="#1684ff"/>
+    </linearGradient>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="2.2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation=".8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
   </defs>
   <rect width="64" height="64" rx="16" fill="url(#bg)"/>
-  <circle cx="32" cy="32" r="23" fill="none" stroke="#19a9ff" stroke-opacity=".28" stroke-width="1.4"/>
-  <circle cx="32" cy="32" r="17" fill="none" stroke="#49d8ff" stroke-opacity=".38" stroke-width="1.2"/>
-  <path d="M32 12v7M32 45v7M12 32h7M45 32h7" stroke="#69e4ff" stroke-opacity=".7" stroke-width="1.6" stroke-linecap="round"/>
-  <circle cx="32" cy="32" r="9" fill="url(#core)" filter="url(#glow)"/>
-  <path d="M29 37v-10h5.5a3 3 0 0 1 0 6H29m0-3h5" fill="none" stroke="#fff" stroke-opacity=".92" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="none" stroke="url(#cyan)" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="32" cy="32" r="25" stroke-opacity=".24" stroke-width=".55" stroke-dasharray=".25 2.2"/>
+    <circle cx="32" cy="32" r="23" stroke-opacity=".74" stroke-width="1.1"/>
+    <circle cx="32" cy="32" r="20" stroke-opacity=".38" stroke-width=".7" stroke-dasharray=".25 1.8"/>
+    <circle cx="32" cy="32" r="17" stroke-opacity=".72" stroke-width=".85"/>
+    <path d="M32 7v5M32 52v5M7 32h5M52 32h5" stroke-opacity=".9" stroke-width="1.05"/>
+    <path d="M14 14l4 4M46 46l4 4M50 14l-4 4M18 46l-4 4" stroke-opacity=".58" stroke-width=".7"/>
+  </g>
+  <g fill="none" stroke="#65eaff" stroke-opacity=".78" stroke-width=".7" stroke-linejoin="round">
+    <path d="M13 25l3-3h5M51 39l-3 3h-5M25 13l-3 3v5M39 51l3-3v-5"/>
+    <path d="M18 32h5M46 32h-5M32 18v5M32 46v-5"/>
+  </g>
+  <g fill="#aaf8ff" filter="url(#softGlow)">
+    <circle cx="16" cy="22" r=".7"/><circle cx="48" cy="42" r=".7"/>
+    <circle cx="22" cy="48" r=".6"/><circle cx="42" cy="16" r=".6"/>
+    <circle cx="32" cy="7" r=".65"/><circle cx="57" cy="32" r=".65"/>
+  </g>
+  <g filter="url(#glow)">
+    <circle cx="32" cy="32" r="13" fill="#0ac8ff" fill-opacity=".13"/>
+    <circle cx="32" cy="32" r="10.5" fill="url(#core)"/>
+  </g>
+  <g fill="none" stroke-linejoin="round">
+    <polygon points="21,22 43,22 32,43" stroke="#e5ffff" stroke-opacity=".92" stroke-width="1.1"/>
+    <polygon points="25,25 39,25 32,38" stroke="#32dcff" stroke-opacity=".9" stroke-width=".72"/>
+    <path d="M21 22l-4-3M43 22l4-3M32 43v5M24 27h-4M40 27h4M27 34h10" stroke="#ccfaff" stroke-opacity=".8" stroke-width=".58" stroke-linecap="round"/>
+  </g>
+  <circle cx="32" cy="31.5" r="4.1" fill="none" stroke="#f4ffff" stroke-opacity=".92" stroke-width=".72"/>
+  <circle cx="32" cy="31.5" r="2.1" fill="#ffffff" filter="url(#softGlow)"/>
 </svg>
