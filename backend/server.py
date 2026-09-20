@@ -7,10 +7,12 @@ from pathlib import Path
 
 import httpx
 from dotenv import load_dotenv
+from jose import JWTError, jwt
 
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request, Response, Security
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -24,6 +26,8 @@ from sqlalchemy import inspect, text
 from sqlalchemy.orm import Session
 
 from auth import (
+    ALGORITHM,
+    JWT_SECRET,
     create_access_token,
     get_current_user_id,
     hash_password,
@@ -88,6 +92,10 @@ APK_DOWNLOADS = {
         "download_name": "jarvis_mobile-lite-v1.2.6-arm64.apk",
     },
 }
+
+DOWNLOAD_TICKET_COOKIE = "jarvis_download_ticket"
+DOWNLOAD_TICKET_MAX_AGE = 180
+download_security = HTTPBearer(auto_error=False)
 
 
 # ============================================================
@@ -712,12 +720,59 @@ def get_me(
 # DOWNLOADS PROTEGIDOS
 # ============================================================
 
-@app.get("/downloads/{variant}")
-def download_apk(
+def _create_download_ticket(user_id: int, variant: str) -> str:
+    now = datetime.utcnow()
+    payload = {
+        "sub": str(user_id),
+        "type": "apk-download",
+        "variant": variant,
+        "iat": now,
+        "exp": now + timedelta(seconds=DOWNLOAD_TICKET_MAX_AGE),
+    }
+    return jwt.encode(payload, JWT_SECRET, algorithm=ALGORITHM)
+
+
+def _get_download_user_id(
+    request: Request,
+    credentials: HTTPAuthorizationCredentials | None = Security(
+        download_security,
+    ),
+) -> tuple[int, bool]:
+    if credentials is not None:
+        return get_current_user_id(credentials), False
+
+    ticket = request.cookies.get(DOWNLOAD_TICKET_COOKIE, "").strip()
+    if not ticket:
+        raise HTTPException(
+            status_code=401,
+            detail="Sessão não informada.",
+        )
+
+    try:
+        payload = jwt.decode(
+            ticket,
+            JWT_SECRET,
+            algorithms=[ALGORITHM],
+        )
+        if payload.get("type") != "apk-download":
+            raise ValueError
+
+        user_id = int(payload.get("sub"))
+        if user_id <= 0:
+            raise ValueError
+        return user_id, True
+    except (JWTError, TypeError, ValueError):
+        raise HTTPException(
+            status_code=401,
+            detail="Autorização de download expirada. Tente novamente.",
+        )
+
+
+def _validate_download_request(
     variant: str,
-    user_id: int = Depends(get_current_user_id),
-    db: Session = Depends(get_db),
-):
+    user_id: int,
+    db: Session,
+) -> dict:
     if not _apk_downloads_are_enabled():
         raise HTTPException(
             status_code=503,
@@ -729,7 +784,6 @@ def download_apk(
         .filter(User.id == user_id)
         .first()
     )
-
     if user is None or not user.active:
         raise HTTPException(
             status_code=403,
@@ -745,13 +799,51 @@ def download_apk(
 
     apk_path = APK_DOWNLOAD_DIR / download["filename"]
     if not apk_path.is_file():
-        logger.error("APK não encontrado: %s", apk_path)
+        logger.error("O APK não foi encontrado: %s", apk_path)
         raise HTTPException(
             status_code=503,
             detail="O APK está temporariamente indisponível.",
         )
 
-    return FileResponse(
+    return download
+
+
+@app.post("/downloads/{variant}/prepare")
+def prepare_apk_download(
+    variant: str,
+    response: Response,
+    user_id: int = Depends(get_current_user_id),
+    db: Session = Depends(get_db),
+):
+    variant = variant.lower()
+    _validate_download_request(variant, user_id, db)
+
+    response.set_cookie(
+        key=DOWNLOAD_TICKET_COOKIE,
+        value=_create_download_ticket(user_id, variant),
+        max_age=DOWNLOAD_TICKET_MAX_AGE,
+        httponly=True,
+        secure=True,
+        samesite="lax",
+        path="/downloads",
+    )
+    return {"ready": True, "path": f"/downloads/{variant}"}
+
+
+@app.get("/downloads/{variant}")
+def download_apk(
+    variant: str,
+    request: Request,
+    response: Response,
+    auth: tuple[int, bool] = Depends(_get_download_user_id),
+    db: Session = Depends(get_db),
+):
+    variant = variant.lower()
+    user_id, used_ticket = auth
+    download = _validate_download_request(variant, user_id, db)
+    apk_path = APK_DOWNLOAD_DIR / download["filename"]
+
+    file_response = FileResponse(
         apk_path,
         media_type="application/vnd.android.package-archive",
         filename=download["download_name"],
@@ -760,6 +852,12 @@ def download_apk(
             "X-Content-Type-Options": "nosniff",
         },
     )
+    if used_ticket:
+        file_response.delete_cookie(
+            DOWNLOAD_TICKET_COOKIE,
+            path="/downloads",
+        )
+    return file_response
 
 
 @app.post("/admin/downloads/pause")

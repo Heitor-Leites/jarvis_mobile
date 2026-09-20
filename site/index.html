@@ -1995,17 +1995,18 @@ downloadVariantLink.addEventListener(
         const controller = new AbortController();
         const requestTimeout = window.setTimeout(
             () => controller.abort(),
-            180000,
+            30000,
         );
 
         try {
             const response = await fetch(
-                `${API_URL}${variant.path}`,
+                `${API_URL}${variant.path}/prepare`,
                 {
-                    method: "GET",
+                    method: "POST",
                     credentials: "include",
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
                     },
                     signal: controller.signal,
                 }
@@ -2020,60 +2021,16 @@ downloadVariantLink.addEventListener(
             if (!response.ok) {
                 const data = await response.json().catch(() => ({}));
                 throw new Error(
-                    data.detail || "Não foi possível iniciar o download."
+                    data.detail || "Não foi possível autorizar o download."
                 );
             }
 
-            downloadVariantLink.textContent = "Baixando arquivo...";
-
-            const contentLength = Number(
-                response.headers.get("content-length") || 0,
-            );
-            const reader = response.body?.getReader();
-            const chunks = [];
-            let received = 0;
-
-            if (reader) {
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-
-                    chunks.push(value);
-                    received += value.byteLength;
-
-                    if (contentLength > 0) {
-                        const percent = Math.min(
-                            100,
-                            Math.round((received / contentLength) * 100),
-                        );
-                        downloadVariantLink.textContent =
-                            `Baixando arquivo... ${percent}%`;
-                    }
-                }
-            } else {
-                chunks.push(await response.arrayBuffer());
-            }
-
-            const blob = new Blob(chunks, {
-                type:
-                    response.headers.get("content-type") ||
-                    "application/vnd.android.package-archive",
-            });
-            const objectUrl = URL.createObjectURL(blob);
-            const anchor = document.createElement("a");
-            anchor.href = objectUrl;
-            anchor.download = variant.filename;
-            document.body.appendChild(anchor);
-            anchor.click();
-            anchor.remove();
-            window.setTimeout(
-                () => URL.revokeObjectURL(objectUrl),
-                60_000
-            );
+            downloadVariantLink.textContent = "Abrindo download...";
+            window.location.assign(`${API_URL}${variant.path}`);
         } catch (error) {
             downloadVariantDescription.textContent =
                 error?.name === "AbortError"
-                    ? "O servidor demorou para responder. Tente novamente."
+                    ? "O servidor demorou para autorizar o download. Tente novamente."
                     : error.message;
         } finally {
             window.clearTimeout(requestTimeout);
@@ -2099,6 +2056,7 @@ openDownloadButton.addEventListener(
             return;
         }
 
+        updateDownloadAccess();
         downloadModal.classList.add(
             "active"
         );
@@ -2160,7 +2118,6 @@ document.addEventListener(
         }
     }
 );
-
 
 /* ==========================================
    INICIALIZAÇÃO
