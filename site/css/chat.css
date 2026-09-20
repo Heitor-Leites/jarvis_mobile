@@ -2659,7 +2659,7 @@
    experiência desktop permanece inalterada acima deste breakpoint.
    ============================================================ */
 
-@media (max-width: 760px) {
+@media (max-width: 900px) and (pointer: coarse) {
     .jarvis-home.authenticated-home {
         height: 100dvh;
         max-height: 100dvh;
