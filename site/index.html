@@ -2026,8 +2026,10 @@ downloadVariantLink.addEventListener(
                 );
             }
 
+            const data = await response.json();
+            const downloadPath = data.path || variant.path;
             downloadVariantLink.textContent = "Abrindo download...";
-            window.location.assign(`${API_URL}${variant.path}`);
+            window.location.assign(`${API_URL}${downloadPath}`);
         } catch (error) {
             downloadVariantDescription.textContent =
                 error?.name === "AbortError"
