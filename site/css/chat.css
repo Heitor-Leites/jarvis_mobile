@@ -2651,3 +2651,147 @@
         padding: 18px 14px 14px;
     }
 }
+
+
+/* ============================================================
+   MOBILE WORKSPACE COMPACTO
+   Aplica somente ao workspace autenticado em telas estreitas. A
+   experiência desktop permanece inalterada acima deste breakpoint.
+   ============================================================ */
+
+@media (max-width: 760px) {
+    .jarvis-home.authenticated-home {
+        height: 100dvh;
+        max-height: 100dvh;
+        overflow: hidden;
+    }
+
+    .jarvis-home.authenticated-home .jarvis-header {
+        height: 60px;
+        min-height: 60px;
+        padding: 0 14px;
+    }
+
+    .jarvis-home.authenticated-home .jarvis-workspace-sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        flex: 0 0 auto;
+        flex-direction: row;
+        gap: 7px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 8px 12px;
+        border-right: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        scrollbar-width: none;
+    }
+
+    .jarvis-home.authenticated-home .jarvis-workspace-sidebar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .jarvis-home.authenticated-home .workspace-sidebar-brand,
+    .jarvis-home.authenticated-home .workspace-sidebar-footer,
+    .jarvis-home.authenticated-home .workspace-help-links,
+    .jarvis-home.authenticated-home .workspace-sidebar-toggle,
+    .jarvis-home.authenticated-home .workspace-conversations {
+        display: none !important;
+    }
+
+    .jarvis-home.authenticated-home .workspace-sidebar-nav {
+        display: flex;
+        width: max-content;
+        min-width: max-content;
+        gap: 6px;
+    }
+
+    .jarvis-home.authenticated-home .workspace-nav-item {
+        flex: 0 0 auto;
+        min-height: 36px;
+        padding: 0 10px;
+        border-radius: 10px;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .jarvis-home.authenticated-home .workspace-nav-item > span:first-child {
+        width: auto;
+        font-size: 15px;
+    }
+
+    .jarvis-home.authenticated-home .jarvis-main {
+        width: 100%;
+        min-height: 0;
+        margin: 0;
+        padding: 14px 12px 10px;
+        overflow: hidden;
+    }
+
+    .jarvis-home.authenticated-home .jarvis-greeting {
+        flex: 0 0 auto;
+        max-height: 248px;
+    }
+
+    .jarvis-home.authenticated-home .jarvis-greeting .core {
+        width: 86px;
+        height: 86px;
+        margin-bottom: 10px;
+    }
+
+    .jarvis-home.authenticated-home .jarvis-greeting h1 {
+        margin-top: 10px;
+        font-size: clamp(26px, 7vw, 32px);
+        line-height: 1.1;
+    }
+
+    .jarvis-home.authenticated-home .jarvis-greeting p {
+        font-size: 13px;
+    }
+
+    .jarvis-home.authenticated-home .jarvis-chat {
+        min-height: 0;
+        margin-top: 10px !important;
+        padding: 0 !important;
+    }
+
+    .jarvis-home.authenticated-home .chat-messages {
+        min-height: 0;
+        max-height: none;
+        padding: 4px 2px 8px;
+    }
+
+    .jarvis-home.authenticated-home .chat-messages:empty {
+        display: none;
+        flex: 0 0 0;
+        min-height: 0;
+        padding: 0;
+    }
+
+    .jarvis-home.authenticated-home .chat-suggestions {
+        flex: 0 0 auto;
+        margin-top: 8px;
+        padding-top: 10px;
+    }
+
+    .jarvis-home.authenticated-home .chat-suggestions-grid {
+        gap: 7px;
+    }
+
+    .jarvis-home.authenticated-home .chat-suggestion {
+        min-height: 64px;
+        padding: 9px;
+    }
+
+    .jarvis-home.authenticated-home .chat-input-container {
+        flex: 0 0 auto;
+        position: sticky;
+        bottom: 0;
+        margin-top: 10px !important;
+        margin-bottom: env(safe-area-inset-bottom);
+    }
+
+    .jarvis-home.authenticated-home .jarvis-footer {
+        display: none;
+    }
+}
