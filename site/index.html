@@ -1992,6 +1992,12 @@ downloadVariantLink.addEventListener(
         downloadVariantLink.textContent = "Autorizando download...";
         downloadVariantLink.setAttribute("aria-busy", "true");
 
+        const controller = new AbortController();
+        const requestTimeout = window.setTimeout(
+            () => controller.abort(),
+            180000,
+        );
+
         try {
             const response = await fetch(
                 `${API_URL}${variant.path}`,
@@ -2000,7 +2006,8 @@ downloadVariantLink.addEventListener(
                     credentials: "include",
                     headers: {
                         Authorization: `Bearer ${token}`
-                    }
+                    },
+                    signal: controller.signal,
                 }
             );
 
@@ -2017,7 +2024,41 @@ downloadVariantLink.addEventListener(
                 );
             }
 
-            const blob = await response.blob();
+            downloadVariantLink.textContent = "Baixando arquivo...";
+
+            const contentLength = Number(
+                response.headers.get("content-length") || 0,
+            );
+            const reader = response.body?.getReader();
+            const chunks = [];
+            let received = 0;
+
+            if (reader) {
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    chunks.push(value);
+                    received += value.byteLength;
+
+                    if (contentLength > 0) {
+                        const percent = Math.min(
+                            100,
+                            Math.round((received / contentLength) * 100),
+                        );
+                        downloadVariantLink.textContent =
+                            `Baixando arquivo... ${percent}%`;
+                    }
+                }
+            } else {
+                chunks.push(await response.arrayBuffer());
+            }
+
+            const blob = new Blob(chunks, {
+                type:
+                    response.headers.get("content-type") ||
+                    "application/vnd.android.package-archive",
+            });
             const objectUrl = URL.createObjectURL(blob);
             const anchor = document.createElement("a");
             anchor.href = objectUrl;
@@ -2030,8 +2071,12 @@ downloadVariantLink.addEventListener(
                 60_000
             );
         } catch (error) {
-            downloadVariantDescription.textContent = error.message;
+            downloadVariantDescription.textContent =
+                error?.name === "AbortError"
+                    ? "O servidor demorou para responder. Tente novamente."
+                    : error.message;
         } finally {
+            window.clearTimeout(requestTimeout);
             downloadVariantLink.textContent = originalLabel;
             downloadVariantLink.removeAttribute("aria-busy");
         }
