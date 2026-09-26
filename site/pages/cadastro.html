@@ -160,12 +160,16 @@ form.addEventListener("submit", async (event) => {
         window.jarvisAnalytics?.capture("signup_completed", {
             method: "password",
         });
-        statusMessage("Conta criada. Entrando no J.A.R.V.I.S....");
+        statusMessage(
+            data.email_verification_sent
+                ? "Conta criada. Verifique seu e-mail."
+                : "Conta criada. Entrando no J.A.R.V.I.S...."
+        );
         button.textContent = "Conta criada";
 
         setTimeout(() => {
             window.location.replace("dashboard.html");
-        }, 400);
+        }, 900);
     } catch (error) {
         statusMessage(error.message || "Não foi possível criar a conta.");
         button.disabled = false;

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS | Recuperar senha</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .auth-help-link {
+            margin: -4px 0 18px;
+            text-align: right;
+            font-size: 13px;
+        }
+
+        .auth-help-link a,
+        .auth-switch a {
+            color: #35c8ff;
+        }
+    </style>
+</head>
+
+<body>
+<main class="login-page">
+    <div class="login-card">
+        <div class="login-logo">JARVIS</div>
+        <p class="login-subtitle">Recupere o acesso à sua conta</p>
+
+        <form id="forgot-form">
+            <div class="input-group">
+                <label for="email">E-mail da conta</label>
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="voce@exemplo.com"
+                    autocomplete="email"
+                    maxlength="320"
+                    required
+                >
+            </div>
+
+            <button type="submit" id="forgot-button">Enviar link</button>
+        </form>
+
+        <p class="auth-switch">
+            Lembrou a senha? <a href="login.html">Voltar ao login</a>
+        </p>
+
+        <div class="login-status" id="forgot-status">
+            Informe o e-mail usado no cadastro
+        </div>
+    </div>
+</main>
+
+<script src="../js/analytics.js?v=1"></script>
+<script src="../js/api.js"></script>
+<script>
+const form = document.getElementById("forgot-form");
+const button = document.getElementById("forgot-button");
+const status = document.getElementById("forgot-status");
+
+form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    button.disabled = true;
+    button.textContent = "Enviando...";
+    status.textContent = "Verificando a solicitação...";
+
+    try {
+        const data = await apiRequest("/auth/password/forgot", {
+            method: "POST",
+            body: JSON.stringify({
+                email: document.getElementById("email").value.trim(),
+            }),
+        });
+        status.textContent = data.message;
+        window.jarvisAnalytics?.capture("password_reset_requested", {
+            method: "email",
+        });
+    } catch (error) {
+        status.textContent = error.message || "Não foi possível enviar o link.";
+        button.disabled = false;
+        button.textContent = "Enviar link";
+    }
+});
+</script>
+</body>
+</html>

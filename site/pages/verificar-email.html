@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS | Confirmar e-mail</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+<main class="login-page">
+    <div class="login-card">
+        <div class="login-logo">JARVIS</div>
+        <p class="login-subtitle">Confirmação de e-mail</p>
+        <div class="login-status" id="verify-status">Validando seu link...</div>
+        <p class="auth-switch">
+            <a href="login.html">Ir para o login</a>
+        </p>
+    </div>
+</main>
+
+<script src="../js/analytics.js?v=1"></script>
+<script src="../js/api.js"></script>
+<script>
+const token = new URLSearchParams(window.location.search).get("token") || "";
+const status = document.getElementById("verify-status");
+
+async function verifyEmail() {
+    if (!token) {
+        status.textContent = "Link de confirmação inválido ou ausente.";
+        return;
+    }
+
+    try {
+        const data = await apiRequest("/auth/verify-email", {
+            method: "POST",
+            body: JSON.stringify({ token }),
+        });
+        window.jarvisAnalytics?.capture("email_verified", {
+            method: "email",
+        });
+        status.textContent = data.message;
+    } catch (error) {
+        status.textContent = error.message || "Não foi possível confirmar o e-mail.";
+    }
+}
+
+verifyEmail();
+</script>
+</body>
+</html>

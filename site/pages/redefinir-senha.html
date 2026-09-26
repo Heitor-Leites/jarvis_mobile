@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS | Nova senha</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+<main class="login-page">
+    <div class="login-card">
+        <div class="login-logo">JARVIS</div>
+        <p class="login-subtitle">Crie uma nova senha para sua conta</p>
+
+        <form id="reset-form">
+            <div class="input-group">
+                <label for="password">Nova senha</label>
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Mínimo de 8 caracteres"
+                    autocomplete="new-password"
+                    minlength="8"
+                    maxlength="72"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="confirm-password">Confirmar nova senha</label>
+                <input
+                    type="password"
+                    id="confirm-password"
+                    placeholder="Repita sua senha"
+                    autocomplete="new-password"
+                    minlength="8"
+                    maxlength="72"
+                    required
+                >
+            </div>
+
+            <button type="submit" id="reset-button">Redefinir senha</button>
+        </form>
+
+        <p class="auth-switch">
+            <a href="login.html">Voltar ao login</a>
+        </p>
+
+        <div class="login-status" id="reset-status">Link de recuperação recebido</div>
+    </div>
+</main>
+
+<script src="../js/analytics.js?v=1"></script>
+<script src="../js/api.js"></script>
+<script>
+const token = new URLSearchParams(window.location.search).get("token") || "";
+const form = document.getElementById("reset-form");
+const button = document.getElementById("reset-button");
+const status = document.getElementById("reset-status");
+
+if (!token) {
+    form.hidden = true;
+    status.textContent = "Link de recuperação inválido ou ausente.";
+}
+
+form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    button.disabled = true;
+    button.textContent = "Salvando...";
+    status.textContent = "Atualizando sua senha...";
+
+    try {
+        await apiRequest("/auth/password/reset", {
+            method: "POST",
+            body: JSON.stringify({
+                token,
+                new_password: document.getElementById("password").value,
+                confirm_password: document.getElementById("confirm-password").value,
+            }),
+        });
+        window.jarvisAnalytics?.capture("password_reset_completed", {
+            method: "email",
+        });
+        status.textContent = "Senha redefinida. Redirecionando para o login...";
+        setTimeout(() => window.location.replace("login.html"), 900);
+    } catch (error) {
+        status.textContent = error.message || "Não foi possível redefinir a senha.";
+        button.disabled = false;
+        button.textContent = "Redefinir senha";
+    }
+});
+</script>
+</body>
+</html>
