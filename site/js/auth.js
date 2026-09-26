@@ -1,5 +1,7 @@
 function saveToken(token) {
     localStorage.setItem("jarvis_token", token);
+
+    window.jarvisAnalytics?.identifyFromToken(token);
 }
 
 function getToken() {
@@ -8,6 +10,8 @@ function getToken() {
 
 function removeToken() {
     localStorage.removeItem("jarvis_token");
+
+    window.jarvisAnalytics?.reset();
 }
 
 function isLoggedIn() {

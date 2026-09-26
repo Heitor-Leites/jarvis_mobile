@@ -53,6 +53,7 @@
     <link rel="stylesheet" href="css/chat.css?v=8-mobile-workspace">
     <link rel="stylesheet" href="css/mobile-workspace.css?v=1">
 
+    <script src="js/analytics.js?v=1"></script>
     <script src="js/api.js?v=1.2.5-devices"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
@@ -1304,6 +1305,7 @@ async function loadUserProfile() {
             localStorage.removeItem(
                 "jarvis_token"
             );
+            window.jarvisAnalytics?.reset();
 
             if (typeof updateDownloadAccess === "function") {
                 updateDownloadAccess();
@@ -2015,6 +2017,7 @@ downloadVariantLink.addEventListener(
 
             if (response.status === 401) {
                 localStorage.removeItem("jarvis_token");
+                window.jarvisAnalytics?.reset();
                 updateDownloadAccess();
                 throw new Error("Sua sessão expirou. Entre novamente.");
             }
@@ -2029,6 +2032,9 @@ downloadVariantLink.addEventListener(
             const data = await response.json();
             const downloadPath = data.path || variant.path;
             downloadVariantLink.textContent = "Abrindo download...";
+            window.jarvisAnalytics?.capture("apk_download_authorized", {
+                variant: variantName,
+            });
             window.location.assign(`${API_URL}${downloadPath}`);
         } catch (error) {
             downloadVariantDescription.textContent =

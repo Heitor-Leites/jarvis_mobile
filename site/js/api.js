@@ -101,6 +101,10 @@ async function publicChat(message, history = []) {
         })
     });
 
+    window.jarvisAnalytics?.capture("chat_message_sent", {
+        mode: "public",
+    });
+
     return response.response;
 }
 
@@ -132,6 +136,10 @@ async function authenticatedChat(message) {
         }
     }
 
+    window.jarvisAnalytics?.capture("chat_message_sent", {
+        mode: "authenticated",
+    });
+
     return response.response;
 }
 
@@ -144,6 +152,7 @@ async function sendMessage(message, history = []) {
         } catch (error) {
             if (error.status === 401) {
                 localStorage.removeItem("jarvis_token");
+                window.jarvisAnalytics?.reset();
                 authenticatedConversationId = null;
             } else {
                 throw error;
